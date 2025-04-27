@@ -1,0 +1,144 @@
+
+input[type="file"]{
+  // display: none;
+  position: absolute;
+  opacity: 0; /* Hace invisible el input pero lo mantiene interactivo */
+  width: 15px; /* Hace que el input ocupe lo mínimo posible */
+  height: 15px; /* Lo hace invisible en términos de altura */
+  margin: 0;
+  padding: 0;
+}
+
+.metadata-end-wrapper{
+    // girar los arrow
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .cloud{
+      padding: 0 0.2rem;
+      &::before{
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 10px;
+        height: 10px;
+        // background-color: red;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+        z-index: -1;
+        // opacity: 0.8;
+      }
+
+&.color-6 { &::before{ background: #C8E6C9 !important; } } /* Amarillo verdoso */
+&.color-7 { &::before{ background: #A5D6A7 !important; } } /* Verde claro */
+&.color-8 { &::before{ background: #81C784 !important; } } /* Verde */
+&.color-9 { &::before{ background: #66BB6A !important; } } /* Verde más oscuro */
+&.color-10 { &::before{ background: #00C853 !important; } } /* Verde esmeralda */
+    }
+
+    .iconBack{
+        transform: rotate(90deg);
+
+        &:hover, &:focus, &:active{
+            opacity: 1;
+            color: green;
+        }
+    }
+    .iconNext{
+        transform: rotate(270deg);
+
+        &:hover, &:focus, &:active{
+            opacity: 1;
+            color: red;
+        }
+    }
+    .iconBack, .iconNext{
+        opacity: 0.5;
+        
+    }
+}
+
+ion-button{
+    margin: 0 0.8rem;
+}
+
+ion-modal#example-modal {
+    --width: fit-content;
+    --min-width: 250px;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
+
+    .image-dic{
+      margin: 0 0 0.64rem 0;
+      border-radius: 0.4rem;
+
+    }
+}
+
+  
+  ion-modal#example-modal h1 {
+    margin: 20px 20px 10px 1rem;
+    margin-top: -0.54rem;
+
+  }
+  ion-modal#example-modal h6 {
+    font-size: 0.8rem;
+    margin-left: 1rem;
+  }
+  
+  ion-modal#example-modal ion-icon {
+    margin-right: 6px;
+  
+    width: 48px;
+    height: 48px;
+  
+    padding: 4px 0;
+  
+    color: #aaaaaa;
+  }
+  
+  ion-modal#example-modal .wrapper {
+    margin: 0.4rem;
+
+    .icon-top{
+      color: #757575;
+      display: flex;
+      gap: 0.64rem;
+      align-items: center;
+      padding: 0; height: 1rem;
+
+      ion-icon{
+        font-size: 0.5rem;
+        width: 1.2rem;
+      }
+    }
+
+  }
+
+.text-desc{
+    text-align: justify;
+    line-height: 1.1rem;
+    margin-left: -0.72rem;
+    overflow-y: auto;
+
+}
+
+.modal-content{
+    display: flex;
+    flex-direction: column;
+}
+
+.desc_text{
+  max-height: 42vh;
+  
+  overflow-y: auto;
+  padding-right: 8px; /* opcional: para evitar que el scroll tape el texto */
+
+  p{
+    margin-bottom: 1rem;
+  }
+}
