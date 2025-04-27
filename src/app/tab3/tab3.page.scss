@@ -1,0 +1,45 @@
+
+
+
+ion-content{
+    --background: var(--ion-background-gradient);
+
+    ion-header{
+        background: transparent;
+
+        ion-toolbar{
+            --background: transparent;
+            
+            ion-title{
+                --color: var(--ion-color-text-primary);
+                font-size: 1.4rem;
+            }
+        }
+    }
+
+    ion-card{
+        position: absolute;
+        top: 38%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 400px;
+        margin:auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+        ion-item{
+            bordewr-radius: 10px;
+        }
+
+        ion-button.play{
+            margin-top: 2vh;
+            float:inline-end;
+        }
+
+        .errorMessage{
+            font-size: small;
+        }
+
+    }
+
+}

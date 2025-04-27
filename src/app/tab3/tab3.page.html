@@ -1,4 +1,5 @@
 
+
 <ion-content [fullscreen]="true">
 
   <ion-header class="ion-no-border">
@@ -6,7 +7,140 @@
 
       <ion-title> Quiz Course </ion-title>
      
+      <ion-buttons slot="end" [routerLink]="['/', 'tabs', 'tab3', 'settings']">
+        <ion-button color="light">
+          <ion-icon name="settings-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    
     </ion-toolbar>
   </ion-header>
+
+  <ion-card class="ion-padding">
+    <ion-card-title>
+      Let's Play
+      <ion-card-subtitle> Time for Quiz </ion-card-subtitle>
+    </ion-card-title>
+
+    @let formData = form()!;
+    <ion-card-content>
+      <form [formGroup]="formData">
+
+        <!-- Seleccione el curso o materia especifica -->
+        <ion-item lines="none" color="light" class="ion-margin-top">
+          <ion-select label="Curso" labelPlacement="fixed" interface="popover" 
+          placeholder="Seleccione un Curso"
+          formControlName="cat_crs_id" 
+          (ionChange)="onCouseSelection(formData.get('cat_crs_id')?.value)">
+          @for(curso of Courses(); track $index){
+            <ion-select-option 
+            [value]="curso.crs_id">
+              {{curso?.crs_name}}
+            </ion-select-option>
+          }
+          </ion-select>
+
+          @let cat_crs_id = formData.get('cat_crs_id');
+          @if(cat_crs_id?.invalid && cat_crs_id?.touched){
+            <div>
+              <ion-text color="danger" class="errorMessage">
+                * Por favor seleccione un curso
+              </ion-text>
+            </div>
+
+          }
+
+        </ion-item>
+        
+        
+        <ion-item lines="none" color="light" class="ion-margin-top"
+        [disabled]="countCategories === 0">
+          <ion-select label="Tema" labelPlacement="fixed" interface="popover" placeholder="Seleccione una categoria"
+          formControlName="pr_cat_id" 
+          (ionChange)="onSelectionPreguntas()">
+          @for(category of categories(); track $index){
+            <ion-select-option 
+            [value]="category.cat_id">
+              {{category?.cat_subtitle}}
+            </ion-select-option>
+          }
+          </ion-select>
+
+          @let pr_cat_id = formData.get('pr_cat_id');
+          @if(pr_cat_id?.invalid && pr_cat_id?.touched){
+            <div>
+              <ion-text color="danger" class="errorMessage">
+                * Por favor seleccione una categoria
+              </ion-text>
+            </div>
+
+          }
+
+        </ion-item>
+
+        <br>
+        <!-- Introduce la cantidad de preguntas que deseas responder -->
+        @let is_error_message = formData.get('question_count')?.errors?.['maxLimit'];
+        <ion-item lines="none" color="light"
+        [disabled]="countQuestions === 0">
+          <ion-input placeholder="N° de preguntas" type="number"
+          #valor_count
+          formControlName="question_count" 
+          [errorText]="is_error_message || '* Ingrese el número adecuado'"
+          (ngModelChange)="onCountQuestion(valor_count)"></ion-input>
+          <ion-text slot="end"> de {{ masterSettings().questionMaxLimit }} </ion-text>
+        </ion-item>
+
+
+        <ion-item lines="none" color="light" class="ion-margin-top">
+          <ion-label> Duracion (hh:mm) </ion-label>
+
+          <ion-datetime-button
+            datetime="datetime" slot="end"></ion-datetime-button>
+
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime
+                id="datetime" presentation="time" hourCycle="h23"
+                formControlName="duration"
+                [showDefaultButtons]="true"
+                [formatOptions]="{ 
+                  time: { hour: '2-digit', minute: '2-digit' } }">
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+
+        </ion-item>
+
+        @let duration = formData.get('duration');
+        @if(duration?.invalid && duration?.touched){
+          <div>
+            <ion-text color="danger" class="errorMessage">
+              @let checkErr = duration?.errors?.['invalidDuration'];
+              @if(checkErr){
+                {{ checkErr }}
+              }@else {
+                * Por favor seleccione una duracion
+              }
+            </ion-text>
+          </div>
+        }
+
+        @if(isLoading_data()){
+          <ion-button>
+            <ion-spinner name="crescent"></ion-spinner>
+          </ion-button>
+        }@else {
+          <ion-button (click)="onSubmit()" class="play"
+            [disabled]="formData.invalid || isLoading_data()">
+            Play &nbsp;
+            <ion-icon name="arrow-forward-circle-outline" slot="end"></ion-icon>
+          </ion-button>
+        }
+
+      </form>
+    </ion-card-content>
+
+  </ion-card>
 
 </ion-content>
