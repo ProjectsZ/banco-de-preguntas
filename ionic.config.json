@@ -1,0 +1,7 @@
+{
+  "name": "banco-de-preguntas",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}
