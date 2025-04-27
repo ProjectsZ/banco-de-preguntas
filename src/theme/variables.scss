@@ -1,2 +1,67 @@
 // For information on how to create your own theme, please see:
 // http://ionicframework.com/docs/theming/
+:root {
+    --ion-color-primary: #141e30;
+    --ion-color-primary-rgb: 0, 188, 212;
+    --ion-color-primary-contrast: #ffffff;
+    --ion-color-primary-contrast-rgb: 255, 255, 255;
+    --ion-color-primary-shade: #0097a7;
+    --ion-color-primary-tint: #33c9dc;
+    --ion-color-primary-light: #ECF0F7;
+
+    --ion-color-secondary: #00a4cc;
+    --ion-color-secondary-rgb: 0, 164, 204;
+    --ion-color-secondary-contrast: #000000;
+    --ion-color-secondary-contrast-rgb: 0, 0, 0;
+    --ion-color-secondary-shade: #008ba3;
+    --ion-color-secondary-tint: #33b5e5;
+    
+
+    --ion-color-text-primary: #ffffff; /* Blanco */
+    --ion-color-text-secondary: #004d60; /* Azul oscuro */
+    --ion-color-text-tertiary: #005f73; /* Azul más oscuro */
+
+
+    --ion-background-gradient: 
+    linear-gradient(120deg, #141e30 0%, #243b55 100%)
+
+    --ion-background-color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --ion-background-color: #ffffff;
+        
+        --ion-color-primary: #0f1723;
+        --ion-color-primary-rgb: 15, 23, 35;
+        --ion-color-primary-contrast: #fafafa;
+        --ion-color-primary-contrast-rgb: 255, 255, 255;
+        --ion-color-primary-shade: #0a1019;
+        --ion-color-primary-tint: #2a3546;
+        --ion-color-primary-light: #EBEFFA;
+
+        --ion-color-secondary: #007e99;
+        --ion-color-secondary-rgb: 0, 126, 153;
+        --ion-color-secondary-contrast: #fafafa;
+        --ion-color-secondary-contrast-rgb: 255, 255, 255;
+        --ion-color-secondary-shade: #006a80;
+        --ion-color-secondary-tint: #3399b3;
+
+        --ion-color-text-primary: #fafafa;
+        --ion-color-text-secondary: #b3cde0;
+        --ion-color-text-tertiary: #88aacc;
+
+        --ion-color-lightgray: rgba(15, 23, 35, .8);
+
+        --ion-background-gradient: linear-gradient(120deg, #141e30 0%, #243b55 100%);
+    }
+}
+
+.ion-color-lightgray {
+    --ion-color-base: var(--ion-color-lightgray);
+    --ion-color-base-rgb: var(--ion-color-lightgray-rgb);
+    --ion-color-contrast: var(--ion-color-lightgray-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-lightgray-contrast-rgb);
+    --ion-color-shade: var(--ion-color-lightgray-shade);
+    --ion-color-tint: var(--ion-color-lightgray-tint);
+}
