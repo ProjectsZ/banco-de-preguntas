@@ -1,0 +1,281 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title> Agregar cuestionario </ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button (click)="closeModal.emit(true)">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" color="light">
+
+  @if(isLoading()){
+    <app-spinner></app-spinner>
+  }
+  
+
+  <form
+    [formGroup]="questionnaireForm()!"
+    (ngSubmit)="onSubmit()">
+    <ion-list 
+      formArrayName="questions">
+
+      @for(question of questions().controls; let i = $index; track i){
+
+        <div class="ion-margin ion-padding form-input"
+          [formGroupName]="i">
+
+          <!-- difficulty level -->
+          <div class="dificulty-tipo">
+            <div class="ion-margin-top inputs dificulty">
+              <ion-select
+                labelPlacement="fixed"
+                interface="popover"
+                [formControl]="question.get('pr_difficulty')"
+                placeholder="Dificultad">
+                <ion-select-option value="easy">Easy</ion-select-option>
+                <ion-select-option value="medium">Medium</ion-select-option>
+                <ion-select-option value="hard">Hard</ion-select-option>
+              </ion-select>
+            </div>
+            <!-- tipo de pregunta -->
+            <div class="inputs">
+              <ion-select
+                labelPlacement="fixed"
+                interface="popover"
+                [formControl]="question.get('pr_type')"
+                placeholder="tipo">
+                <ion-select-option value="multiple">
+                  Multi                 
+                </ion-select-option>
+                <ion-select-option value="boolean">
+                  V/F
+                </ion-select-option>
+              </ion-select>
+            </div>
+
+            <!-- category ID -->
+            <div class="inputs">
+              <!-- <ion-input class="ion-padding-horizontal"
+                placeholder="Categoria ID"
+                [formControl]="question.get('category_id')"
+                errorText="* Requerido">
+              </ion-input> -->
+              
+              @let category_id = question.get('pr_cat_id');
+              <ion-select
+                labelPlacement="fixed"
+                interface="popover"
+                [formControl]="category_id"
+                placeholder="Select Category">
+                @for(category of categories(); track $index){
+                  <ion-select-option
+                    [value]="category.cat_id">
+                    {{ category?.cat_subtitle | textLimit: 25 }}
+                  </ion-select-option>
+                }
+              </ion-select>
+              
+              @if(category_id?.invalid && category_id?.touched){
+                <div>
+                  <ion-text class="errorMessage" color="danger">
+                    * Por favor selecciona una categoria
+                  </ion-text>
+                </div>
+              }
+
+            </div>
+
+          </div>
+
+
+          <!-- remove button -->
+          <ion-fab>
+            <ion-fab-button color="danger" size="small"
+              (click)="removeQuestion(i)">
+              <!-- <ion-icon name="close-outline"></ion-icon> -->
+              <ion-icon name="trash-outline">dsad</ion-icon>
+            </ion-fab-button>
+            <ion-fab-button color="light" size="small" class="image-add"
+              [ngClass]="{ 'active': question.get('pr_img')?.value !== '' }"
+              (click)="onSelectIndex(i)"
+              [id]="'open_modal_image' + i" >
+              <ion-icon name="image-outline"></ion-icon>
+            </ion-fab-button>
+          </ion-fab>
+
+
+           <ion-modal [trigger]="'open_modal_image' + i" 
+           [initialBreakpoint]="0.5"
+           [breakpoints]="[0.25, 0.5, 0.75]"
+           handleBehavior="cycle">
+           <ng-template>
+             <ion-content class="ion-padding">
+               <div class="flex">
+                 <ion-input
+                 #newImage
+                  [formControl]="question.get('pr_img')"
+                 placeholder="URL de imagen valida (*.png, *.jpg)"
+                 class="ion-padding-horizontal input-tag"
+                 errorText="* Solo imagen de tipo png o jpg"
+                 ></ion-input>
+         
+                 <div class="agregando-tags modal-tag-add">  
+                   <div class="addTag" expand="block" fill="outline"
+                   (click)="addImage(newImage)">
+                     <ion-icon name="add"></ion-icon>
+                   </div>
+                 </div>
+               </div>  
+               <br><br> 
+               <p> <i>  * A continuacion agregue una url de imagen valida! </i> </p>
+               <br>
+               <img [src]="newImage.value" alt="">
+             </ion-content>
+           </ng-template>
+         </ion-modal>
+          
+
+          <!-- pregunta Input -->
+          <div class="ion-margin-top inputs">
+            <ion-input class="ion-padding-horizontal"
+              [placeholder]="'Question '+(i+1)"
+              [formControl]="question.get('pr_question')"
+              errorText="* La pregunta es requerida">
+            </ion-input>
+          </div>
+
+          <!-- Agregando 4 opciones -->
+          <ion-list class="options-list">
+            <ion-radio-group value="strawberries"
+            (ionChange)="onOptionChange($event, i)">
+            
+            @for(option of (question.get('pr_options').controls); let j = $index; track j){
+              
+
+              <div class="inputs">
+                <ion-radio [value]="option"></ion-radio>
+                <ion-input class="ion-padding-horizontal"
+                  #valueOption
+                  [placeholder]="'Option '+(j+1)"
+                  [formControl]="option"
+                  errorText="* Opcion Requerida">
+                </ion-input>
+              </div>
+            }
+            </ion-radio-group>
+          </ion-list>
+
+          <!-- answer -->
+          <!-- <div class="inputs">
+            <ion-input class="ion-padding-horizontal"
+              placeholder="Respuesta correcta"
+              [formControl]="question.get('pr_answer')"
+              errorText="* Requerido">
+            </ion-input>
+          </div> -->
+
+          <div class="solution">
+            
+            <!-- contenido o solucion  -->
+            <div class="inputs textarea">
+              <ion-textarea class="ion-padding-horizontal"
+                placeholder="Explicación o solucion de la respuesta"
+                [formControl]="question.get('pr_content')"
+                errorText="* La explicación es requerida">
+              </ion-textarea>
+            </div>
+          </div>
+
+
+         <!-- Agregando tags -->
+         <ion-list class="listando-tags">
+          <div class="tags-list">
+            @for(tags of newTags[i]; let k = $index; track k){
+            
+              <div class="tags-outline">
+                  #{{ tags }}
+                <ion-button fill="clear" 
+                   (click)="removeTag(k, i)">
+                  <ion-icon name="close"></ion-icon>
+                </ion-button>
+              </div>              
+            }
+          </div>
+          <div class="agregando-tags">     
+            <div class="addTag" expand="block" fill="outline" 
+            [id]="'open-modal-tag' + i"
+            (click)="onSelectIndex(i)">
+                <ion-icon name="add"></ion-icon>
+            </div>            
+          </div>
+
+              <ion-modal [trigger]="'open-modal-tag' + i" 
+                  [initialBreakpoint]="0.25"
+                  [breakpoints]="[0, 0, 0, 0]"
+                  handleBehavior="cycle">
+                  <ng-template>
+                    <ion-content class="ion-padding">
+                      <div class="flex">
+                        <ion-input
+                        #newTagInput
+                        placeholder="Escribe un tag"
+                        class="ion-padding-horizontal input-tag"
+                        ></ion-input>
+  
+                        <div class="agregando-tags modal-tag-add">  
+                          <div class="addTag" expand="block" fill="outline"
+                          (click)="addTag(newTagInput)">
+                            <ion-icon name="add"></ion-icon>
+                          </div>
+                        </div>
+                      </div>  
+                      <br><br> 
+                      <p> <i>  * A continuacion agregue todos los tags que se requiera! </i> </p>
+                    </ion-content>
+                  </ng-template>
+              </ion-modal>
+
+
+
+
+        </ion-list>
+
+
+        </div>
+
+        
+
+      }
+    </ion-list>
+
+    @if(!isLoading()){
+      <ion-row class="ion-margin-horizontal ion-justify-content-end">
+        <ion-col class="ion-text-end"> <!-- Add Question Button -->
+          <!-- Add Question -->
+          <ion-button mode="ios" fill="outline"
+            (click)="addQuestion()">
+            <ion-icon name="duplicate-outline"></ion-icon>
+          </ion-button>
+  
+          <ion-button color="success" mode="ios"
+            (click)="loadingDATA()">
+             +++
+          </ion-button>
+
+          <ion-button color="success" mode="ios" type="submit">
+            <!-- Submit -->
+            <ion-icon name="send-outline"></ion-icon>
+          </ion-button>
+        </ion-col>
+  
+      </ion-row>
+    }
+
+  </form>
+</ion-content>
+
+

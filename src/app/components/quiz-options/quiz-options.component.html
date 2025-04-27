@@ -1,0 +1,21 @@
+
+<ion-radio-group mode ="ios"
+  [ngModel]="selectedOption()" >
+  @let opts = options();
+
+  @for(option of opts; track $index){
+
+    @let isSelectedOption = selectedOption() === opts[$index];
+    <ion-item class="choice"
+     [ngClass]="{'selected': isSelectedOption}"
+     (click)="setOption($index)">
+      @if(isSelectedOption){
+        <ion-icon name="checkmark-circle" slot="start" color="primary"></ion-icon>
+      } @else {
+        <ion-radio slot="start" color="light"
+          [value]="$index"></ion-radio>
+      }
+      <ion-label> {{ option }} </ion-label>
+    </ion-item>
+  }
+</ion-radio-group>
