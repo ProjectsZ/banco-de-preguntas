@@ -1,0 +1,13 @@
+
+<ion-button
+  size="small"
+  [fill]="fill()"
+  [color]="buttonColor()"
+  (click)="onClick()">
+
+  <ion-text 
+    [color]="textColor()">
+    {{ text() }}
+  </ion-text>
+
+</ion-button>

@@ -1,0 +1,132 @@
+
+<ion-header class="ion-no-border">
+  <ion-toolbar color="primary">
+    <ion-title mode="ios" >
+      Resultados
+    </ion-title>
+
+    <ion-buttons slot="start">
+      <ion-button color="light" fill="clear" size="large" 
+        (click)="closeModal()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  @let rs = result();
+  @defer(when rs){
+
+    <div class="score" align="center">
+      <ion-label color="medium">
+        <b> Tu score </b>
+        <p>
+          
+          @if(rs?.totalPoints === rs?.score ){
+            <ion-text color="success">
+              {{ rs?.score }} 
+            </ion-text>
+          } @else if(((rs?.totalPoints/2) < rs?.score) && (rs?.score != rs?.totalPoints)){
+            <ion-text color="warning">
+              {{ rs?.score }} 
+            </ion-text>
+          } @else {
+            <ion-text color="danger">
+              {{ rs?.score }} 
+            </ion-text>
+          }
+            <ion-text color="success">
+              / {{ rs?.totalPoints }}
+            </ion-text>
+        </p>
+      </ion-label>
+    </div>
+
+    <div class="ion-margin-bottom calification_result">
+      <ion-grid class="ion-padding-vertical">
+        <ion-row>
+          <ion-col class="position-center txt" >
+            <ion-label>
+              Tiempo tomado
+            </ion-label>
+            <p>
+              <ion-text>
+                {{ rs?.timeTaken }}
+              </ion-text>
+            </p>
+          </ion-col>
+
+          <ion-col class="postion-center txt">
+            <ion-label>
+              Total de duración
+            </ion-label>
+            <p>
+              <ion-text>
+                {{ rs?.actualDuration }}
+              </ion-text>
+            </p>
+          </ion-col>
+
+        </ion-row>
+
+        <br>  
+
+        <ion-row class="ion-margin-top">
+          <ion-col>
+            <app-circle-text
+              bgColor="success"
+              title="Correcto"
+              [text]="rs.correct"
+              [textColor]="true">
+            </app-circle-text>
+          </ion-col>
+          <ion-col>
+            <app-circle-text
+              bgColor="danger"
+              title="Incorrecto"
+              [text]="rs.wrong"
+              [textColor]="true">
+            </app-circle-text>
+          </ion-col>
+          <ion-col>
+            <app-circle-text
+              title="Saltados"
+              [text]="rs.skipped">              
+            </app-circle-text>
+          </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </div>
+
+    <ion-row class="btns">
+      <ion-col>
+        <ion-button expand="block" fill="outline" mode="ios" color="medium"        
+          (click)="replay()">
+          <ion-label>
+            <ion-icon name="reload-outline"></ion-icon>
+          </ion-label>
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        @if(rs?.score > (rs?.totalPoints/2) || userSTATUS() == 'ADMIN'){ 
+
+          <ion-button expand="block" fill="outline" mode="ios" color="medium"        
+            (click)="viewAnswers()">
+            View Answers
+          </ion-button>
+        }
+      </ion-col>
+    </ion-row>
+
+    
+    <ion-row>
+
+    </ion-row>
+
+  }
+
+</ion-content>

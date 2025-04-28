@@ -1,0 +1,453 @@
+<ion-header class="ion-no-border quiz-header">
+  <ion-toolbar>
+    @if(questions()){
+    <ion-buttons slot="start">
+      <ion-button color="light" fill="clear" size="large"
+        (click)="goBackAlert()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    }
+    @if(questions()){
+
+      @let qstn = questions();
+      @let isMarked = qstn[currentIndex()].marked ? true : false;
+
+      <ion-buttons slot="end">
+        <ion-button color="light" fill="clear" size="large">
+          <ion-icon name="bulb-outline" slot="icon-only"></ion-icon>
+          <span class="pointRecuerdo">{{ recordQuestions.length }}</span>
+        </ion-button>
+        <ion-button 
+          [color]="isMarked ? 'warning' : 'light'" 
+          (click)="markAnswer()">
+          <ion-icon slot="icon-only"
+          [name]="isMarked ? 'star' : 'star-outline'"></ion-icon>
+        </ion-button>
+
+        <ion-button color="light"
+        (click)="setIsReview(true)">
+        <ion-icon name="options-outline" slot="icon-only"></ion-icon>
+      </ion-button>
+
+      </ion-buttons>
+
+    }
+  </ion-toolbar>
+</ion-header>
+
+@if(isLoading() || !questions()){
+  <app-spinner></app-spinner>
+}
+<ion-content [fullscreen]="true" class="ion-padding-horizontal quiz-content">
+
+  <!-- el tiempo de duracion del examen -->
+  @if(questions()){
+  <ion-item lines="lines" class="timer">
+    <div slot="start">
+      <!-- <ion-chip color="success">
+        <ion-text>
+          +{{ masterSettings().correctAnswerPoint }}
+        </ion-text>
+      </ion-chip>
+      <ion-chip color="danger">
+        <ion-text>
+          {{ masterSettings().wrongAnswerPoint }}
+        </ion-text>
+      </ion-chip> -->
+    </div>
+
+    @if(duration()){
+      <ion-text slot="end">
+        
+        <ion-chip color="dark" disabled="true">
+          <ion-text class="bold"> {{ duration() }} </ion-text>
+        </ion-chip>
+      </ion-text>
+    }
+    
+  </ion-item>
+  }
+  
+  @defer(when questions()){
+    <div class="swiperDiv">
+      <swiper-container #swiper [Modules]="swiperModules" 
+        [slidesPerView]="1"
+        [spaceBetween]="20"
+        initial-slide="0" centered-slides="true" keyboard="true"
+        (swiperslideChange)="onSlideChange()">
+        
+        @for (question of questions(); track i; let i = $index) {
+
+            <!-- <ion-chip color="dark" class="eye-chip add-question-in-exam"
+              (click)="onAddQuestionInAExam()">
+              <ion-icon name="add-outline"></ion-icon>
+            </ion-chip> -->
+
+
+          <swiper-slide>
+
+            <ion-list lines="none">
+              <ion-item-group class="ion-padding">
+
+                <!-- @if(currentUser.usr_r_id?.r_name == 'ADMIN' || currentUser.usr_r_id?.r_name == 'DOCENTE'){ -->
+                  @if (question?.viewAnswer) {
+                    <ion-chip color="light" class="eye-chip cat-chip"
+                      (click)="onActiveCatAnswer(question, i)">
+                      <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt="">
+                    </ion-chip>
+                    <ion-chip color="light" class="eye-chip"
+                      (click)="onActiveAnswer(i)">
+                      <ion-icon name="eye"></ion-icon>
+                    </ion-chip>
+
+                  }@else {
+                  
+                    <ion-chip color="light" class="eye-chip cat-chip"
+                      (click)="onActiveCatAnswer(question, i)">
+                      <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="">
+                    </ion-chip>
+                    <ion-chip color="light" class="eye-chip"
+                      (click)="onActiveAnswer(i)">
+                      <ion-icon name="eye-outline"></ion-icon>
+                    </ion-chip>
+                  }
+
+                <!-- } -->
+
+                <!-- pregunta propuesta -->
+                <ion-item>
+                  <ion-label>
+                   <b class="title-short"> PREGUNTA {{ $index+1 }}: </b> 
+                   <p
+                   [innerHTML]="question?.pr_question + '' "></p>
+                    <!-- {{ question?.pr_question }} -->
+                   
+                  </ion-label>
+                </ion-item>
+
+                <!-- imagen de la pregunta -->
+                <ion-item>
+                  <ion-label class="ion-text-center">
+                    @if(question?.pr_img && question?.pr_img != ''){
+                      <img src="{{ question?.pr_img }}" alt="question image" class="question-image">
+                    } @else if(question?.pr_img == ''){
+                      <!-- <img src="./../../../assets/imgs/loading_img.png" alt="" class="question-image"> -->
+                    }
+                  </ion-label>
+                </ion-item>
+
+                
+                @if(question?.viewAnswer){
+                 <ion-item>
+                  <ion-label class="ion-text-center">
+                    
+                    
+                    @if(!activeEditContent()){
+                      <ion-chip color="dark" class="answer-chip">
+
+                        <ion-text class="bold"
+                        [innerHTML]="question?.pr_content + ''"></ion-text>
+                        
+                      </ion-chip> 
+                      <ion-icon name="eye" class="on-edit" (click)="activeEditContent_()"></ion-icon>
+                      
+                      <ion-icon name="pencil-outline" class="on-edit" (click)="activeEditContent_()"></ion-icon>
+                    }
+                    <div>
+                      @for (my_tag of question.pr_tags; track l; let l = $index) {
+                        <ion-chip color="dark" class="tag-chip">
+                          <ion-text class="bold">#{{ my_tag }}</ion-text>
+                        </ion-chip>
+                      }
+                    </div>
+
+                  </ion-label>
+                 </ion-item>       
+                }
+
+                @if(!question?.viewAnswer){
+                  <!-- options component-->
+                  <app-quiz-options
+                    [options]="question.pr_options"
+                    [selectedOption]="question.selectedAnswer"
+                    (selectedOptionChange)="optionSelected($event, $index)"
+                    [freezeAction]="isSubmitted()"></app-quiz-options>
+                }
+
+              </ion-item-group>
+
+              @let length = questions().length;
+              <!-- buttons -->
+                <ion-row>
+                  @if(isSubmitted()){
+
+                    <ion-col>
+                      <ion-button class="ion-margin" color="warning"
+                        shape="round" size="large" expand="block"
+                        [strong]="true"
+                        (click)="onRestart()">
+                        <ion-text> RE-PLAY </ion-text>
+                      </ion-button>
+                    </ion-col>
+
+                    <ion-col>
+                      <ion-button class="ion-margin" color="primary"
+                        shape="round" size="large" expand="block"
+                        [strong]="true"
+                        (click)="showResult()">
+                        <ion-text> RESULT </ion-text>
+                      </ion-button>
+                    </ion-col>
+
+                  } @else {
+                    @if( $index > 0 ){
+                      <ion-col size="2"
+                        (click)="slideTo($index - 1)">
+                        <ion-button
+                          size="large" shape="round" color="light" expand="block">
+                          <ion-icon name="chevron-back" slot="icon-only"></ion-icon>
+                        </ion-button>
+                      </ion-col>
+                    }
+
+                    <ion-col>
+                      @if((length - 1) === $index){
+                        <ion-button class="ion-margin" color="success"
+                          shape="round" size="large"
+                          expand="block" 
+                          [strong]="true"
+                          (click)="onSubmitAlert()">
+                          <ion-text> SUBMIT </ion-text>
+
+                        </ion-button>
+                      } @else {
+                        <ion-button class="ion-margin"
+                          shape="round" size="large" expand="block" 
+                          [strong]="true"
+                          (click)="slideTo($index + 1)">
+                          <ion-text> NEXT </ion-text>
+                        </ion-button>                        
+                      }
+
+                      
+
+
+                    </ion-col>
+
+                  }
+                </ion-row>
+
+            </ion-list>
+
+            <ion-item lines="none" class="remaining">
+                <ion-text slot="end">
+                  {{ $index + 1 }} de {{ length }}
+                </ion-text>
+            </ion-item>
+
+            <ion-fab vertical="bottom" class="fab-icon" horizontal="end">
+              <ion-fab-button color="light">
+                <ion-icon name="chevron-up-outline"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-list side="top">
+                <!-- GUARDADO MOMENTANEO DE LA PREGUNTA -->
+                <ion-fab-button>
+                  <ion-icon name="add"></ion-icon>
+                </ion-fab-button>
+                <ion-fab-button>
+                  <ion-icon name="bookmark-outline"></ion-icon>
+                </ion-fab-button>
+              </ion-fab-list>
+            </ion-fab>
+
+          </swiper-slide>
+        }
+      </swiper-container>
+    </div>
+  } @placeholder {
+    <div class="spin">
+      <ion-spinner name="crescent" color="dark">
+        <ion-label>Loading...</ion-label>
+      </ion-spinner>
+    </div>
+  }
+
+  <!-- alert on submit -->
+  <ion-alert  header="Confirm" 
+    #confirmAlert
+    [isOpen]="isSubmitConfirm()"
+    [message]="alertMessage() || 'Estas seguro de que quieres enviar?'"
+    [buttons]="alertButtons()"
+    (didDismiss)="setIsSubmitConfirm(false, alertMessage() ? true: false)">
+  </ion-alert>
+
+  <!-- result modal -->
+  <ion-modal
+    #result_modal
+    (didDismiss)="isRestart()? exitModal() : exitQuiz()"
+    [isOpen]="isResult()">
+    <ng-template>
+      <app-result
+        [result]="result()"
+        (close)="result_modal.dismiss()"
+        (restart)="replayViaModal(result_modal)"
+        (answer)="viewAnswers()">
+      </app-result>
+    </ng-template>
+  </ion-modal>
+
+  <!-- view answers modal -->
+
+  <ion-modal
+    #answers_modal
+    (didDismiss)="setIsAnswer(false)"
+    [isOpen]="isAnswer()"
+    [breakpoints]="[0.7, 0.9, 1]"
+    [initialBreakpoint]="1">    
+    <ng-template>
+      <ion-header class="ion-no-border answers">
+        <ion-title mode="ios">
+          View Answer
+        </ion-title>
+
+
+        <ion-buttons slot="end" class="flex end">
+          <ion-button
+            (click)="onVerRespuestasTotales()">
+            <ion-icon name="eye-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            (click)="answers_modal.dismiss()">
+            <ion-icon name="close" slot="icon-only"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+
+        <ion-toolbar>
+          <ion-segment mode="ios"
+            value="all"
+            [scrollable]="true"
+            (ionChange)="filterAnswers($event)">
+            <ion-segment-button value="all">
+              <ion-label>All</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="correct">
+              <ion-label>Correct</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="wrong">
+              <ion-label>Wrong</ion-label>
+            </ion-segment-button>
+            <ion-segment-button value="skipped">
+              <ion-label>Skipped</ion-label>  
+            </ion-segment-button>
+          </ion-segment>
+        </ion-toolbar>
+
+      </ion-header>  
+       
+      <ion-content color="light">
+        @for(question of answeredQuestions(); track $index){
+          <app-view-answer
+            [question]="question"
+            [index]="$index"
+            [seeAnswer]="selectSeeAnswer()"></app-view-answer>
+        }
+      </ion-content>
+
+    </ng-template>
+  </ion-modal>
+
+  <!-- muestra las preguntas almacenadas para guardarlos en cache -->
+  <ion-modal
+    #review_quiz_modal
+    (didDismiss)="setIsReview(false)"
+    [isOpen]="isCacheQuestion()"
+    [breakpoints]="[0.8, 0.9, 1]"
+    [initialBreakpoint]="0.8">
+    <ng-template>
+      <div class="modal-cache">
+        @for (pregunta of recordQuestions; track k; let k = $index) {
+          <ion-card class="flash-card">
+            <div [class.flipped]="isFlipped">
+              @if(!isFlipped){
+              <div class="front">
+                <h6> <b>Pregunta: {{ k +1  }}</b> </h6>
+                <p 
+                   [innerHTML]="pregunta.pr_question + '' "></p>
+                    
+                <ion-textarea class="answer-textarea answer-chip"  placeholder="Escribe tu respuesta" class="answer-textarea answer-chip" 
+                  #dataquestion >
+                </ion-textarea>
+              
+                <ion-button fill="clear">
+                  <ion-icon name="file-tray-full-outline"></ion-icon>
+                </ion-button>
+              </div>
+            }@else{
+              @if(recordIndex == k){
+                <div class="back"  (click)="isFlipped = !isFlipped">
+                  <h6> <b>Respuesta:</b> </h6>
+                  <p>{{ pregunta.pr_content }}</p>
+                  <p 
+                    [innerHTML]="pregunta?.pr_content + ''"></p>
+
+                  <h6> {{ pregunta.pr_answer }} </h6>
+                </div>
+
+              }@else{
+                <div class="front">
+                  <h2>Pregunta: {{ k +1  }}</h2>
+                  <p>{{ pregunta.pr_question }}</p>
+                  <ion-textarea class="answer-textarea answer-chip"  placeholder="Escribe tu respuesta" class="answer-textarea answer-chip" 
+                    #dataquestion >
+                  </ion-textarea>
+
+                  <ion-button fill="clear">
+                    <ion-icon name="file-tray-full-outline"></ion-icon>
+                  </ion-button>
+
+                </div>
+
+              }
+            }
+  
+            </div>
+          </ion-card>
+        }
+      </div>
+    </ng-template>
+  </ion-modal>
+  
+  <!-- movernos entre las opciones de la pregunta -->
+  <ion-modal
+    #review_quiz_modal
+    (didDismiss)="setIsReview(false)"
+    [isOpen]="isReview()"
+    [breakpoints]="[0.8, 0.9, 1]"
+    [initialBreakpoint]="0.8">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title mode="ios">
+            Review Quiz
+          </ion-title>
+
+          <ion-buttons slot="end">
+            <ion-button color="dark"
+              (click)="review_quiz_modal.dismiss()">
+              <ion-icon name="close" slot="icon-only"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <app-review
+          [questions]="questions()"
+          (slide)="openQuestion($event, review_quiz_modal)"
+          (submitQuiz)="onSubmitAlert()"></app-review>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+  
+</ion-content>
