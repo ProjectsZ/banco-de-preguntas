@@ -3,11 +3,112 @@
     <ion-title>
       Diccionario y/o conceptos
     </ion-title>
-    
+    <ion-buttons slot="end">
+     @if(currentUser.usr_r_id?.r_name == 'ADMIN' || currentUser.usr_r_id?.r_name == 'DOCENTE'){
+      <ion-button>
+        <ion-icon name="document-outline"></ion-icon>
+        <input type="file" accept=".xlsx, .xls"
+        #filePicker 
+        (change)="onFileImportFromExcelDictionary($event)"  />
+      </ion-button>
+    }
+
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
+
+  <!-- <ion-modal id="example-modal" #modal [trigger]="'open-custom-dialog'+ i"> -->
+    <ion-modal [isOpen]="isModalOpen()" id="example-modal" #modal
+      (didDismiss)="onModalDismiss($event)">
+      <ng-template>
+        <div class="wrapper">
+          <h6 class="icon-top"> 
+            <div class="flex center"><ion-icon name="chatbubble-ellipses-outline"></ion-icon> +{{ itemSelected()?.dic_like }} </div>
+            <div class="flex center"><ion-icon name="layers-outline"></ion-icon> +{{ itemSelected()?.dic_description?.length }}</div>
+            
+            <ion-icon name="share-social-outline"></ion-icon>
+          </h6> 
+          <h6> {{ itemSelected()?.categorias.cat_title  }} </h6>
+          <h1> {{ itemSelected()?.dic_name }} </h1>
+          @if(itemSelected()?.dic_img){
+            <img class="image-dic" [src]="itemSelected()?.dic_img" alt="">
+          }
+  
+          <ion-list lines="none">
+            <ion-item class="desc_text" button="true" detail="false" 
+              (click)="modal.dismiss()">
+              <ion-icon name="person-circle"></ion-icon>
+              
+              <div  class="text-desc">
+                @for (dic of itemSelected()?.dic_description; track j; let j = $index) {
+                  <p
+                  [innerHTML]="dic.text | textHighlight : 'text-yellow' ">  </p>
+  
+                  @if(dic.image){
+                    <img class="image-dic" [src]="dic.image" alt="">
+                  }
+                }
+              </div>
+            </ion-item>
+          </ion-list>
+        </div>
+      </ng-template>
+    </ion-modal>
+
+
 <ion-content [fullscreen]="true">
+  
+  @if(isloading()){
+    <app-spinner></app-spinner>
+  }
+
+
+
+  <ion-accordion-group>
+    @for(wordCat of wordsAll(); track i; let i = $index){
+    <ion-accordion>
+      <ion-item [button]="true" detail="false"  slot="header" color="light">
+        <ion-label>
+          <strong> {{ wordCat.categoria_title }} </strong><br>
+        </ion-label>
+      </ion-item>
+      
+      <ion-list class="ion-padding" slot="content">
+  
+          @for (item of wordCat.data_dic; track i; let i = $index) {
+            <ion-item [button]="true" detail="false">
+              <div class="unread-indicator-wrapper" slot="start">
+                <div class="unread-indicator"></div>
+              </div>
+              <ion-label> {{ item.dic_name }} <br> </ion-label>
+       
+              <div class="metadata-end-wrapper" slot="end">
+                <!-- <ion-icon class="iconBack" name="chevron-back-outline"
+                  (click)="onLike(i, 1)"></ion-icon> -->
+                <ion-icon [id]="'open-custom-dialog'+ i" name="chatbubble-ellipses-outline"
+                  [class]="'color-'+ item.dic_like + ' cloud'"
+                  (click)="loadDataDiccionario(item)"></ion-icon>
+                <!-- <ion-note color="medium"> {{ item.dic_like }} </ion-note> -->
+                <!-- <ion-icon class="iconNext" name="chevron-back-outline"
+                (click)="onLike(i, -1)"></ion-icon> -->
+              </div>
+            </ion-item>
+      
+          }
+        </ion-list>
+
+    </ion-accordion>
+  }
+  </ion-accordion-group>
+
+
+  
+  <!-- <ion-infinite-scroll (ionInfinite)="onIonInfinite($event)">
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll> -->
+
+  
   
 
 </ion-content>
