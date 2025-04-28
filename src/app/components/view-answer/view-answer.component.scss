@@ -1,0 +1,32 @@
+
+ion-chip{
+    padding: 0.5rem 1rem;
+}
+
+img{
+    margin: 0.8rem 0;
+}
+
+ion-card{
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    background: #e7e5e5;
+    color: #212121;
+    text-align: justify;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    
+    &:hover{
+        transform: scale(1.02);
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    ion-card-header ion-card-title{
+        font-size: 1.2rem;
+        font-weight: 500;
+        color: var(--ion-color-primary);
+        margin: 1rem;
+    }
+
+}

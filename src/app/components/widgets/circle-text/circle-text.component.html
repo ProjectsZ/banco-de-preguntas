@@ -1,0 +1,21 @@
+
+<div class="position-center">
+  <ion-avatar class="position-center"
+    [style.background]="'var(--ion-color-'+ bgColor() +')'">
+
+    @if(textColor()){
+      <ion-text class="text-white">
+        {{ text() }}
+      </ion-text>
+    }@else{
+      <ion-text class="text-black" color="dark">
+        {{ text() }}
+      </ion-text>
+    }    
+  </ion-avatar>
+
+  <div class="title">
+    {{ title() }}
+  </div>
+
+</div>

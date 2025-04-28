@@ -1,0 +1,67 @@
+
+<ion-item-divider>
+  Preguntas: {{ questions().length }}
+</ion-item-divider>
+
+<ion-row class="ion-margin-top clas-option-questions">
+  @for(question of questions(); track $index){
+    <ion-col size="1" class="card-number">
+      
+      @let fill = question?.selectedAnswer || question?.marked ? 'solid' : 'outline';
+      @let btnColor = question?.marked ? 'warning' : (question?.selectedAnswer ? 'primary' : 'lightgray');
+      @let textColor = question?.marked && question?.selectedAnswer ? 'primary' : (question?.selectedAnswer ? '' : 'dark');
+      
+      <app-text-outline-button
+        [fill]="fill"
+        [buttonColor]="btnColor"
+        [text]="$index + 1"
+        [textColor]="textColor"
+        (tapped)="openSlide($index)">
+
+      </app-text-outline-button>
+
+    </ion-col>
+  }
+</ion-row>
+
+<!-- info buttons -->
+<ion-row class="action-buttons">
+  <ion-col size="6">
+    <app-icon-clear-button
+      title="Respondido"
+      iconColor="primary">
+    </app-icon-clear-button>
+  </ion-col>
+
+  <ion-col size="6">
+    <app-icon-clear-button
+      title="Sin responder"
+      iconColor="medium">
+    </app-icon-clear-button>
+  </ion-col>
+
+  <ion-col size="6">
+    <app-icon-clear-button
+      title="Marcado para su revisión"
+      iconColor="warning">
+    </app-icon-clear-button>
+  </ion-col>
+
+  <ion-col size="6">
+    <app-icon-clear-button
+      title="Marcado para revisión y respondido"
+      iconColor="primary"
+      [isMarked]="true">
+    </app-icon-clear-button>
+  </ion-col>
+
+</ion-row>
+
+<!-- submit button -->
+ <ion-button size="large" expand="block"
+  [strong]="true"
+  color="primary"
+  (click)="onSubmit()">
+  <ion-text> SUBMIT </ion-text>
+
+</ion-button>

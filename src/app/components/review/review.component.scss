@@ -1,0 +1,33 @@
+
+ion-item-divider{
+    --background: transparent;
+    font-size: medium;
+    font-weight: 500;
+}
+
+ion-row.action-buttons{
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin: 10vh 1vh 2vh 1vh;
+}
+
+.clas-option-questions{
+    gap: 0.4rem;
+}
+
+ion-button{
+    margin: 1rem;
+    ion-text{
+        font-size: 1rem;
+    }
+}
+
+.row-review{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+ion-col.card-number{
+    margin: 0 0.16rem 0.16rem 0;
+}

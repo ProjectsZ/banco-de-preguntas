@@ -1,0 +1,107 @@
+
+<!-- @if(viewWord){
+<app-floating-card 
+  [wordX]="wordX" 
+  [wordY]="wordY"
+  [dictionary]="wordsAll"></app-floating-card>
+} -->
+
+<ion-item-group class="ion-margin">
+
+  @let selectedAnswer = question()?.selectedAnswer;
+  @let isAnswerMatched = selectedAnswer === question()?.pr_answer;
+
+  <ion-item lines="none">
+    <ion-label>
+      <ion-chip color="dark">
+        <strong>
+          {{ index() + 1 }}
+        </strong>
+      </ion-chip>
+    </ion-label>
+    <ion-text slot="end"
+      [color]="isAnswerMatched ? 'success' : (selectedAnswer ? 'danger' : 'warning')">
+      <strong>
+        {{ isAnswerMatched ? 'CORRECT' : (selectedAnswer ? 'WRONG' : 'SKIPPED') }}
+      </strong>
+    </ion-text>
+  </ion-item>
+
+  <ion-item lines="none">
+    <ion-label>
+      <!-- <p> {{ question()?.pr_question }} </p> -->
+      <p  
+      [innerHTML]="question()?.pr_question + ''"></p>
+    </ion-label>
+  </ion-item>
+
+  <!-- imagen de la pregunta -->
+  <ion-item lines="none">
+    <ion-label class="ion-text-center">
+      @if(question()?.pr_img && question()?.pr_img != ''){
+        <img src="{{ question()?.pr_img }}" alt="question image" class="question-image">
+      } @else if(question()?.pr_img == ''){
+        <!-- sin imagen -->
+      }
+    </ion-label>
+  </ion-item>
+
+  <!-- options -->
+  @let opts = question()?.pr_options;
+
+  @for(option of opts; track $index){
+
+    @let isCorrectAnswer = question()?.pr_answer === option;
+    @let isSelectedAnswer = selectedAnswer === option;
+
+      @if(seeAnswer()){
+        @if(isCorrectAnswer){
+          <ion-item lines="none">      
+            <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
+            <ion-label 
+            color="success">
+              {{ option }}
+            </ion-label>
+          </ion-item>
+        }
+      }@else {
+        <ion-item lines="none">
+      
+          @if(isCorrectAnswer){
+            <ion-icon name="checkmark-circle" slot="start" color="success"></ion-icon>
+          } @else{
+            @if(!isAnswerMatched && isSelectedAnswer){
+              <ion-icon name="close-circle" slot="start" color="danger"></ion-icon>
+            } @else{
+              <ion-radio slot="start" color="light"
+                [disabled]="true">
+              </ion-radio>
+            }
+          }
+    
+    
+          <ion-label 
+          [color]="isCorrectAnswer ? 'success' : !isAnswerMatched && isSelectedAnswer ? 'danger' : 'dark'">
+            {{ option }}
+          </ion-label>
+        </ion-item>
+      }
+    
+
+  }
+
+  <ion-item  lines="none">
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Explicacion: </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <!-- {{ question()?.pr_content }} -->
+        <ion-text class="bold"
+                      [innerHTML]="question()?.pr_content + ''"></ion-text>
+                      
+      </ion-card-content>
+    </ion-card>
+  </ion-item>
+
+</ion-item-group>

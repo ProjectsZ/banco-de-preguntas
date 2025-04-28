@@ -3,15 +3,20 @@ import { IonSelect, IonSelectOption, IonContent, IonCard, IonCardTitle, IonCardS
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { arrowForwardCircleOutline, settingsOutline } from 'ionicons/icons';
+import { QuizService } from '../services/quiz/quiz.service';
+import { Category } from '../interfaces/category.interface';
+import { CategoryService } from '../services/quiz/category.service';
 import { ValidatorData } from '../class/validator-data';
 import { Duration } from '../class/duration';
 import { Router, RouterModule } from '@angular/router';
+import { Course } from '../interfaces/course.interface';
+import { CourseService } from '../services/quiz/course.service';
+import { User } from '../interfaces/user.interface';
+import { AuthService } from '../services/auth.service';
 import { Subscription } from 'rxjs';
-import { Course } from 'src/interfaces/course.interface';
-import { Category } from 'src/interfaces/category.interface';
-import { QuizService } from 'src/services/quiz/quiz.service';
-import { CourseService } from 'src/services/quiz/course.service';
-import { CategoryService } from 'src/services/quiz/category.service';
+import { ToastService } from '../components/toast/toast.service';
+import { SpinnerComponent } from '../components/spinner/spinner.component';
+
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -19,10 +24,13 @@ import { CategoryService } from 'src/services/quiz/category.service';
   imports: [IonButtons, 
     IonTitle, IonToolbar, IonHeader, IonIcon, IonSpinner, IonModal, IonDatetimeButton, IonDatetime, IonLabel, IonText, IonInput, IonItem, IonCardContent, IonButton, IonCardSubtitle, IonCardTitle, 
     IonCard, IonContent, IonSelect, IonSelectOption,
-            ReactiveFormsModule, RouterModule
+            ReactiveFormsModule, RouterModule, SpinnerComponent
   ],
 })
 export class Tab3Page implements OnInit, OnDestroy {
+
+    // usuario de tipo User
+  currentUser!: User;
 
   form = signal<FormGroup | null>(null);
 
@@ -45,6 +53,8 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
   private quizS = inject(QuizService);
   private courseS = inject(CourseService);
   private categoryS = inject(CategoryService);
+  private authS = inject(AuthService);
+  private toastS = inject(ToastService);
 
   constructor(private validatorData: ValidatorData,
               private duration: Duration
@@ -59,6 +69,19 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
     this.getCourses();
 
 
+    // Nos suscribimos al BehaviorSubject del servicio
+    this.userSubscription = this.authS.currentUser.subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        console.log('Usuario actual:', this.currentUser);
+      },
+      error: (err) => {
+        console.error('Error al obtener datos del usuario:', err);
+      },
+      complete: () => {
+        console.log('Suscripción completada');
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -114,6 +137,7 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
       const { data, total } = await this.categoryS.getCategories_crs(crs_id);
       this.countCategories = total;
       if(this.countCategories === 0){
+        this.toastS.openToast('curso sin temas','warning');
       }
 
       if(data){
@@ -131,6 +155,7 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
       this.countQuestions = await this.quizS.getQuestion_cat(this.form()!.value.pr_cat_id);
       
       if(this.countQuestions === 0){
+        this.toastS.openToast('tema sin preguntas','warning');
       }
 
       //actualizamos el campo específico del formulario que pasamos como parámetros 

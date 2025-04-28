@@ -1,0 +1,23 @@
+
+ion-avatar{
+    width: 8vh;
+    height: 8vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ion-text{
+        font-size: 1rem;
+        font-weight: bold;
+    }
+}
+
+.title{
+    margin-top: 5px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.text-white{
+    color: var(--ion-color-text-primary);    
+}

@@ -1,0 +1,11 @@
+<ion-button expand="block" fill="clear" size="small" color="dark"
+  (click)="onClick()">
+
+  <ion-icon slot="start"
+    [name]="isMarked() ? 'checkmark' : 'checkmark-circle'"
+    [color]="iconColor()"
+    [ngClass]="{ marked: isMarked() }">
+  </ion-icon>
+  {{ title() }}
+
+</ion-button>
