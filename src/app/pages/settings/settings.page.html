@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button defaultHref="/tab1">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-menu-button>
+      <ion-title size="large">settings</ion-title>
+
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-list>
+
+    <input type="file" accept=".xlsx, .xls"
+    #filePicker 
+    (change)="onFileImportFromExcel($event)"  />
+
+    <ion-item [detail]="true"
+      (click)="filePicker.click()">
+      <ion-label> Upload excel file </ion-label>
+    </ion-item>
+
+    <ion-item [detail]="true"
+      (click)="setBulkInsert(true)">
+      <ion-label >Add Question(s)</ion-label>      
+    </ion-item>
+
+  </ion-list>
+
+ 
+  @if(isLoading()){
+    <app-spinner></app-spinner>
+  }
+
+  <!-- bulk insert modal -->
+  <ion-modal
+    #bulk_insert_modal
+    (didDismiss)="setBulkInsert(false)"
+    [isOpen]="bulkInsert()">
+    <ng-template>
+      <app-add-questions
+       (closeModal)="bulk_insert_modal.dismiss()"></app-add-questions>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>
