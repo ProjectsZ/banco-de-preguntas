@@ -1,5 +1,6 @@
 import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { IonSelect, IonSelectOption, IonContent, IonCard, IonCardTitle, IonCardSubtitle, IonButton, IonCardContent, IonItem, IonInput, IonText, IonLabel, IonDatetime, IonDatetimeButton, IonModal, IonSpinner, IonIcon, IonHeader, IonToolbar,  IonTitle, IonButtons } from '@ionic/angular/standalone';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { arrowForwardCircleOutline, moonOutline, settingsOutline, sunnyOutline } from 'ionicons/icons';
@@ -24,7 +25,7 @@ import { SpinnerComponent } from '../components/spinner/spinner.component';
   imports: [IonButtons, 
     IonTitle, IonToolbar, IonHeader, IonIcon, IonSpinner, IonModal, IonDatetimeButton, IonDatetime, IonLabel, IonText, IonInput, IonItem, IonCardContent, IonButton, IonCardSubtitle, IonCardTitle, 
     IonCard, IonContent, IonSelect, IonSelectOption,
-            ReactiveFormsModule, RouterModule, SpinnerComponent
+            ReactiveFormsModule, RouterModule, SpinnerComponent, TranslateModule
   ],
 })
 export class Tab3Page implements OnInit, OnDestroy {
@@ -55,6 +56,7 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
   private categoryS = inject(CategoryService);
   private authS = inject(AuthService);
   private toastS = inject(ToastService);
+  private translate = inject(TranslateService);
 
   // thema color
   colorTheme = signal<string>('');
@@ -73,6 +75,10 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
     // verificar en el storage si el tema esta en modo light o dark
     this.colorTheme.set(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
     // console.log('---> colorTheme: ', localStorage.getItem('theme'));
+    
+    // Make sure the translation service is available
+    const browserLang = this.translate.getBrowserLang();
+    this.translate.use(browserLang?.match(/es|en/) ? browserLang : 'es');
   }
 
   ngOnInit(): void {

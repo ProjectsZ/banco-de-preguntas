@@ -1,8 +1,31 @@
 {
+  "TABS": {
+    "home": "Inicio",
+    "dictionary": "Diccionario",
+    "quiz": "Examen"
+  },
+  "TAB3": {
+    "quiz_course": "Curso de Examen",
+    "lets_play": "Vamos a Jugar",
+    "time_for_quiz": "Tiempo para el Examen",
+    "course": "Curso",
+    "select_course": "Seleccione un Curso",
+    "please_select_course": "Por favor seleccione un curso",
+    "topic": "Tema",
+    "select_category": "Seleccione una categoría",
+    "please_select_category": "Por favor seleccione una categoría",
+    "num_questions": "N° de preguntas",
+    "enter_valid_number": "* Ingrese el número adecuado",
+    "of": "de",
+    "duration": "Duración (hh:mm)",
+    "please_select_duration": "Por favor seleccione una duración",
+    "play": "Jugar"
+  },
   "HOME": {
     "menu": {
       "mi_perfil": "Mi perfil",
       "mis_examenes": "Mis exámenes",
+      "idioma": "Idioma",
       "exit": "Salir"
     },
     "greeting": {

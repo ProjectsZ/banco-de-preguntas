@@ -1,5 +1,9 @@
 
 # VERSION 0.8
+0.8.9
+- Se corrigio el error de la maskota (en dos lenguajes adjuntos)
+- Se ajusto el idioma cambio y mejoro el lenguaje
+- Se agrego i18n (cambio idioma ingles y español) 
 
 0.8.8
 - probando test del login

@@ -1,23 +1,48 @@
 {
-  "menu": {
-    "mi_perfil": "My Profile",
-    "mis_examenes": "My Exams",
-    "exit": "Exit"
+  "TABS": {
+    "home": "Home",
+    "dictionary": "Dictionary",
+    "quiz": "Quiz"
   },
-  "greeting": {
-    "bienvenido": "Welcome",
-    "nombre_usuario": "{{firstName}}"
+  "TAB3": {
+    "quiz_course": "Quiz Course",
+    "lets_play": "Let's Play",
+    "time_for_quiz": "Time for Quiz",
+    "course": "Course",
+    "select_course": "Select a Course",
+    "please_select_course": "Please select a course",
+    "topic": "Topic",
+    "select_category": "Select a category",
+    "please_select_category": "Please select a category",
+    "num_questions": "Number of questions",
+    "enter_valid_number": "* Enter a valid number",
+    "of": "of",
+    "duration": "Duration (hh:mm)",
+    "please_select_duration": "Please select a duration",
+    "play": "Play"
   },
-  "tabs": {
-    "temas": "Topics",
-    "cursos": "Courses"
-  },
-  "recomendando": {
-    "listado_temass": "Topic List",
-    "ver_todos": "View All",
-    "recomendando_temass": "Recommended Topics"
-  },
-  "cards": {
-    "desarrollo_aplicaciones": "Cloud Application Development"
+  "HOME": {
+    "menu": {
+      "mi_perfil": "My Profile",
+      "mis_examenes": "My Exams",
+      "idioma": "Language",
+      "exit": "Exit"
+    },
+    "greeting": {
+      "bienvenido": "Welcome",
+      "nombre_usuario": "{{firstName}}"
+    },
+    "tabs": {
+      "temas": "Topics",
+      "cursos": "Courses"
+    },
+    "recomendando": {
+      "listado_temass": "Topic List",
+      "ver_todos": "View All",
+      "recomendando_temass": "Recommended Topics"
+    },
+    "cards": {
+      "desarrollo_aplicaciones": "Cloud Application Development"
+    }
   }
 }

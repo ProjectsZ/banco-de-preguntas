@@ -27,7 +27,7 @@
       </ion-item>
       <ion-item class="ion-no-padding" lines="none" (click)="onNaviate('/favorites')">
         <ion-icon name="clipboard-outline"></ion-icon>
-        <ion-label>Mis examenes</ion-label>
+        <ion-label>{{ 'HOME.menu.mis_examenes' | translate }}</ion-label>
       </ion-item>
       <!-- <ion-item class="ion-no-padding" lines="none">
         <ion-icon name="folder-outline"></ion-icon>
@@ -53,9 +53,19 @@
         <ion-icon name="help-outline"></ion-icon>
         <ion-label>Ayuda</ion-label>
       </ion-item> -->
+      <!-- Language Selector -->
+      <ion-item class="ion-no-padding" lines="none">
+        <ion-icon name="language-outline"></ion-icon>
+        <ion-label>{{ 'HOME.menu.idioma' | translate }}</ion-label>
+        <div slot="end" class="language-selector">
+          <button [ngClass]="{'active': currentLang() === 'es'}" (click)="changeLanguage('es')">ES</button>
+          <button [ngClass]="{'active': currentLang() === 'en'}" (click)="changeLanguage('en')">EN</button>
+        </div>
+      </ion-item>
+
       <ion-item class="ion-no-padding" lines="none" (click)="logout()">
         <ion-icon name="exit-outline"></ion-icon>
-        <ion-label>Exit</ion-label>
+        <ion-label>{{ 'HOME.menu.exit' | translate }}</ion-label>
       </ion-item>
     </ion-list>
     <div class="greeting">
@@ -76,7 +86,7 @@
         <ion-menu-button></ion-menu-button>
       </ion-buttons>
       <div class="greeting">
-        <h5> Bienvenido </h5>
+        <h5> {{ 'HOME.greeting.bienvenido' | translate }} </h5>
         <h3> {{ currentUser.usr_infp_id?.infp_firstname }} </h3>
       </div>
       <div class="user-image">
@@ -86,8 +96,8 @@
   
  
   <ul class="tabs">
-    <li><a [ngClass]="{ 'active': selectTab() === 'temas' }" (click)="selectTab.set('temas')"> Temas </a></li>
-    <li><a [ngClass]="{ 'active': selectTab() === 'cursos' }" (click)="selectTab.set('cursos')"> Cursos </a></li>
+    <li><a [ngClass]="{ 'active': selectTab() === 'temas' }" (click)="selectTab.set('temas')"> {{ 'HOME.tabs.temas' | translate }} </a></li>
+    <li><a [ngClass]="{ 'active': selectTab() === 'cursos' }" (click)="selectTab.set('cursos')"> {{ 'HOME.tabs.cursos' | translate }} </a></li>
     <!-- <li><a [ngClass]="{ 'active': selectTab() === 'categorias' }" (click)="selectTab.set('categorias')"> Categorias </a></li>
     <li><a [ngClass]="{ 'active': selectTab() === 'examenes' }" (click)="selectTab.set('examenes')"> examenes </a></li> -->
   </ul>
@@ -108,8 +118,8 @@
       <div class="recomendando">
         
         <div class="flex center justify title">
-          <h6> <b>Listado de temas</b> </h6>
-          <span> View all </span>
+          <h6> <b>{{ 'HOME.recomendando.listado_temass' | translate }}</b> </h6>
+          <span> {{ 'HOME.recomendando.ver_todos' | translate }} </span>
         </div>
         
         <div class="cards-recomendando">
@@ -133,8 +143,8 @@
 
       <div class="recomendando">
         <div class="flex center justify title">
-          <h6> <b>Recomendando temas</b> </h6>
-          <span> View all </span>
+          <h6> <b>{{ 'HOME.recomendando.recomendando_temass' | translate }}</b> </h6>
+          <span> {{ 'HOME.recomendando.ver_todos' | translate }} </span>
         </div>
   
         <div class="cards-recomendando">
@@ -178,8 +188,8 @@
 
       <div class="recomendando">
         <div class="flex center justify title">
-          <h6> <b>Recomendando temas</b> </h6>
-          <span> View all </span>
+          <h6> <b>{{ 'HOME.recomendando.recomendando_temass' | translate }}</b> </h6>
+          <span> {{ 'HOME.recomendando.ver_todos' | translate }} </span>
         </div>
   
         <div class="cards-recomendando">

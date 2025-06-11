@@ -98,6 +98,7 @@
             "ci": {
               "progress": false
             }
+
           },
           "defaultConfiguration": "development"
         },

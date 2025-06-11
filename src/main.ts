@@ -7,7 +7,7 @@ import { AppComponent } from './app/app.component';
 import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { TokenInterceptor } from './app/services/token.interceptor';
 
-import { TranslateModule, TranslateLoader, provideTranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateLoader, provideTranslateService, TranslateStore } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 bootstrapApplication(AppComponent, {
@@ -24,5 +24,14 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideHttpClient(),
+    TranslateStore,
+    provideTranslateService({
+      defaultLanguage: 'en',
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) => new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+        deps: [HttpClient]
+      }
+    })
   ]
 });

@@ -3,7 +3,7 @@ import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonButtons, IonMenu, IonMenuButton, IonIcon, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonAvatar, IonLabel, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonCardSubtitle, IonSearchbar } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { bookOutline, clipboardOutline, exitOutline, folderOutline, helpOutline, listOutline, menu, notificationsOutline, personOutline, settingsOutline, starOutline } from 'ionicons/icons';
+import { bookOutline, clipboardOutline, exitOutline, folderOutline, helpOutline, languageOutline, listOutline, menu, notificationsOutline, personOutline, settingsOutline, starOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -36,8 +36,10 @@ export class HomePage implements OnInit, OnDestroy {
   private userSubscription: Subscription | null = null; // Suscripción al BehaviorSubject del servicio
 
   private authS = inject(AuthService);
+  private translate = inject(TranslateService);
 
   selectTab = signal<string>('temas');
+  currentLang = signal<string>('es');
 
   temas = computed<any[]>(()=> this.categoryS.topics()!); 
 
@@ -55,6 +57,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   
   constructor() {
+    // Set default language
+    this.translate.setDefaultLang('es');
+    // Get browser language or use default
+    const browserLang = this.translate.getBrowserLang();
+    const lang = browserLang?.match(/es|en/) ? browserLang : 'es';
+    this.translate.use(lang);
+    this.currentLang.set(lang);
   }
 
   ngOnInit() {
@@ -69,7 +78,8 @@ export class HomePage implements OnInit, OnDestroy {
       notificationsOutline,
       settingsOutline,
       helpOutline,
-      exitOutline
+      exitOutline,
+      languageOutline
     })
 
     this.isLoading.set(true); // Set loading state to true
@@ -130,7 +140,11 @@ export class HomePage implements OnInit, OnDestroy {
 
   onNaviate(navegar: string) {
     this.router.navigate([navegar]);
+  }
 
+  changeLanguage(lang: string) {
+    this.translate.use(lang);
+    this.currentLang.set(lang);
   }
 
   
