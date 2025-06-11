@@ -1,0 +1,51 @@
+<div class="log-in">
+  <div class="log-in__container">
+    <div class="top-title">
+      <h1 class="log-in__title">Log in</h1>
+      <p class="log-in__description">Inicie sesión con su cuenta</p>
+
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="log-in__form">
+
+      @if(isLoading()){
+        <app-spinner></app-spinner>
+      }
+
+      <ion-input
+        formControlName="email"
+        type="email"
+        placeholder="Email"
+        class="log-in__input">
+      </ion-input>
+      <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error">
+        <small *ngIf="loginForm.get('email')?.errors?.['required']" color="danger">El email es obligatorio.</small>
+        <small *ngIf="loginForm.get('email')?.errors?.['pattern']">
+          Debe ser un correo arroba unas.edu.pe.
+        </small>
+      </div>
+
+      <ion-input
+        formControlName="password"
+        type="password"
+        placeholder="Password"
+        class="log-in__input">
+      </ion-input>
+      <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error">
+        <small  color="danger">La contraseña es obligatoria.</small>
+      </div>
+     
+      <!-- <label class="custom-checkbox">
+        <input type="checkbox" formControlName="rememberMe">
+        <span class="checkmark"></span>
+        Recordarme
+      </label> -->
+
+      <button type="submit" [disabled]="loginForm.invalid" class="log-in__button">
+        Log In
+      </button>
+
+      <p class="contact">(*) En caso no tenga cuenta por favor contactarse con el administrador de la aplicación para que le cree una cuenta.</p>
+    </form>
+  </div>
+</div>
