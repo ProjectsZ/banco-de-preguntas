@@ -23,6 +23,15 @@ ion-header.quiz-header{
 ion-content.quiz-content{
     --background: var(--ion-background-gradient);
 
+    .promotion{
+        img{
+            border-radius: 15px;
+            height: 80px;
+            width: 100%;
+            object-fit: cover;
+        }
+    }
+
     ion-item.timer{
         border-radius: 20px 20px 0 0;
 
@@ -144,9 +153,10 @@ ion-header.answers{
     }
 }
 
+// los chiups
 .cat-chip{
     margin-right: 3.2rem;
-    opacity: 0.2;
+    opacity: 0.56;
     
     .icon_cat{
         position: absolute;
@@ -157,6 +167,11 @@ ion-header.answers{
 
 .answer-chip{
     padding: 1rem 0.4rem;
+}
+
+.tag-chip{
+    margin: 0.16rem;
+    height: 0.8rem;
 }
 
 ion-textarea.answer-chip{
@@ -233,46 +248,63 @@ ion-textarea.answer-chip{
     }
 }
 
+.filter-chip{
+    margin-left: 0.4rem;
+}
+.ion-select-filter{
+    background: transparent;
+    margin-left: 0.2rem;
+}
 
-/* En tu archivo global.scss o componente.scss */
-.small-modal {
-    --width: 100vw; /* Ajusta el ancho deseado */
-    --height: 40vh; /* Ajusta la altura deseada */
+app-spinner{
+    position: absolute;
+    z-index: 99999;
+}
 
-    --max-width: 90%;
-    --border-radius: 16px;
-    --background: #ffffff;
-      
-      .checkbox-list {
-        max-height: 20vh; /* Altura máxima con scroll automático */
-        overflow-y: auto;
-      }
-      
-      .header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 16px;
+.dark-theme {
 
-        h2 {
-            font-size: 1.2rem;
-            margin: 0;
+    ion-chip{
+        background: var(--ion-dark-text-primary);
+
+        &.eye-chip{
+            opacity: 0.64;
         }
+    }
 
-        ion-icon {
-            font-size: 24px;
-            cursor: pointer;
+    &.item-native{
+        --background: var(--ion-color-primary);
+    }
+
+    ion-list{
+        background: var(--ion-dark-color-primary);
+    }
+
+    img.question-image{
+        //filter invert color 
+        filter: invert(1);    
+    }
+
+     ion-button{
+        opacity: 0.4;
+        --color: var(--ion-dark-text-primary);
+        border: 2px solid var(--ion-dark-text-primary);
+        border-radius: 24px;
+
+        &:hover, &:active, &:focus{
+            opacity: 1;
         }
+    }
 
-      }
-      ion-item{
+    ion-item{
+        --background: var(--ion-dark-color-primary);
+        --color: var(--ion-dark-text-primary);
+        --border-color: var(--ion-dark-text-primary);
+        --box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
+
         ion-label{
-            margin-left: 0.4rem;
+            --color: #ffffff;
+            b{  opacity: 0.75; }
+            p{ color: var(--ion-dark-text-primary); }
         }
-      }
-      .new-list-button {
-        margin-top: 20px;
-        --border-radius: 20px;
-        width: 100%;
-      }
+    }
 }

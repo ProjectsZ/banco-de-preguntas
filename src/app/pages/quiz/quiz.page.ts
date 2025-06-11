@@ -1,11 +1,13 @@
-import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, Inject, inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, Inject, inject, OnDestroy, OnInit, signal, ViewChild, viewChild } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonicSlides, IonToolbar, IonButton, IonButtons, IonFab, IonFabButton, IonFabList,
-  Platform, IonAlert, IonModal,
+  Platform, IonAlert, IonModal, IonFooter,
    IonIcon, IonItem, IonChip, IonText, IonList, IonItemGroup, IonLabel, IonRow, IonCol, IonSpinner, IonTitle, IonSegment, IonSegmentButton } from '@ionic/angular/standalone';
-import { add, addOutline, arrowBack, bookmarkOutline, bulbOutline, checkmark, checkmarkCircle, chevronBack, chevronDownCircle, chevronForwardCircle, chevronUpCircle, chevronUpOutline, close, closeCircle, colorPalette, diamondOutline, earthOutline, eye, eyeOutline, fileTrayFullOutline, globe, lockClosedOutline, optionsOutline, pencilOutline, saveOutline, star, starOutline } from 'ionicons/icons';
+import { add, addOutline, arrowBack, bookmarkOutline, bulbOutline, checkmark, checkmarkCircle, chevronBack, chevronDownCircle, chevronForwardCircle, chevronUpCircle, chevronUpOutline, close, closeCircle, colorPalette, diamondOutline, documentOutline, documentTextOutline, earthOutline, eye, eyeOutline, fileTrayFullOutline, globe, lockClosedOutline, optionsOutline, pencilOutline, saveOutline, searchSharp, star, starOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { Question } from 'src/app/interfaces/question.interface';
+import { QuizService } from 'src/app/services/quiz/quiz.service';
 import { register } from 'swiper/element/bundle';
 import { Router } from '@angular/router';
 import { Subscription, timeout } from 'rxjs';
@@ -14,14 +16,22 @@ import { ResultComponent } from "../../components/result/result.component";
 import { ViewAnswerComponent } from "../../components/view-answer/view-answer.component";
 import { ReviewComponent } from 'src/app/components/review/review.component';
 import { TextHighlightPipe } from 'src/app/pipes/text-highlight.pipe';
+import { Dictionary } from 'src/app/interfaces/dictionary.interface';
+import { DictionaryService } from 'src/app/services/dictionary.service';
 import { FloatingCardComponent } from 'src/app/components/floating-card/floating-card.component';
+import { User } from 'src/app/interfaces/user.interface';
+import { AuthService } from 'src/app/services/auth.service';
 import { SpinnerComponent } from 'src/app/components/spinner/spinner.component';
+import { QuestionService } from 'src/app/services/question.service';
 import { ToastService } from 'src/app/components/toast/toast.service';
-import { Question } from 'src/interfaces/question.interface';
-import { QuizService } from 'src/services/quiz/quiz.service';
-import { Dictionary } from 'src/interfaces/dictionary.interface';
-import { DictionaryService } from 'src/services/dictionary.service';
-import { QuestionService } from 'src/services/question.service';
+import { q } from '@angular/core/weak_ref.d-Bp6cSy-X';
+import { ExamService } from 'src/app/services/exam.service';
+import { Exam, PreguntasEnExamen } from 'src/app/interfaces/exam.interface';
+import { PublicityService } from 'src/app/services/publicidad/publicity.service';
+import { Publicity } from 'src/app/interfaces/publicity.interface';
+import { PdfViewerComponent } from 'src/app/components/pdf-viewer/pdf-viewer.component';
+import { CategoryService } from 'src/app/services/quiz/category.service';
+import { Category } from 'src/app/interfaces/category.interface';
 register();
 
 @Component({
@@ -30,11 +40,11 @@ register();
   styleUrls: ['./quiz.page.scss'],
   standalone: true,
   imports: [IonSegmentButton, IonSegment, IonTitle, IonSpinner, IonCol, IonRow, IonLabel, 
-    IonFab,IonFabButton,IonFabList,
+    IonFab,IonFabButton,IonFabList, IonFooter,
     IonItemGroup, IonList, IonText, IonChip, IonItem, IonIcon, IonButtons, IonButton, IonContent,
      IonHeader, IonToolbar, IonAlert, IonModal, ReviewComponent,
     CommonModule, FormsModule, QuizOptionsComponent, ResultComponent, ViewAnswerComponent,
-    TextHighlightPipe, FloatingCardComponent, SpinnerComponent],
+    TextHighlightPipe, FloatingCardComponent, SpinnerComponent, PdfViewerComponent ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ], //CUIDADO: Esto puede evitar que se encuentre el error en los elementos. Si se encuentra un error en el template, eliminar esta línea y revisar el error en consola
 })
 export class QuizPage implements OnInit, OnDestroy {
@@ -42,6 +52,23 @@ export class QuizPage implements OnInit, OnDestroy {
   currentIndex = signal<number>(0);
   isReview = signal<boolean>(false);
   isSubmitted = signal<boolean>(false);
+
+  // PDF 
+  isPDF = signal<boolean>(false); // variable para el pdf
+  remotePdfUrl = signal<string | null>(null); // variable para el pdf
+  loadingModalPDF = signal<boolean>(false); // variable para el pdf
+  //image Zoom
+  imgZoom = signal<string | null>(null);  
+  isImageZoom = signal<boolean>(false); // variable para el zoom de la imagen
+  isCantidadZoom = signal<number>(0.5); // variable para el zoom de la imagen
+  isFilterImgZoom = signal<string>('none'); // variable para el zoom de la imagen
+
+  
+  // promos
+  promociones = signal<Publicity[]>([]);
+
+  // categoria seleccionada
+  categoria = signal<Category | null>(null);
 
   // cache question
   isCacheQuestion = signal<boolean>(false);
@@ -70,6 +97,8 @@ export class QuizPage implements OnInit, OnDestroy {
   resultModal = viewChild<IonModal>('result_modal');
   reviewModal = viewChild<IonModal>('review_quiz_modal');
   
+
+
   backButtonSubscription!: Subscription;  
   // readonly questions = input<Question[]>([]);
   swiperModules = [IonicSlides];
@@ -78,6 +107,7 @@ export class QuizPage implements OnInit, OnDestroy {
   masterSettings = computed(()=> this.quizS.masterSettings);
   duration = computed(()=> this.quizS.formattedTimeSignal());
   timeUp = computed<boolean>(()=> this.quizS.timeUp());
+  listExam = computed<any>(()=> this.examS.exams());
 
   recordQuestions: Question[] = [];
   isFlipped = false;
@@ -86,6 +116,12 @@ export class QuizPage implements OnInit, OnDestroy {
   private router = inject(Router);
   private platform = inject(Platform);
   private quizS = inject(QuizService);
+  private examS = inject(ExamService);
+  private publicityS = inject(PublicityService);
+ 
+  // publicidad
+  publicidad: Publicity[] = [];
+  
   /********************************************************************** */
   // Agregando busqueda de palabras por diccionario a las preguntas
   eventTagName: string = "b";
@@ -101,14 +137,24 @@ export class QuizPage implements OnInit, OnDestroy {
   wordsDic: Dictionary | null = null; // signal<Dictionary[]>(); // signal<Dictionary[]>([]);
   // wordsDic = signal<Dictionary>();
   private dictionaryS = inject(DictionaryService);
+
+  // limitar acceso
+    currentUser!: User;      // usuario de tipo User
+  private userSubscription: Subscription | null = null; // Suscripción al BehaviorSubject del servicio
+    private authS = inject(AuthService);
   private questionS = inject(QuestionService);
   private toastS = inject(ToastService);
+  private categoryS = inject(CategoryService); // Categoria obtener datos PDF
 
   isLoading = signal<boolean>(false); // Loading state
   selectSeeAnswer = signal<boolean>(false); // variable para el select de ver respuestas
   activeEditContent = signal<boolean>(false); // variable para el select de ver respuestas
   
   selectQuestion = signal<Question | null>(null); // variable para el select de ver respuestas
+
+  
+    // thema color
+  colorTheme = signal<string>('');
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     addIcons({
@@ -132,7 +178,11 @@ export class QuizPage implements OnInit, OnDestroy {
       bookmarkOutline,
       fileTrayFullOutline,
       earthOutline,
-      lockClosedOutline
+      lockClosedOutline,
+      searchSharp,
+
+      // document PDF
+      documentTextOutline
     });
 
     effect(()=> {
@@ -141,6 +191,11 @@ export class QuizPage implements OnInit, OnDestroy {
         this.submitQuiz();
       }
     });
+    
+    // verificar en el storage si el tema esta en modo light o dark
+    this.colorTheme.set(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+    // console.log('---> colorTheme: ', localStorage.getItem('theme'));
+
    }
 
    setIsLoading(loading: boolean){
@@ -156,6 +211,30 @@ export class QuizPage implements OnInit, OnDestroy {
     // load dictionary
     this.loadingDictionary();
 
+    // Nos suscribimos al BehaviorSubject del servicio
+    this.userSubscription = this.authS.currentUser.subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        // console.log('Usuario actual:', this.currentUser);
+        this.loadingPublicity(); // cargar publicidad
+      },
+      error: (err) => {
+        console.error('Error al obtener datos del usuario:', err);
+      },
+      complete: () => {
+        console.log('Suscripción completada');
+      }
+    });
+
+    this.categoryS.getCategoriesById(this.categoryS.select_cat_id()+'').then((cat: any) => {
+      // console.log("categoria: ", cat);
+      this.categoria.set(cat);
+
+      console.log("categoria: ", this.categoria());
+    }).catch((error) => {
+      console.error("Error al obtener la categoría: ", error);
+    });
+    
   }
 
 
@@ -164,9 +243,36 @@ export class QuizPage implements OnInit, OnDestroy {
     this.unSubscribeBackButtonEventHandler();
       this.quizS.reset();
 
+      // Es importante desuscribirse para evitar memory leaks
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe();
+    }
+
+  }
+
+   // cambio del tema
+  changeModeThem(){
+    if(this.colorTheme() === 'light'){
+      this.colorTheme.set('dark');
+      localStorage.setItem('theme', 'dark');
+    }else{
+      this.colorTheme.set('light');
+      localStorage.setItem('theme', 'light');
+    }
   }
 
 
+  setIsImageZoom(value: boolean){
+    this.isImageZoom.set(value);
+    this.isCantidadZoom.set(1);
+  }
+
+  setIsPDF(value: boolean){
+    if(value === false){
+      this.isLoading.set(false);
+    }
+    this.isPDF.set(value);
+  }
 
   setIsReview(value: boolean){
     this.isReview.set(value);
@@ -309,6 +415,7 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   slideTo(index: number){
+    this.setIsReview(false)
     console.log(index);
     const swiperElement = this.swiperRef()?.nativeElement.swiper;
     swiperElement.slideTo(index, 300, false);
@@ -396,6 +503,47 @@ export class QuizPage implements OnInit, OnDestroy {
     this.slideTo(index);
   }
 
+  async loadingPublicity(){
+    const { data, error }:any = await this.publicityS.getPromos(this.currentUser?.usr_r_id?.r_name);
+
+    if (error) {
+      console.error('Error al cargar la publicidad:', error);
+      return;
+    }
+
+    if (data) {
+      console.log('Publicidad cargada:', data);
+
+      this.promociones.set(data);
+      console.log("promociones: ", this.promociones());
+
+      this.expandirPublicidadPorPrioridad(data);
+
+      this.publicityS.setPromos(data);
+    }
+
+  }
+
+  expandirPublicidadPorPrioridad(publicidades: Publicity[]): Publicity[] {
+    const prioridadToRepeticiones: Record<number, number> = {
+      0: 3,
+      1: 2,
+      2: 1,
+    };
+    
+    for (const pub of publicidades) {
+      const prioridad = pub.pub_priority ?? 2; // por defecto 4 si es undefined
+      const repeticiones = prioridadToRepeticiones[prioridad] || 2;
+      for (let i = 0; i < repeticiones; i++) {
+        this.publicidad.push(pub);
+      }
+    }
+
+    // console.log("--------->", this.publicidad);
+  
+    return this.publicidad;
+  }
+
   /***************************************************************** */
   // dictionary
   loadingDictionary(){
@@ -473,11 +621,49 @@ export class QuizPage implements OnInit, OnDestroy {
       this.questions()[index].viewAnswer = false;
       return;
     }
+
+      if(this.currentUser?.usr_coin == 0){
+        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", "angry", true); 
+        return
+      }
+    
+      // Validar si existe el usuario antes de proceder
+      if (!this.currentUser?.usr_id) {
+        console.error('Usuario no autenticado');
+        return;
+      }
+
     
       // Activar loading
       this.setIsLoading(true);
 
-      
+      // Actualizar moneditas
+      this.userSubscription = this.authS.updateCoin(this.currentUser.usr_id).subscribe({
+        next: (success) => {
+          if (success) {
+            console.log('Monedas actualizadas correctamente');
+
+            // desactivando loading
+            this.setIsLoading(false);
+
+            this.questions()[index].viewAnswer = true;
+
+            this.toastS.openToast("La explicación de la pregunta fue desbloqueada exitosamente!","success", "happy", false);
+
+            // setTimeout(() => {
+            //   this.questions()[index].viewAnswer = false;
+            // }, 19000);
+
+          } else {
+            // console.warn('No se pudo actualizar las monedas');            
+            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger", "angry", true);
+
+          }
+        },
+        error: (err) => {
+          console.error('Error en la suscripción de updateCoin:', err);
+        }
+      });
   }
 
   
@@ -624,5 +810,210 @@ export class QuizPage implements OnInit, OnDestroy {
     console.log(this.wordsDic);
   }
 
+
+  onActiveCatAnswer(question: Question, index: number, payment: number = 2){
+    console.log("activeCatAnswer: ", question);
+    this.setAlertMessage(`¿Está seguro de que desea pagar ${payment} monedas para ver la respuesta?`);
+          
+    
+    this.setIsSubmitConfirm(true);
+
+    this.alertButtons.set([
+      {
+        text: 'No',
+        role: 'cancel',
+      }, {
+        text: 'Si',
+        handler: () => {
+          if(this.alertMessage()){
+            console.log("si: ");
+            this.setActiveCatAnswer(question, index, payment);
+          }
+        }
+      }
+    ]);
+  }
+
+  setActiveCatAnswer(question: Question, index: number, payment: number = 2){
+    const data = this.quizS.selectOptionsAndAnswer(question);
+
+// this.questions()[index].viewAnswer = !question.viewAnswer;
+    // va primero: dado a que se tiene que verificar si esta habilitado o no
+    // if(this.questions()[index].viewAnswer){
+    //   this.questions()[index].viewAnswer = false;
+    //   return;
+    // }
+
+      if(this.currentUser?.usr_coin == 0){
+        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", "angry", true); 
+        return
+      }
+    
+      // Validar si existe el usuario antes de proceder
+      if (!this.currentUser?.usr_id) {
+        console.error('Usuario no autenticado');
+        return;
+      }
+
+      // Activar loading
+      this.setIsLoading(true);
+
+      // Actualizar moneditas
+      this.userSubscription = this.authS.updateCoin(this.currentUser.usr_id, payment).subscribe({
+        next: (success) => {
+          if (success) {
+            console.log('Monedas actualizadas correctamente');
+
+            // desactivando loading
+            this.setIsLoading(false);
+
+            // this.questions()[index].viewAnswer = true;
+
+            this.toastS.openToast("la respuesta podra ser", "success", "happy", true, `**${data?.opcion1}**`, `ó **${data?.opcion2}**`, 6400);
+
+          } else {         
+            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger", "angry", true);
+          }
+        },
+        error: (err) => {
+          console.error('Error en la suscripción de updateCoin:', err);
+        }
+      });
+  }
+
+  async addExam(index: number, question: Question){
+    console.log("agregar examen2222: ", question);    
+    this.setIsExam(!this.isModalExam());
+    console.log(this.currentUser);
+    if(!this.currentUser?.usr_id){
+      this.toastS.openToast("Error al agregar examen, intente luego!","danger");
+      return;
+    }
+    const { data, total }: any = await this.examS.getExams(this.currentUser?.usr_id, true);
+    console.log("examenes: ", data);
+
+    console.log("examenes: ", total);
+    if(data){
+      console.log("examenes: ", this.listExam());
+
+      this.checkOnTheounExamen(data, question.pr_id);
+      this.selectQuestion.set(question);
+    }
+
+    
+  }
+
+  // chequeamos si la pregunta ya existe en el examen
+  checkOnTheounExamen(listExam: Exam[], pr_id: string = "") {
+    if (pr_id === "") {
+      this.toastS.openToast("Error al agregar examen, intente luego!", "danger");
+      return;
+    }
+  
+    let found = false;
+  
+    // Recorremos todos los exámenes
+    /** Supabase ********************************** 
+     * A veces en Supabase o backend, si guardas un campo jsonb vacío, puede venir como
+     * null
+      {} (un objeto vacío, no array)
+      No venir (undefined)
+     */
+    listExam.forEach((exam: Exam) => {
+      if (Array.isArray(exam.exm_pr)) {
+        const exists = exam.exm_pr.some((question: PreguntasEnExamen) => question.pr_id === pr_id);
+    
+        if (exists) {
+          exam.marked = true; // Marcar el examen como seleccionado
+          found = true;
+        }
+      } else {
+        console.log("exaaam",exam.exm_pr);
+        console.warn(`exm_pr no es un array en el examen: ${exam.exm_id}`, exam.exm_pr);
+      }
+    });
+  
+    if (found) {
+      console.log("La pregunta ya existe en el examen, se ha marcado.");
+      // this.toastS.openToast("La pregunta ya existe en el examen, se ha marcado.", "warning");
+    } else {
+      console.log("Pregunta nueva, agregada al examen.");
+      // this.toastS.openToast("Pregunta nueva, agregada al examen.", "success");
+    }
+  }
+  
+
+  // agregar preguntas a mis examenes
+  async onCheckboxClicked(exam: Exam, checked: boolean){
+    
+     // Verificar si la pregunta ya existe en el examen
+    const exists = exam.exm_pr.some((q: any) => q.pr_id === this.selectQuestion()?.pr_id);
+
+    if (exists && checked) {
+
+      console.log('La pregunta YA existe en este examen.');
+
+    } else {
+      const { updataBoleam } = await this.examS.addQuestionFromExam(exam, 
+        { pr_id: this.selectQuestion()?.pr_id, pr_point: this.selectQuestion()?.pr_point || 1 },
+      this.currentUser?.usr_id || "");
+      
+      if(updataBoleam){
+        console.log('La pregunta fue agregada al examen.');
+      }
+
+      console.log('La pregunta NO existe en este examen.');
+    }
+    
+  }
+
+  addMyCourses(){
+
+  }
+
+  onSelectionImageZoom(pr_img: string){
+    console.log("imagen: ", pr_img);
+    this.imgZoom.set(pr_img);
+    this.setIsImageZoom(true);
+  }
+
+  onZoomImage(){
+    this.isCantidadZoom.set(this.isCantidadZoom() + 0.5);
+    if(this.isCantidadZoom() >= 2.5){
+      this.isCantidadZoom.set(0.5);
+    }
+  }
+
+  onFilterImage(evento: any){
+    const value = evento.detail.value;
+    this.isFilterImgZoom.set(value);
+  }
+
+  onModalPDF(cat: { uri: string; title: string; author: string; }){
+    console.log("cat: ", cat);
+    this.remotePdfUrl.set(cat.uri);
+    if(this.currentUser?.usr_r_id?.r_name == "ESTUDIANTE"){
+      this.toastS.openToast("no_subscripcion","danger", "angry");
+      return;
+    }
+
+    this.isLoading.set(true);
+
+    console.log("clicked");
+    this.setIsPDF(true);
+  }
+
+  handleLoadingFull(value: boolean): void {
+    console.log('PDF cargado completamente:', value); // Debería mostrar "true"
+    
+    this.isLoading.set(false);
+
+    this.loadingModalPDF.set(value);
+  }
+
+  get remotePdfTitle(): string | null {    
+    const cat = this.categoria();
+    return cat?.cat_doc?.[0]?.title ?? null;
+  }
 
 }
