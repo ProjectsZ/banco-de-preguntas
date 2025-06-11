@@ -3,6 +3,11 @@
 
 0.8.8
 - probando test del login
+- Se aumento el presupuesto del limite de size en scss: Aumenté el límite de advertencia ("maximumWarning": "2kb" en "6kb") y Aumenté el límite de error ("maximumError": "4kb" en "8kb")
+"budgets": [
+  { "type": "initial", "maximumWarning": "2mb",  "maximumError": "5mb" },
+  { "type": "anyComponentStyle", "maximumWarning": "6kb",  "maximumError": "8kb" }
+]
 
 0.8.7
 - fixed quiz component, corrigiendolo la parte del slider que este en estatico y no se mueva solo o evitando que cambie de manera automatica!

@@ -64,6 +64,7 @@ export class LoginPage implements OnInit {
     });
   }
 
+  // validar una contraseña
   async onChangeWord(usrPassword: any) {
     if (!usrPassword) return;
   

@@ -1,0 +1,26 @@
+{
+  "HOME": {
+    "menu": {
+      "mi_perfil": "Mi perfil",
+      "mis_examenes": "Mis exámenes",
+      "exit": "Salir"
+    },
+    "greeting": {
+      "bienvenido": "Bienvenido",
+      "nombre_usuario": "{{firstName}}"
+    },
+    "tabs": {
+      "temas": "Temas",
+      "cursos": "Cursos"
+    },
+    "recomendando": {
+      "listado_temass": "Listado de temas",
+      "ver_todos": "Ver todos",
+      "recomendando_temass": "Temas recomendados"
+    },
+    "cards": {
+      "desarrollo_aplicaciones": "Desarrollo de aplicaciones para la nube"
+    }
+  }
+  
+}

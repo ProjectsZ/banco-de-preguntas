@@ -23,7 +23,6 @@ ion-header.quiz-header{
 ion-content.quiz-content{
     --background: var(--ion-background-gradient);
 
-
     .promotion{
         img{
             border-radius: 15px;
@@ -304,12 +303,8 @@ app-spinner{
 
         ion-label{
             --color: #ffffff;
-            b{
-                opacity: 0.75;
-            }
-            p{
-                color: var(--ion-dark-text-primary);
-            }
+            b{  opacity: 0.75; }
+            p{ color: var(--ion-dark-text-primary); }
         }
     }
 }

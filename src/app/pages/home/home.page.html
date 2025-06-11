@@ -9,6 +9,8 @@
         <span> {{ currentUser.usr_infp_id?.infp_firstname }} </span>
         <br>
         <h5> {{ currentUser.usr_r_id?.r_name }} </h5>
+        <br>
+       
       </div>
     </div>
     <ion-list>
@@ -20,7 +22,8 @@
       <ion-item class="ion-no-padding" lines="none"
         (click)="onNaviate('/register')">
         <ion-icon name="person-outline"></ion-icon>
-        <ion-label>Mi perfil</ion-label>
+        <ion-label>{{ 'HOME.menu.mi_perfil' | translate }}</ion-label>
+
       </ion-item>
       <ion-item class="ion-no-padding" lines="none" (click)="onNaviate('/favorites')">
         <ion-icon name="clipboard-outline"></ion-icon>

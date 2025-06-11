@@ -17,6 +17,8 @@ import { AdvertisingComponent } from 'src/app/components/advertising/advertising
 import { PublicityService } from 'src/app/services/publicidad/publicity.service';
 import { Publicity } from 'src/app/interfaces/publicity.interface';
 
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 
 @Component({
@@ -25,7 +27,7 @@ import { Publicity } from 'src/app/interfaces/publicity.interface';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [IonSearchbar, IonCardContent, IonCardTitle, IonCardHeader, IonCard, IonLabel, IonAvatar, IonItem, IonList, IonIcon, IonButtons, IonContent, IonMenu, IonMenuButton,
-           CommonModule, FormsModule,ReactiveFormsModule, SpinnerComponent, TextLimitPipe, AdvertisingComponent ],
+           CommonModule, FormsModule,ReactiveFormsModule, SpinnerComponent, TextLimitPipe, AdvertisingComponent, TranslateModule,  ],
 })
 export class HomePage implements OnInit, OnDestroy {
 
@@ -51,6 +53,7 @@ export class HomePage implements OnInit, OnDestroy {
   //PUBLICIDAD
   banner: any[] = [];
 
+  
   constructor() {
   }
 

@@ -1,0 +1,23 @@
+{
+  "menu": {
+    "mi_perfil": "My Profile",
+    "mis_examenes": "My Exams",
+    "exit": "Exit"
+  },
+  "greeting": {
+    "bienvenido": "Welcome",
+    "nombre_usuario": "{{firstName}}"
+  },
+  "tabs": {
+    "temas": "Topics",
+    "cursos": "Courses"
+  },
+  "recomendando": {
+    "listado_temass": "Topic List",
+    "ver_todos": "View All",
+    "recomendando_temass": "Recommended Topics"
+  },
+  "cards": {
+    "desarrollo_aplicaciones": "Cloud Application Development"
+  }
+}
