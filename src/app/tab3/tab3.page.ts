@@ -193,6 +193,8 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
     const formValue = this.form()!.value;
     console.log(formValue);
 
+    this.categoryS.setSelectCatId(formValue.pr_cat_id);
+
     try{
       this.setLoader(true);
 

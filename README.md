@@ -1,7 +1,9 @@
 
 # VERSION 0.8
+0.8.6
+- creacion de un nuevo componente que use la libreria angular PDF view, PARA VISUALIZAR PDFs linkeados de la red (ngx-extended-pdf-viewer), permite leer el pdf que es referente del contenido de del tema seleccionado
+
 0.8.5
-- creacion de un nuevo componente que use la libreria angular PDF view, PARA VISUALIZAR PDFs linkeados de la red
 - Fixed tab Quiz, 
 - Fixed modal Review Quiz, que se muestre un espaciado entre los botones y nose vean tan pegados y que al realizar la accion se cierre el modal de manera automatica
 - Fixed ventana toast, para que no cierre el cambio de otros modal activos
@@ -98,6 +100,7 @@ create table if not exists categorias (
   cat_description text not null,
   cat_crs_id uuid references cursos(crs_id) on delete set null,
   created_at timestamp default now()
+  cat_doc jsonb[]
 );
 
 

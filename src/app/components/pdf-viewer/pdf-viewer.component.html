@@ -1,3 +1,79 @@
-<p>
-  pdf-viewer works!
-</p>
+<ion-header>
+  <ion-toolbar [color]="coloreado">
+    <ion-title (click)="changeDiaXnoche()"> 
+      @if(modoNoche){
+        <ion-icon name="cloudy-night-outline"></ion-icon>
+      }@else { <ion-icon name="partly-sunny-outline"></ion-icon> }
+       &nbsp;
+      PDF: {{ title() }} 
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  @if(!remotePdfUrl){
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>PDF: {{ title() }} </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-button expand="block" (click)="fileInput.click()">Seleccionar archivo</ion-button>
+      <input type="file" hidden 
+      accept="application/pdf,image/*"
+      #fileInput 
+      (change)="onFileSelectedPDF($event)" />
+      
+      @if(selectedFile){
+        <div class="file-info">
+          <ion-label color="medium">Archivo seleccionado: {{ selectedFile?.name }}</ion-label>
+        </div>
+      }
+    </ion-card-content>
+  </ion-card>
+  }
+  @if(!remotePdfUrl && isFileDocument){
+    <div  class="pdf-container">
+      <ngx-extended-pdf-viewer 
+        [base64Src]="selectedFileBase64"
+        [useBrowserLocale]="true"
+        [height]="'90vh'"
+        backgroundColor="#ffffff"
+        [handTool]="false"
+        [showHandToolButton]="true">
+      </ngx-extended-pdf-viewer>
+    </div>
+  }
+
+  @if(remotePdfUrl() && showRemotePdf){
+      <!-- Visualizador PDF remoto -->
+      <div class="pdf-container"
+      [ngClass]="modoNoche ? 'modo-noche' : 'modo-dia'">
+        <ngx-extended-pdf-viewer
+
+          [src]="remotePdfUrl()"
+          [useBrowserLocale]="true"
+          [height]="'90vh'"
+          backgroundColor="#212121"
+          [handTool]="false"
+          [showHandToolButton]="true"
+          [showDownloadButton]="false"
+          [showPrintButton]="false"
+          [showOpenFileButton]="false"
+          [showPresentationModeButton]="false"
+          [showSecondaryToolbarButton]="false"
+
+          (pagesLoaded)="onPagesLoaded($event)"
+          >
+        </ngx-extended-pdf-viewer>
+      </div>
+  }
+
+  @if(isFileImage){
+    <div class="img-container">
+      <img [src]="selectedFilePath" alt="Imagen seleccionada" />
+    </div>
+  }
+
+</ion-content>

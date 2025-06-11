@@ -26,7 +26,7 @@ export class HomePage implements OnInit, OnDestroy {
 
     private authS = inject(AuthService);
 
-  selectTab = signal<string>('cursos');
+  selectTab = signal<string>('temas');
 
   private router = inject(Router);
   private toastS = inject(ToastService);

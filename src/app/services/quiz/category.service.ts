@@ -10,6 +10,8 @@ export class CategoryService {
 
   categories = signal<Category[] | null>(null); // Signal to hold categories
 
+  select_cat_id = signal<string | null>(null); // Signal to hold selected category ID
+
   private supabaseS = inject(SupabaseService);
   private supabase = computed<SupabaseClient>(()=> this.supabaseS.getClient());
 
@@ -59,8 +61,45 @@ export class CategoryService {
 
   }
 
+  async getCategoriesById(cat_id: string){
+    const { data, error } = await this.supabase()
+      .from('categorias')
+      .select('*')
+      .eq('cat_id', cat_id)
+      .single();
+
+    if(error) throw error;
+
+    return data;
+  }
+
+  // objeter todas las categorias con documentos (cat_doc)
+  async getAllCategoriesWithCatDoc(){
+
+    try{
+      const { data, error } = await this.supabase()
+        .from('categorias')
+        .select('*, cat_doc(*)')
+        .order('cat_id', { ascending: true });
+
+      if(error) throw error;
+
+      return data;
+
+    }catch(error){
+      console.error('Error al obtener las categorias con documentos:', error);
+      throw error;
+    }
+
+  }
+
   setCategories(value: any){
     this.categories.set(value);
   }
+
+  setSelectCatId(value: string | null){
+    this.select_cat_id.set(value);
+  }
+
 
 }

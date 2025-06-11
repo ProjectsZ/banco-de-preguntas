@@ -17,7 +17,7 @@ import { User } from '../interfaces/user.interface';
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
-  imports: [IonAccordion, IonAccordionGroup, IonButtons, IonButton, IonModal, IonIcon, IonLabel, IonItem, IonList, IonHeader, IonToolbar, IonTitle, IonContent, IonMenuButton, IonNote,
+  imports: [IonAccordion, IonAccordionGroup, IonButtons, IonButton, IonModal, IonIcon, IonLabel, IonItem, IonList, IonHeader, IonToolbar, IonTitle, IonContent, 
     TextHighlightPipe, SpinnerComponent]
 })
 export class Tab2Page implements OnInit, OnDestroy {

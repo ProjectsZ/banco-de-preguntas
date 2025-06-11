@@ -5,5 +5,6 @@ export interface Category {
     cat_description: string;
     cat_crs_id: string;
     created_at: string;
+    cat_doc?: any[];
 }
 

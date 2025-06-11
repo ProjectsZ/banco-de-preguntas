@@ -256,3 +256,8 @@ ion-textarea.answer-chip{
     background: transparent;
     margin-left: 0.2rem;
 }
+
+app-spinner{
+    position: absolute;
+    z-index: 99999;
+}

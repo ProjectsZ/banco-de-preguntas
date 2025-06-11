@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonicSlides, IonToolbar, IonButton, IonButtons, IonFab, IonFabButton, IonFabList,
   Platform, IonAlert, IonModal, IonFooter,
    IonIcon, IonItem, IonChip, IonText, IonList, IonItemGroup, IonLabel, IonRow, IonCol, IonSpinner, IonTitle, IonSegment, IonSegmentButton } from '@ionic/angular/standalone';
-import { add, addOutline, arrowBack, bookmarkOutline, bulbOutline, checkmark, checkmarkCircle, chevronBack, chevronDownCircle, chevronForwardCircle, chevronUpCircle, chevronUpOutline, close, closeCircle, colorPalette, diamondOutline, earthOutline, eye, eyeOutline, fileTrayFullOutline, globe, lockClosedOutline, optionsOutline, pencilOutline, saveOutline, searchSharp, star, starOutline } from 'ionicons/icons';
+import { add, addOutline, arrowBack, bookmarkOutline, bulbOutline, checkmark, checkmarkCircle, chevronBack, chevronDownCircle, chevronForwardCircle, chevronUpCircle, chevronUpOutline, close, closeCircle, colorPalette, diamondOutline, documentOutline, documentTextOutline, earthOutline, eye, eyeOutline, fileTrayFullOutline, globe, lockClosedOutline, optionsOutline, pencilOutline, saveOutline, searchSharp, star, starOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { Question } from 'src/app/interfaces/question.interface';
 import { QuizService } from 'src/app/services/quiz/quiz.service';
@@ -29,6 +29,9 @@ import { ExamService } from 'src/app/services/exam.service';
 import { Exam, PreguntasEnExamen } from 'src/app/interfaces/exam.interface';
 import { PublicityService } from 'src/app/services/publicidad/publicity.service';
 import { Publicity } from 'src/app/interfaces/publicity.interface';
+import { PdfViewerComponent } from 'src/app/components/pdf-viewer/pdf-viewer.component';
+import { CategoryService } from 'src/app/services/quiz/category.service';
+import { Category } from 'src/app/interfaces/category.interface';
 register();
 
 @Component({
@@ -41,7 +44,7 @@ register();
     IonItemGroup, IonList, IonText, IonChip, IonItem, IonIcon, IonButtons, IonButton, IonContent,
      IonHeader, IonToolbar, IonAlert, IonModal, ReviewComponent,
     CommonModule, FormsModule, QuizOptionsComponent, ResultComponent, ViewAnswerComponent,
-    TextHighlightPipe, FloatingCardComponent, SpinnerComponent],
+    TextHighlightPipe, FloatingCardComponent, SpinnerComponent, PdfViewerComponent ],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ], //CUIDADO: Esto puede evitar que se encuentre el error en los elementos. Si se encuentra un error en el template, eliminar esta línea y revisar el error en consola
 })
 export class QuizPage implements OnInit, OnDestroy {
@@ -50,14 +53,22 @@ export class QuizPage implements OnInit, OnDestroy {
   isReview = signal<boolean>(false);
   isSubmitted = signal<boolean>(false);
 
+  // PDF 
+  isPDF = signal<boolean>(false); // variable para el pdf
+  remotePdfUrl = signal<string | null>(null); // variable para el pdf
+  loadingModalPDF = signal<boolean>(false); // variable para el pdf
   //image Zoom
   imgZoom = signal<string | null>(null);  
   isImageZoom = signal<boolean>(false); // variable para el zoom de la imagen
   isCantidadZoom = signal<number>(0.5); // variable para el zoom de la imagen
   isFilterImgZoom = signal<string>('none'); // variable para el zoom de la imagen
 
+  
   // promos
   promociones = signal<Publicity[]>([]);
+
+  // categoria seleccionada
+  categoria = signal<Category | null>(null);
 
   // cache question
   isCacheQuestion = signal<boolean>(false);
@@ -133,12 +144,16 @@ export class QuizPage implements OnInit, OnDestroy {
     private authS = inject(AuthService);
   private questionS = inject(QuestionService);
   private toastS = inject(ToastService);
+  private categoryS = inject(CategoryService); // Categoria obtener datos PDF
 
   isLoading = signal<boolean>(false); // Loading state
   selectSeeAnswer = signal<boolean>(false); // variable para el select de ver respuestas
   activeEditContent = signal<boolean>(false); // variable para el select de ver respuestas
   
   selectQuestion = signal<Question | null>(null); // variable para el select de ver respuestas
+
+  
+  
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     addIcons({
@@ -163,7 +178,10 @@ export class QuizPage implements OnInit, OnDestroy {
       fileTrayFullOutline,
       earthOutline,
       lockClosedOutline,
-      searchSharp
+      searchSharp,
+
+      // document PDF
+      documentTextOutline
     });
 
     effect(()=> {
@@ -202,6 +220,14 @@ export class QuizPage implements OnInit, OnDestroy {
       }
     });
 
+    this.categoryS.getCategoriesById(this.categoryS.select_cat_id()+'').then((cat: any) => {
+      // console.log("categoria: ", cat);
+      this.categoria.set(cat);
+
+      console.log("categoria: ", this.categoria());
+    }).catch((error) => {
+      console.error("Error al obtener la categoría: ", error);
+    });
     
   }
 
@@ -219,9 +245,17 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
 
+
   setIsImageZoom(value: boolean){
     this.isImageZoom.set(value);
     this.isCantidadZoom.set(1);
+  }
+
+  setIsPDF(value: boolean){
+    if(value === false){
+      this.isLoading.set(false);
+    }
+    this.isPDF.set(value);
   }
 
   setIsReview(value: boolean){
@@ -937,6 +971,33 @@ export class QuizPage implements OnInit, OnDestroy {
   onFilterImage(evento: any){
     const value = evento.detail.value;
     this.isFilterImgZoom.set(value);
+  }
+
+  onModalPDF(cat: { uri: string; title: string; author: string; }){
+    console.log("cat: ", cat);
+    this.remotePdfUrl.set(cat.uri);
+    if(this.currentUser?.usr_r_id?.r_name == "ESTUDIANTE"){
+      this.toastS.openToast("no_subscripcion","danger", "angry");
+      return;
+    }
+
+    this.isLoading.set(true);
+
+    console.log("clicked");
+    this.setIsPDF(true);
+  }
+
+  handleLoadingFull(value: boolean): void {
+    console.log('PDF cargado completamente:', value); // Debería mostrar "true"
+    
+    this.isLoading.set(false);
+
+    this.loadingModalPDF.set(value);
+  }
+
+  get remotePdfTitle(): string | null {    
+    const cat = this.categoria();
+    return cat?.cat_doc?.[0]?.title ?? null;
   }
 
 }

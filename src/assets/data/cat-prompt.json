@@ -234,5 +234,29 @@
             { "speak": "¡Todo en orden! Los exámenes ya están aquí, humano curioso.", "feeling": "affectionate", "several_times": 9 },
             { "speak": "¡Miau! Los exámenes están a tu disposición. ¡A aprender se ha dicho!", "feeling": "happy", "several_times": 10 }
         ]
+    },
+    {
+        "key_phrase": "no_subscripcion",
+        "color": "warning",
+        "message": [
+            { "speak": "Miau miau... detecto que no tienes una suscripción activa. ¿Estás bien, humano?", "feeling": "concerned", "several_times": 1 },
+            { "speak": "Sin suscripción... sin beneficios... sin gemitas premium. Miau triste.", "feeling": "sad", "several_times": 2 },
+            { "speak": "Yo no tengo tarjeta, pero si la tuviera, ¡ya estaría suscrito!", "feeling": "sad", "several_times": 2 },
+            { "speak": "Miau... ¿te perdiste? El botón de suscribirse está a la vuelta del clic.", "feeling": "affectionate", "several_times": 3 },
+            { "speak": "Te lo digo con cariño felino: sin suscripción, te pierdes lo bueno. Miau.", "feeling": "affectionate", "several_times": 3 },
+            { "speak": "¡Imagina todas las funciones ronroneantes que podrías tener con una suscripción!", "feeling": "sad", "several_times": 4 },
+            { "speak": "Vamos, humano. Hasta el pez de plástico paga su suscripción... bueno, casi.", "feeling": "angry", "several_times": 5 },
+            { "speak": "¿Una vida sin suscripción? Prefiero una caja sin agujeros. Miau frustrado.", "feeling": "angry", "several_times": 5 },
+            { "speak": "Si te suscribes, prometo ronronear más fuerte. Bueno... lo intentaré.", "feeling": "playful", "several_times": 6 },
+            { "speak": "Sin suscripción... es como un gato sin sol: posible, pero muy triste.", "feeling": "sad", "several_times": 3 },
+            { "speak": "Humano, actúa con orgullo: suscribirse no quita dignidad, ¡la da!", "feeling": "proud", "several_times": 5 },
+            { "speak": "Te lo digo con ronroneo serio: sin suscripción, estás perdiendo lo mejor.", "feeling": "affectionate", "several_times": 3 },
+            { "speak": "¿Todavía sin suscribirte? Miau... no sé si reír o arañar suavemente.", "feeling": "annoyed", "several_times": 4 },
+            { "speak": "No tener suscripción en este punto es... sospechoso. ¿Te está vigilando el perro?", "feeling": "suspicious", "several_times": 5 },
+            { "speak": "He visto ratones tomar mejores decisiones. Solo digo: ¡suscríbete!", "feeling": "offended", "several_times": 5 },
+            { "speak": "¿Y si hoy te haces un regalo y te suscribes? Prometo no juzgarte... mucho.", "feeling": "playful", "several_times": 6 },
+            { "speak": "Suscribirse es de felinos audaces. ¿Te animas o seguirás como un ratón tímido?", "feeling": "proud", "several_times": 5 }
+          
+        ]
     }
 ]

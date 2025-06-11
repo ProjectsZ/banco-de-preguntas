@@ -11,6 +11,9 @@ import { from } from 'rxjs';
 })
 export class AppComponent {
 
+  
+  public detectDate = new Date().getTime();
+
   private platform = inject(Platform);
 
 

@@ -94,6 +94,17 @@
         <ion-text class="bold"> {{ currentUser.usr_coin }} </ion-text>
       </ion-chip>
     </ion-text>
+    
+
+    @for(cat of categoria()?.cat_doc; track i; let i = $index) {
+      <ion-text slot="start" class="margin-left" 
+        (click)="onModalPDF(cat)">        
+        <ion-chip color="dark" disabled="true" class="flex center"
+          >
+          <ion-icon name="document-text-outline"></ion-icon>
+        </ion-chip>
+      </ion-text>
+    }   
 
     @if(duration()){
       <ion-text slot="end">
@@ -620,6 +631,30 @@
           </ion-select>
         </ion-chip>
       </div>
+
+    </ng-template>
+  </ion-modal>
+
+  <!-- modal view PDF -->
+  <ion-modal
+    #PDF_quiz_modal
+    (didDismiss)="setIsPDF(false)"
+    [isOpen]="isPDF()"
+    [initialBreakpoint]="0.95" 
+    [cssClass]="'small-modal visor-pdf img-modal'"
+    [ngClass]="{ 'visor-pdf-mini': !loadingModalPDF() }">
+    <ng-template>
+      
+      @if(isPDF()){
+
+        <div class="content-full">
+          <app-pdf-viewer 
+          [title]="remotePdfTitle"
+          (loadingFull)="handleLoadingFull($event)"
+          [remotePdfUrl]="remotePdfUrl()"></app-pdf-viewer>
+        </div>
+
+      }
 
     </ng-template>
   </ion-modal>

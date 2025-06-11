@@ -1,0 +1,45 @@
+.file-info {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+  }
+  
+  .pdf-container {
+    overflow: hidden;
+    height: 100vh;
+    margin-top: -1rem;
+    width: 89vw;
+    margin-left: -1rem;
+  }
+  
+  .img-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  
+    img {
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+  }
+
+/* Para modo noche */
+.modo-noche ::ng-deep .page canvas {
+  filter: invert(1) brightness(0.9) contrast(1.1) !important;
+}
+
+.modo-noche ::ng-deep .page {
+  background-color: #121212 !important;
+}
+
+/* Para modo día */
+.modo-dia ::ng-deep .page canvas {
+  filter: none !important;
+}
+
+.modo-dia ::ng-deep .page {
+  background-color: #ffffff !important;
+}

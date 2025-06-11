@@ -106,6 +106,10 @@ h5,h3{
   }
 }
 
+.margin-left{
+  margin-left: 0.72rem;
+}
+
 .img-container{
   width: 100%;
   height: 150px;
@@ -244,14 +248,29 @@ h5,h3{
   --width: 100vw; /* Ajusta el ancho deseado */
   --height: 40vh; /* Ajusta la altura deseada */
 
-  --max-width: 90%;
+  --max-width: 92%;
   --border-radius: 16px;
   --background: #ffffff;
+  opacity: 1;
 
   &.img-modal{
     --background: transparent;
   }
-    
+
+  &.visor-pdf{
+    --height: 75vh;
+  }  
+  // util para ocultar el visor de pdf
+  &.visor-pdf-mini{
+    --height: 0vh !important;
+    opacity: 0;
+  }
+
+  .content-full{
+    height: 100%;
+  }
+
+
     .checkbox-list {
       max-height: 20vh; /* Altura máxima con scroll automático */
       overflow-y: auto;
@@ -284,4 +303,8 @@ h5,h3{
       --border-radius: 20px;
       width: 100%;
     }
+
+    
 }
+
+
