@@ -12,28 +12,61 @@
         <app-spinner></app-spinner>
       }
 
+      @let is_error_email = loginForm.get('email')?.touched && loginForm.get('email')?.invalid;
       <ion-input
         formControlName="email"
         type="email"
         placeholder="Email"
         class="log-in__input">
       </ion-input>
-      <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error">
-        <small *ngIf="loginForm.get('email')?.errors?.['required']" color="danger">El email es obligatorio.</small>
-        <small *ngIf="loginForm.get('email')?.errors?.['pattern']">
-          Debe ser un correo arroba unas.edu.pe.
-        </small>
-      </div>
+      <div  class="errorPass">
+      @if(is_error_email){
+        <ion-text color="danger">
+          <ul>
+            @if(loginForm.get('email')?.errors?.['required']){
+            <li class="txt-error">
+                  <ion-icon name="close-outline"></ion-icon> 
+                  El email es obligatorio.
+            </li>
+            }            
+            @if(loginForm.get('email')?.errors?.['pattern']){
+              <li class="txt-error">                
+                  <ion-icon name="close-outline"></ion-icon> 
+                  Debe ser un correo arroba unas.edu.pe.
+              </li>
+             }
+          </ul>
+        </ion-text>
+      }
+    </div> 
 
+
+
+      @let is_error_message0 = loginForm.get('password')?.errors?.['passwordStrength'];
       <ion-input
         formControlName="password"
         type="password"
         placeholder="Password"
-        class="log-in__input">
+        class="log-in__input"
+        (ionInput)="onChangeWord($event.target.value)">
       </ion-input>
-      <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error">
-        <small  color="danger">La contraseña es obligatoria.</small>
-      </div>
+
+       
+       <div class="errorPass">
+        @if(is_error_message0){
+          <ion-text color="danger">
+            <ul>
+              @for (item of messageCAT; track $index) {
+                @if(!item.estado){
+                  <li class="ion-padding-start txt-error">
+                    <ion-icon name="close-outline"></ion-icon>  {{ item.message }}
+                  </li>
+                }
+              } 
+            </ul>
+          </ion-text>
+         }
+       </div>
      
       <!-- <label class="custom-checkbox">
         <input type="checkbox" formControlName="rememberMe">

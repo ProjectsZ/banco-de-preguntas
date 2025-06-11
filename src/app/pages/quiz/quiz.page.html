@@ -14,33 +14,22 @@
       @let isMarked = qstn[currentIndex()].marked ? true : false;
 
       <ion-buttons slot="end">
-
-        <ion-button color="light" (click)="changeModeThem()">
-          @if(colorTheme() === 'dark'){
-            <ion-icon name="moon-outline"></ion-icon>
-          }@else {
-            <ion-icon name="sunny-outline"></ion-icon>
-          }
-        </ion-button>
-
-
         <ion-button color="light" fill="clear" size="large"
           (click)="iniciarRecuerdo()">
           <ion-icon name="bulb-outline" slot="icon-only"></ion-icon>
           <span class="pointRecuerdo">{{ recordQuestions.length }}</span>
         </ion-button>
-        <!-- <ion-button 
+        <ion-button 
           [color]="isMarked ? 'warning' : 'light'" 
           (click)="markAnswer()">
           <ion-icon slot="icon-only"
           [name]="isMarked ? 'star' : 'star-outline'"></ion-icon>
-        </ion-button> -->
-
-        <ion-button color="light"
-          (click)="setIsReview(true)">
-          <ion-icon name="options-outline" slot="icon-only"></ion-icon>
         </ion-button>
 
+        <ion-button color="light"
+        (click)="setIsReview(true)">
+        <ion-icon name="options-outline" slot="icon-only"></ion-icon>
+      </ion-button>
 
       </ion-buttons>
 
@@ -51,11 +40,7 @@
 @if(isLoading() || !questions()){
   <app-spinner></app-spinner>
 }
-<ion-content [fullscreen]="true" class="ion-padding-horizontal quiz-content"
-[class]="{
-    'dark-theme': colorTheme() === 'dark',
-    'light-theme': colorTheme() === 'light'
-    }">
+<ion-content [fullscreen]="true" class="ion-padding-horizontal quiz-content">
   
   @if(viewWord){
     <app-floating-card 
@@ -67,7 +52,7 @@
 
 
   <!-- PUBLICIDAD -->
-   @if(publicidad.length > 0 && promociones() && publicidad[0].pub_type == 'promo'){
+   @if(publicidad.length > 0 && promociones()){
     <div class="promotion">
       <!-- <img src="assets/imgs/publicidad_01.png" alt=""> -->
 
@@ -78,8 +63,8 @@
         class="mi-swiper"
       >
         <swiper-slide *ngFor="let pub of publicidad">
-          <a [href]="pub.pub_data?.url" target="_blank">
-            <img [src]="pub.pub_data?.img" alt="Publicidad" class="img-pub">
+          <a [href]="pub.pub_link_url" target="_blank">
+            <img [src]="pub.pub_img_url" alt="Publicidad" class="img-pub">
           </a>
           <!-- <h4>{{ pub.pub_description }}</h4> -->
         </swiper-slide>
@@ -109,17 +94,6 @@
         <ion-text class="bold"> {{ currentUser.usr_coin }} </ion-text>
       </ion-chip>
     </ion-text>
-    
-
-    @for(cat of categoria()?.cat_doc; track i; let i = $index) {
-      <ion-text slot="start" class="margin-left" 
-        (click)="onModalPDF(cat)">        
-        <ion-chip color="dark" disabled="true" class="flex center"
-          >
-          <ion-icon name="document-text-outline"></ion-icon>
-        </ion-chip>
-      </ion-text>
-    }   
 
     @if(duration()){
       <ion-text slot="end">
@@ -138,9 +112,7 @@
       <swiper-container #swiper [Modules]="swiperModules" 
         [slidesPerView]="1"
         [spaceBetween]="20"
-        initial-slide="0" centered-slides="true"
-         [loop]="false" 
-          [autoplay]="false"
+        initial-slide="0" centered-slides="true" keyboard="true"
         (swiperslideChange)="onSlideChange()">
         
         @for (question of questions(); track i; let i = $index) {
@@ -158,13 +130,9 @@
 
                 <!-- @if(currentUser.usr_r_id?.r_name == 'ADMIN' || currentUser.usr_r_id?.r_name == 'DOCENTE'){ -->
                   @if (question?.viewAnswer) {
-                    <ion-chip color="light" class="flex center eye-chip cat-chip"
+                    <ion-chip color="light" class="eye-chip cat-chip"
                       (click)="onActiveCatAnswer(question, i)">
-                      @if(isSubmitConfirm()){
-                        <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt=""  width="16">
-                      }@else{
-                        <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="" width="16">
-                      }
+                      <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt="">
                     </ion-chip>
                     <ion-chip color="light" class="eye-chip"
                       (click)="onActiveAnswer(i)">
@@ -173,20 +141,15 @@
 
                   }@else {
                   
-                    <ion-chip color="light" class="flex center eye-chip cat-chip"
+                    <ion-chip color="light" class="eye-chip cat-chip"
                       (click)="onActiveCatAnswer(question, i)">
-                      @if(isSubmitConfirm()){
-                        <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt="" width="16">
-                      }@else{
-                        <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="" width="16">
-                      }
+                      <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="">
                     </ion-chip>
                     <ion-chip color="light" class="eye-chip"
                       (click)="onActiveAnswer(i)">
                       <ion-icon name="eye-outline"></ion-icon>
                     </ion-chip>
                   }
-                  
 
                 
 
@@ -201,17 +164,15 @@
                   </ion-label>
                 </ion-item>
 
-                <!-- imagen de la pregunta ------------------------------------- -->
+                <!-- imagen de la pregunta -->
                 <ion-item>
+                  <ion-label class="ion-text-center">
                     @if(question?.pr_img && question?.pr_img != ''){
-
-                    <div class="ion-text-center img-container">
-                      <img src="{{ question?.pr_img }}" alt="question image" class="question-image"
-                      (click)="onSelectionImageZoom(question?.pr_img!)">
-                    </div>
+                      <img src="{{ question?.pr_img }}" alt="question image" class="question-image">
                     } @else if(question?.pr_img == ''){
                       <!-- <img src="./../../../assets/imgs/loading_img.png" alt="" class="question-image"> -->
                     }
+                  </ion-label>
                 </ion-item>
 
                 
@@ -277,10 +238,7 @@
                   <!-- options component-->
                   <app-quiz-options
                     [options]="question.pr_options"
-                    [content]="question.pr_content"
-                    [role]="currentUser.usr_r_id?.r_name!"
                     [selectedOption]="question.selectedAnswer"
-                    [colorTheme]="colorTheme()"
                     (selectedOptionChange)="optionSelected($event, $index)"
                     [freezeAction]="isSubmitted()"></app-quiz-options>
                 }
@@ -604,78 +562,6 @@
           (slide)="openQuestion($event, review_quiz_modal)"
           (submitQuiz)="onSubmitAlert()"></app-review>
       </ion-content>
-    </ng-template>
-  </ion-modal>
-
-  <!-- mostrar la imagen de la pregunta -->
-  <ion-modal
-    #imageZoom_quiz_modal
-    (didDismiss)="setIsImageZoom(false)"
-    [isOpen]="isImageZoom()"
-    [initialBreakpoint]="1" 
-    [cssClass]="'small-modal img-modal'">
-    <ng-template>
-      
-      <div class="ion-padding image-zoom">
-        <div class="image-inner"
-             [ngStyle]="{
-               'transform': 'scale(' + isCantidadZoom() + ')',
-               'transform-origin': 'top left',
-               'filter': isFilterImgZoom()
-             }">
-          <img [src]="imgZoom()" alt="" (click)="onZoomImage()">
-        </div>
-      </div>
-
-      <!-- aplicar filtros a la imagen -->
-      <div class="top-chip">
-        <ion-chip color="dark">
-          <ion-icon name="search-sharp"></ion-icon>
-          <ion-text class="bold"> +{{ isCantidadZoom() }} </ion-text>
-        </ion-chip>
-        <ion-chip color="dark" class="filter-chip">
-          <ion-select
-            class="ion-padding ion-select-filter"
-            interface="popover"
-            placeholder="Seleccionar filtro"
-            (ionChange)="onFilterImage($event)">
-            <ion-select-option value="none">Ninguno</ion-select-option>
-            <ion-select-option value="grayscale(100%)">Gris</ion-select-option>
-            <ion-select-option value="invert(100%)">Invertir</ion-select-option>
-            <ion-select-option value="sepia(80%)">Sepia</ion-select-option>
-            <ion-select-option value="brightness(120%)">Brillo</ion-select-option>
-            <ion-select-option value="contrast(180%)">Contraste</ion-select-option>
-            <ion-select-option value="hue-rotate(90deg)">Tono</ion-select-option>
-            <ion-select-option value="saturate(200%)">Saturar</ion-select-option>
-            <ion-select-option value="grayscale(100%) invert(100%)">Gris e invertir</ion-select-option>
-          </ion-select>
-        </ion-chip>
-      </div>
-
-    </ng-template>
-  </ion-modal>
-
-  <!-- modal view PDF -->
-  <ion-modal
-    #PDF_quiz_modal
-    (didDismiss)="setIsPDF(false)"
-    [isOpen]="isPDF()"
-    [initialBreakpoint]="0.95" 
-    [cssClass]="'small-modal visor-pdf img-modal'"
-    [ngClass]="{ 'visor-pdf-mini': !loadingModalPDF() }">
-    <ng-template>
-      
-      @if(isPDF()){
-
-        <div class="content-full">
-          <app-pdf-viewer 
-          [title]="remotePdfTitle"
-          (loadingFull)="handleLoadingFull($event)"
-          [remotePdfUrl]="remotePdfUrl()"></app-pdf-viewer>
-        </div>
-
-      }
-
     </ng-template>
   </ion-modal>
   

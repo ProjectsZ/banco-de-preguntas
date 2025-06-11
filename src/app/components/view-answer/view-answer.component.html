@@ -31,7 +31,7 @@
     <ion-label>
       <!-- <p> {{ question()?.pr_question }} </p> -->
       <p  
-      [innerHTML]="question()?.pr_question + ''"></p>
+      [innerHTML]="question()?.pr_question + '' | textHighlight : 'text-bold': 'b'"></p>
     </ion-label>
   </ion-item>
 
@@ -98,7 +98,7 @@
       <ion-card-content>
         <!-- {{ question()?.pr_content }} -->
         <ion-text class="bold"
-                      [innerHTML]="question()?.pr_content + ''"></ion-text>
+                      [innerHTML]="question()?.pr_content + '' | textHighlight : 'text-yellow' "></ion-text>
                       
       </ion-card-content>
     </ion-card>

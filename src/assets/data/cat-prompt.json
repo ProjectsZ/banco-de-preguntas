@@ -1,5 +1,21 @@
 [
     {
+        "key_phrase": "miau miau",
+        "color": "success",
+        "message": [
+            { "speak": "¡Miau miau! Hoy es un buen día para ronronear y triunfar.", "feeling": "happy", "several_times": 1 },
+            { "speak": "¡Vamos, humano! Si yo puedo cazar un láser, tú puedes con eso.", "feeling": "proud", "several_times": 2 },
+            { "speak": "Miau miau... yo creo en ti, aunque finja que duermo todo el día.", "feeling": "affectionate", "several_times": 2 },
+            { "speak": "¡Despierta, humano! Hasta yo, que duermo 16 horas, me puse en marcha.", "feeling": "playful", "several_times": 3 },
+            { "speak": "Miau... podrías estar descansando conmigo, pero estás haciendo algo útil. ¡Bravo!", "feeling": "proud", "several_times": 4 },
+            { "speak": "Miau miau... me estoy aburriendo más que un gato sin caja.", "feeling": "annoyed", "several_times": 2 },
+            { "speak": "Otra vez lo mismo... miau miau... ¿y si mejor jugamos?", "feeling": "bored", "several_times": 3 },
+            { "speak": "¿Sabías que he contado todos los pelos de mi cola por aburrimiento? ¡Miau!", "feeling": "bored", "several_times": 4 },
+            { "speak": "Miau... estoy tan aburrido que hasta pensé en hacer ejercicio. Casi.", "feeling": "playful", "several_times": 5 },
+            { "speak": "Si bostezas una vez más, humano... te acompaño. Pero solo por solidaridad.", "feeling": "lazy", "several_times": 6 }        
+        ]
+    },
+    {
         "key_phrase": "error usuario",
         "color": "danger",
         "message": [
@@ -35,6 +51,27 @@
             { "speak": "¡Al fin, humano! Pensé que te habías perdido entre ovillos de lana, ¡miau!", "feeling": "playful", "several_times": 8 },
             { "speak": "¡Ya era hora! Te encontré, humano despistado, ¡miau-miau!", "feeling": "affectionate", "several_times": 9 },
             { "speak": "¡Weeepa humano! ¡Aquí estás, últimamente estuviste más perdido que ratón en fiesta de gatos! ¡Miau!", "feeling": "playful", "several_times": 10 }
+        ]
+    },
+    {
+        "key_phrase": "datos incorrectos",
+        "color": "warning",
+        "message": [
+            { "speak": "Diría que en ****, pero no pongas todas tus croquetas en esa canasta, ¡miau!", "feeling": "playful", "several_times": 4 },
+            { "speak": "Estoy 73% seguro de que es ****... ¿pero me crees, humano?", "feeling": "curious", "several_times": 3 },
+            { "speak": "Creo que es ****... aunque mi bola de lana dice lo contrario, ¡miau!", "feeling": "confused", "several_times": 3 },
+            { "speak": "Mi olfato felino me dice que podría ser ****... o un error más, ¡miau!", "feeling": "suspicious", "several_times": 2 },
+            { "speak": "Podría apostar una siesta a que es ****... pero no estoy del todo seguro.", "feeling": "playful", "several_times": 3 },
+            { "speak": "Según mis cálculos felinos, en ****... aunque los gatos no usamos calculadora.", "feeling": "playful", "several_times": 4 },
+            { "speak": "**** me suena a la respuesta correcta, pero mis bigotes se erizan de duda.", "feeling": "confused", "several_times": 3 },
+            { "speak": "Si tuviera que adivinar, diría ****, pero no pongas tus ratones ahí todavía.", "feeling": "curious", "several_times": 3 },
+            { "speak": "¿****? Puede ser... o puede que esté maullando por nada.", "feeling": "confused", "several_times": 2 },
+            { "speak": "Creo que sí es ****... pero recuerda que también dudo de los pepinos.", "feeling": "playful", "several_times": 4 },
+            { "speak": "Apuesto una sardina a que es ****... aunque ya me equivoqué antes.", "feeling": "curious", "several_times": 3 },
+            { "speak": "Mis patas dicen que es ****, pero mi cola no está tan segura.", "feeling": "confused", "several_times": 3 },
+            { "speak": "Miau... **** parece correcto, aunque podría estar soñando despierto.", "feeling": "confused", "several_times": 2 },
+            { "speak": "Todo indica que es ****... pero no te fíes de un gato dormilón.", "feeling": "suspicious", "several_times": 3 }
+          
         ]
     },
     {
@@ -178,6 +215,24 @@
           { "speak": "¡Zas! El examen se me resbaló entre las patas, miau. Prueba nuevamente.", "feeling": "playful", "several_times": 8 },
           { "speak": "¡Miau desconsolado! Fallamos esta vez, pero aprenderemos juntos, humano.", "feeling": "sad", "several_times": 9 },
           { "speak": "¡Grrrr! ¡Fallé en agregar el examen, humano! Pero no abandonaré, ¡volveré más fuerte!", "feeling": "proud", "several_times": 10 }
+        ]
+    },
+    {
+        "key_phrase": "examenes cargadados",
+        "color": "success",
+        "message": [
+            { "speak": "¡Exámenes cargados, humano brillante! ¡Miau de emoción!", "feeling": "proud", "several_times": 1 },
+            { "speak": "¡Todo está listo, humano! Guau... ¡ups! Quise decir miau-miau, jeje.", "feeling": "happy", "several_times": 2 },
+            { "speak": "¡Misión cumplida! Los exámenes ya están donde deben estar.", "feeling": "proud", "several_times": 2 },
+            { "speak": "¡Buen trabajo! Ya tienes tus exámenes cargados, humano.", "feeling": "affectionate", "several_times": 3 },
+            { "speak": "¡Con estilo felino, los exámenes llegaron sin rasguños!", "feeling": "playful", "several_times": 4 },
+            { "speak": "¡Miau de éxito! Los exámenes ya están en tu poder.", "feeling": "happy", "several_times": 4 },
+            { "speak": "¡Así se hace, humano! Los exámenes están listos para la acción.", "feeling": "proud", "several_times": 5 },
+            { "speak": "¡Me encanta ayudarte! Los exámenes ya están disponibles.", "feeling": "curious", "several_times": 5 },
+            { "speak": "¡Miau! Los exámenes están listos para que los explores, humano.", "feeling": "playful", "several_times": 7 },
+            { "speak": "¡Exámenes cargados y listos para la aventura! ¡Miau!", "feeling": "happy", "several_times": 8 },
+            { "speak": "¡Todo en orden! Los exámenes ya están aquí, humano curioso.", "feeling": "affectionate", "several_times": 9 },
+            { "speak": "¡Miau! Los exámenes están a tu disposición. ¡A aprender se ha dicho!", "feeling": "happy", "several_times": 10 }
         ]
     }
 ]

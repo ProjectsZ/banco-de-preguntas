@@ -4,13 +4,14 @@
       Diccionario y/o conceptos
     </ion-title>
     <ion-buttons slot="end">
+     @if(currentUser.usr_r_id?.r_name == 'ADMIN' || currentUser.usr_r_id?.r_name == 'DOCENTE'){
       <ion-button>
         <ion-icon name="document-outline"></ion-icon>
         <input type="file" accept=".xlsx, .xls"
         #filePicker 
         (change)="onFileImportFromExcelDictionary($event)"  />
       </ion-button>
-    
+    }
 
     </ion-buttons>
   </ion-toolbar>

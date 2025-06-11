@@ -1,8 +1,16 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-title>Registro</ion-title>
+  <ion-toolbar color="primary" class="ion-no-border">
+    <ion-buttons slot="start" color="light">
+      <ion-icon name="arrow-back"  color="light"
+      (click)="goBack()"></ion-icon>
+    </ion-buttons>
+    <ion-title class="perfil-center" >Perfil del usuario</ion-title>
   </ion-toolbar>
 </ion-header>
+
+@if(isLoading()){
+  <app-spinner></app-spinner>
+}
 
 <ion-content class="ion-padding">
 
@@ -11,10 +19,12 @@
     value="all"
     [scrollable]="true"
     (ionChange)="filterAnswers($event)">
-    <ion-segment-button value="usuario">
+    <ion-segment-button value="usuario"
+      [ngClass]="{'segment-button-checked': selectedTab() === 'usuario'}">
       <ion-label>Usuario</ion-label>
     </ion-segment-button>
-    <ion-segment-button value="personal">
+    <ion-segment-button value="personal"
+      [ngClass]="{'segment-button-checked': selectedTab() === 'personal'}">
       <ion-label>Datos personales</ion-label>
     </ion-segment-button>
   </ion-segment>
@@ -22,73 +32,165 @@
 
 
   @if(selectedTab() === 'usuario') {
+    
+    <ion-text color="primary" class="ion-padding-start title-panel flex">
+      <img [src]="'assets/icon/cat_'+ personalidadCAT.feeling +'.svg'" alt="" width="72px">
+      <p class="ion-padding-start ion-padding-top"> 
+        {{ personalidadCAT.message }}
+      </p>
+    </ion-text>
+
     <br><br>
-    <form>
+    <form [formGroup]="editRegisterForm" (ngSubmit)="onSubmitLogin()">
 
       <ion-item>
-        <ion-label position="floating">Correo</ion-label>
-        <ion-input type="email"></ion-input>
+        <ion-label class="disabled" position="floating" disabled>Correo</ion-label>
+        <br> 
+        <ion-input type="email"  
+          [value]="currentUser.usr_email"
+          formControlName="usr_email"></ion-input>
+      </ion-item>
+ 
+      <ion-item>
+        <ion-label position="floating">Contraseña antigua</ion-label>
+        <ion-input 
+          type="password" 
+          formControlName="usr_password"
+          (ionInput)="onChangeWord($event.target.value)">
+        </ion-input>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Contraseña</ion-label>
-        <ion-input type="password"></ion-input>
-      </ion-item>
+        <br>
 
-      <ion-button expand="block" type="submit">Registrar</ion-button>
+        @let is_error_message0 = editRegisterForm.get('usr_newPassword0')?.errors?.['passwordStrength'];       
+        <ion-label position="floating">Contraseña nueva</ion-label>
+        <ion-input type="password" formControlName="usr_newPassword0"
+          (ionInput)="onChangeWord_new($event.target.value)"></ion-input>
+      </ion-item>
+      
+      <div class="errorPass">
+        @if(is_error_message0){
+          <ion-text color="danger">
+            <ul>
+              @for (item of messageCAT2; track $index) {
+                @if(!item.estado){
+                  <li class="ion-padding-start txt-error">
+                    <ion-icon name="close-outline"></ion-icon>  {{ item.message }}
+                  </li>
+                }
+              } 
+            </ul>
+          </ion-text>
+         }
+       </div>
+
+
+       <br>
+      <ion-item>
+
+        @let is_error_message = editRegisterForm.get('usr_newPassword')?.errors?.['passwordStrength'];       
+        <ion-label position="floating">Contraseña nueva</ion-label>
+        <ion-input type="password" formControlName="usr_newPassword"
+          (ionInput)="onChangeWord_repeat($event.target.value)"></ion-input>
+      </ion-item>
+       <div class="errorPass">
+        @if(is_error_message){
+          <ion-text color="danger">
+            <ul>
+              @for (item of messageCAT3; track $index) {
+                @if(!item.estado){
+                  <li class="ion-padding-start txt-error">
+                    <ion-icon name="close-outline"></ion-icon>  {{ item.message }}
+                  </li>
+                }
+              } 
+            </ul>
+          </ion-text>
+         }
+       </div>
+       <br>   
+      
+
+      <ion-button expand="block" type="submit" fill="outline"
+      [disabled]="editRegisterForm.invalid">
+        <ion-icon name="refresh-outline"></ion-icon>
+      </ion-button>
     </form>
 
-  }@else {
+  }
+  @if(selectedTab() === 'personal'){
     <!-- Formulario reactivo -->
-  <form [formGroup]="registerForm" (ngSubmit)="submit()">
-
+  <form [formGroup]="editDataPersonalForm" (ngSubmit)="editUserSubmit()">
+    <ion-text color="primary" class="ion-padding-start title-panel flex">
+      <img [src]="'assets/icon/cat_'+ personalidadCAT.feeling +'.svg'" alt="" width="72px">
+      <p class="ion-padding-start ion-padding-top"> 
+        {{ personalidadCAT.message }}
+      </p>
+    </ion-text>
+     <br><br>
     <!-- TAB 1 -->
     <div >
       
-      <ion-item>
-        <ion-label position="floating">Usuario</ion-label>
-        <ion-input formControlName="usr_username"></ion-input>
+      <ion-item class="disabled">
+        <ion-label position="floating" color="medium">
+        Rol: &nbsp; &nbsp; {{ currentUser.usr_r_id?.r_name }} 
+
+        </ion-label>        
+
+      </ion-item>
+      
+
+      <ion-item  class="disabled">
+        <ion-label position="floating" color="medium">Total de monedas: &nbsp; &nbsp; <ion-icon name="diamond-outline"></ion-icon> {{ currentUser.usr_coin }} </ion-label>
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Rol</ion-label>
+        <ion-label position="floating" color="medium">Nombres</ion-label>
+        <ion-input formControlName="infp_firstname"
+                 errorText="(*) Se debe introducir el nombre correctamente" ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating" color="medium">Apellidos</ion-label>
+        <ion-input formControlName="infp_lastname"
+                 errorText="(*) Se debe introducir los apellidos completos" ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating" color="medium">Teléfono</ion-label>
+        <ion-input formControlName="infp_phone" type="number"
+                 errorText="(*) Se debe introducir el número de celular" ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating" color="medium">Dirección</ion-label>
+        <ion-input formControlName="infp_address"
+                 errorText="(*) Se debe introducir el la dirección domiciliaria" ></ion-input>
+      </ion-item>
+      <br>
+      <div class="datetime-container">
+        <ion-label position="floating" color="medium">Fecha de Nacimiento</ion-label>
         <br>
-        <ion-select formControlName="usr_r_id" interface="popover" placeholder="Seleccione un rol">
-          <ion-select-option value="ADMIN">ADMIN</ion-select-option>
-          <ion-select-option value="DOCENTE">DOCENTE</ion-select-option>
-          <ion-select-option value="ESTUDIANTE">ESTUDIANTE</ion-select-option>
-        </ion-select>
-      </ion-item>
+        <ion-item>
+          <ion-datetime
+            min="1950-03-01T00:00:00"
+            max="2005-12-31T23:59:59"
+            presentation="date" display-format="DD/MM/YYYY"
+            formControlName="infp_birthday"
+          ></ion-datetime>
+        </ion-item>
 
-
-      <ion-item>
-        <ion-label position="floating">+ 30 Monedas (NUEVO USUARIO)</ion-label>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Nombres</ion-label>
-        <ion-input formControlName="infp_firstname"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Apellidos</ion-label>
-        <ion-input formControlName="infp_lastname"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Teléfono</ion-label>
-        <ion-input formControlName="infp_phone"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="floating">Fecha de Nacimiento</ion-label>
-        <br><br>
-        <ion-datetime formControlName="infp_birthdate" display-format="DD/MM/YYYY"></ion-datetime>
-      </ion-item>
+      </div>
 
     </div>
 
-    <ion-button expand="block" type="submit">Registrar</ion-button>
+    
+    <ion-button expand="block" type="submit" fill="outline"
+    [disabled]="editDataPersonalForm.invalid">
+      <ion-icon name="refresh-outline"></ion-icon>
+    </ion-button>
+
   </form>
   }
 

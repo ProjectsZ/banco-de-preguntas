@@ -2,15 +2,17 @@ import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem,  IonLabel, IonMenuButton,ToastController,
   InfiniteScrollCustomEvent,  IonNote, IonIcon, IonModal, IonButton, IonButtons, IonImg, IonSpinner, IonAccordionGroup, IonAccordion } from '@ionic/angular/standalone';
 
+import { Dictionary, OrderCatDictionary } from '../interfaces/dictionary.interface';
 import { addOutline, chatbubbleEllipsesOutline, chevronBackOutline, documentOutline, layersOutline, shareSocialOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { TextHighlightPipe } from '../pipes/text-highlight.pipe';
+import { DictionaryService } from '../services/dictionary.service';
 import { SpinnerComponent } from "../components/spinner/spinner.component";
+import { c } from '@angular/core/event_dispatcher.d-pVP0-wST';
 import { Subscription } from 'rxjs';
-import { User } from '@supabase/supabase-js';
-import { Dictionary, OrderCatDictionary } from 'src/interfaces/dictionary.interface';
-import { DictionaryService } from 'src/services/dictionary.service';
-import { AuthService } from 'src/services/auth.service';
+import { AuthService } from '../services/auth.service';
+import { User } from '../interfaces/user.interface';
+
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',

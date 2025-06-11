@@ -2,9 +2,9 @@ import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, Inject
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonicSlides, IonToolbar, IonButton, IonButtons, IonFab, IonFabButton, IonFabList,
-  Platform, IonAlert, IonModal, IonFooter,
+  Platform, IonAlert, IonModal,
    IonIcon, IonItem, IonChip, IonText, IonList, IonItemGroup, IonLabel, IonRow, IonCol, IonSpinner, IonTitle, IonSegment, IonSegmentButton } from '@ionic/angular/standalone';
-import { add, addOutline, arrowBack, bookmarkOutline, bulbOutline, checkmark, checkmarkCircle, chevronBack, chevronDownCircle, chevronForwardCircle, chevronUpCircle, chevronUpOutline, close, closeCircle, colorPalette, diamondOutline, documentOutline, documentTextOutline, earthOutline, eye, eyeOutline, fileTrayFullOutline, globe, lockClosedOutline, optionsOutline, pencilOutline, saveOutline, searchSharp, star, starOutline } from 'ionicons/icons';
+import { add, addOutline, arrowBack, bookmarkOutline, bulbOutline, checkmark, checkmarkCircle, chevronBack, chevronDownCircle, chevronForwardCircle, chevronUpCircle, chevronUpOutline, close, closeCircle, colorPalette, diamondOutline, earthOutline, eye, eyeOutline, fileTrayFullOutline, globe, lockClosedOutline, optionsOutline, pencilOutline, saveOutline, star, starOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { Question } from 'src/app/interfaces/question.interface';
 import { QuizService } from 'src/app/services/quiz/quiz.service';
@@ -29,9 +29,6 @@ import { ExamService } from 'src/app/services/exam.service';
 import { Exam, PreguntasEnExamen } from 'src/app/interfaces/exam.interface';
 import { PublicityService } from 'src/app/services/publicidad/publicity.service';
 import { Publicity } from 'src/app/interfaces/publicity.interface';
-import { PdfViewerComponent } from 'src/app/components/pdf-viewer/pdf-viewer.component';
-import { CategoryService } from 'src/app/services/quiz/category.service';
-import { Category } from 'src/app/interfaces/category.interface';
 register();
 
 @Component({
@@ -40,11 +37,11 @@ register();
   styleUrls: ['./quiz.page.scss'],
   standalone: true,
   imports: [IonSegmentButton, IonSegment, IonTitle, IonSpinner, IonCol, IonRow, IonLabel, 
-    IonFab,IonFabButton,IonFabList, IonFooter,
+    IonFab,IonFabButton,IonFabList,
     IonItemGroup, IonList, IonText, IonChip, IonItem, IonIcon, IonButtons, IonButton, IonContent,
      IonHeader, IonToolbar, IonAlert, IonModal, ReviewComponent,
     CommonModule, FormsModule, QuizOptionsComponent, ResultComponent, ViewAnswerComponent,
-    TextHighlightPipe, FloatingCardComponent, SpinnerComponent, PdfViewerComponent ],
+    TextHighlightPipe, FloatingCardComponent, SpinnerComponent],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ], //CUIDADO: Esto puede evitar que se encuentre el error en los elementos. Si se encuentra un error en el template, eliminar esta línea y revisar el error en consola
 })
 export class QuizPage implements OnInit, OnDestroy {
@@ -53,22 +50,8 @@ export class QuizPage implements OnInit, OnDestroy {
   isReview = signal<boolean>(false);
   isSubmitted = signal<boolean>(false);
 
-  // PDF 
-  isPDF = signal<boolean>(false); // variable para el pdf
-  remotePdfUrl = signal<string | null>(null); // variable para el pdf
-  loadingModalPDF = signal<boolean>(false); // variable para el pdf
-  //image Zoom
-  imgZoom = signal<string | null>(null);  
-  isImageZoom = signal<boolean>(false); // variable para el zoom de la imagen
-  isCantidadZoom = signal<number>(0.5); // variable para el zoom de la imagen
-  isFilterImgZoom = signal<string>('none'); // variable para el zoom de la imagen
-
-  
   // promos
   promociones = signal<Publicity[]>([]);
-
-  // categoria seleccionada
-  categoria = signal<Category | null>(null);
 
   // cache question
   isCacheQuestion = signal<boolean>(false);
@@ -97,8 +80,6 @@ export class QuizPage implements OnInit, OnDestroy {
   resultModal = viewChild<IonModal>('result_modal');
   reviewModal = viewChild<IonModal>('review_quiz_modal');
   
-
-
   backButtonSubscription!: Subscription;  
   // readonly questions = input<Question[]>([]);
   swiperModules = [IonicSlides];
@@ -144,17 +125,12 @@ export class QuizPage implements OnInit, OnDestroy {
     private authS = inject(AuthService);
   private questionS = inject(QuestionService);
   private toastS = inject(ToastService);
-  private categoryS = inject(CategoryService); // Categoria obtener datos PDF
 
   isLoading = signal<boolean>(false); // Loading state
   selectSeeAnswer = signal<boolean>(false); // variable para el select de ver respuestas
   activeEditContent = signal<boolean>(false); // variable para el select de ver respuestas
   
   selectQuestion = signal<Question | null>(null); // variable para el select de ver respuestas
-
-  
-    // thema color
-  colorTheme = signal<string>('');
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     addIcons({
@@ -178,11 +154,7 @@ export class QuizPage implements OnInit, OnDestroy {
       bookmarkOutline,
       fileTrayFullOutline,
       earthOutline,
-      lockClosedOutline,
-      searchSharp,
-
-      // document PDF
-      documentTextOutline
+      lockClosedOutline
     });
 
     effect(()=> {
@@ -191,11 +163,6 @@ export class QuizPage implements OnInit, OnDestroy {
         this.submitQuiz();
       }
     });
-    
-    // verificar en el storage si el tema esta en modo light o dark
-    this.colorTheme.set(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
-    // console.log('---> colorTheme: ', localStorage.getItem('theme'));
-
    }
 
    setIsLoading(loading: boolean){
@@ -226,14 +193,6 @@ export class QuizPage implements OnInit, OnDestroy {
       }
     });
 
-    this.categoryS.getCategoriesById(this.categoryS.select_cat_id()+'').then((cat: any) => {
-      // console.log("categoria: ", cat);
-      this.categoria.set(cat);
-
-      console.log("categoria: ", this.categoria());
-    }).catch((error) => {
-      console.error("Error al obtener la categoría: ", error);
-    });
     
   }
 
@@ -250,29 +209,7 @@ export class QuizPage implements OnInit, OnDestroy {
 
   }
 
-   // cambio del tema
-  changeModeThem(){
-    if(this.colorTheme() === 'light'){
-      this.colorTheme.set('dark');
-      localStorage.setItem('theme', 'dark');
-    }else{
-      this.colorTheme.set('light');
-      localStorage.setItem('theme', 'light');
-    }
-  }
 
-
-  setIsImageZoom(value: boolean){
-    this.isImageZoom.set(value);
-    this.isCantidadZoom.set(1);
-  }
-
-  setIsPDF(value: boolean){
-    if(value === false){
-      this.isLoading.set(false);
-    }
-    this.isPDF.set(value);
-  }
 
   setIsReview(value: boolean){
     this.isReview.set(value);
@@ -415,7 +352,6 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   slideTo(index: number){
-    this.setIsReview(false)
     console.log(index);
     const swiperElement = this.swiperRef()?.nativeElement.swiper;
     swiperElement.slideTo(index, 300, false);
@@ -622,8 +558,8 @@ export class QuizPage implements OnInit, OnDestroy {
       return;
     }
 
-      if(this.currentUser?.usr_coin == 0){
-        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", "angry", true); 
+      if(this.currentUser?.usr_coin == "0"){
+        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger"); 
         return
       }
     
@@ -648,7 +584,7 @@ export class QuizPage implements OnInit, OnDestroy {
 
             this.questions()[index].viewAnswer = true;
 
-            this.toastS.openToast("La explicación de la pregunta fue desbloqueada exitosamente!","success", "happy", false);
+            this.toastS.openToast("La explicación de la pregunta fue desbloqueada exitosamente!","success");
 
             // setTimeout(() => {
             //   this.questions()[index].viewAnswer = false;
@@ -656,7 +592,7 @@ export class QuizPage implements OnInit, OnDestroy {
 
           } else {
             // console.warn('No se pudo actualizar las monedas');            
-            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger", "angry", true);
+            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger");
 
           }
         },
@@ -844,8 +780,8 @@ export class QuizPage implements OnInit, OnDestroy {
     //   return;
     // }
 
-      if(this.currentUser?.usr_coin == 0){
-        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", "angry", true); 
+      if(this.currentUser?.usr_coin == "0"){
+        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger"); 
         return
       }
     
@@ -869,10 +805,10 @@ export class QuizPage implements OnInit, OnDestroy {
 
             // this.questions()[index].viewAnswer = true;
 
-            this.toastS.openToast("la respuesta podra ser", "success", "happy", true, `**${data?.opcion1}**`, `ó **${data?.opcion2}**`, 6400);
+            this.toastS.openToast("la respuesta podra ser", "success", "happy", false, `**${data?.opcion1}**`, `ó **${data?.opcion2}**`, 6400);
 
           } else {         
-            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger", "angry", true);
+            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger");
           }
         },
         error: (err) => {
@@ -969,51 +905,6 @@ export class QuizPage implements OnInit, OnDestroy {
 
   addMyCourses(){
 
-  }
-
-  onSelectionImageZoom(pr_img: string){
-    console.log("imagen: ", pr_img);
-    this.imgZoom.set(pr_img);
-    this.setIsImageZoom(true);
-  }
-
-  onZoomImage(){
-    this.isCantidadZoom.set(this.isCantidadZoom() + 0.5);
-    if(this.isCantidadZoom() >= 2.5){
-      this.isCantidadZoom.set(0.5);
-    }
-  }
-
-  onFilterImage(evento: any){
-    const value = evento.detail.value;
-    this.isFilterImgZoom.set(value);
-  }
-
-  onModalPDF(cat: { uri: string; title: string; author: string; }){
-    console.log("cat: ", cat);
-    this.remotePdfUrl.set(cat.uri);
-    if(this.currentUser?.usr_r_id?.r_name == "ESTUDIANTE"){
-      this.toastS.openToast("no_subscripcion","danger", "angry");
-      return;
-    }
-
-    this.isLoading.set(true);
-
-    console.log("clicked");
-    this.setIsPDF(true);
-  }
-
-  handleLoadingFull(value: boolean): void {
-    console.log('PDF cargado completamente:', value); // Debería mostrar "true"
-    
-    this.isLoading.set(false);
-
-    this.loadingModalPDF.set(value);
-  }
-
-  get remotePdfTitle(): string | null {    
-    const cat = this.categoria();
-    return cat?.cat_doc?.[0]?.title ?? null;
   }
 
 }

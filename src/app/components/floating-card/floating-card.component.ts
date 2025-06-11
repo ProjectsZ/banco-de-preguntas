@@ -1,6 +1,6 @@
 import { Component, input, OnInit } from '@angular/core';
+import { Dictionary } from 'src/app/interfaces/dictionary.interface';
 import { TextHighlightPipe } from 'src/app/pipes/text-highlight.pipe';
-import { Dictionary } from 'src/interfaces/dictionary.interface';
 
 @Component({
   selector: 'app-floating-card',

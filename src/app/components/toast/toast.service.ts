@@ -103,10 +103,11 @@ export class ToastService {
    * @param message Mensaje a mostrar en el toast.
    * @param color Color del toast (success, danger, warning).
    * @param noCerrarElAnterior Si es true, no cierra el modal anterior. */  
-  async openToast(message: string, color: 'success' | 'danger' | 'warning' = 'success', 
+  async openToast(message: string, 
+    color: 'success' | 'danger' | 'warning' = 'success', 
     emotion: 'happy' | 'curious' | 'annoyed' | 'proud' | 'confused' | 'affectionate' | 'angry' | 'playful' | 'offended' | 'sad' | 'suspicious' = 'happy', 
     noCerrarElAnterior: boolean = false,
-    opcion1: string="", opcion2: string="", time_duration: number = 3200) {
+    opcion1: string="", opcion2: string="", time_duration: number = 4000) {
 
     const numero = this.onCountNivelNumeric(message.toLowerCase());
       console.log("numero count:", numero);
@@ -139,6 +140,29 @@ export class ToastService {
     // Cerrar automáticamente en 4.8 segundos
     setTimeout(() => modal.dismiss(), time_duration);
   }
+
+  // mostrar solo mensaje para manejar la interactividad de la conversación
+  async openMessage(message: string, 
+    color: 'success' | 'danger' | 'warning' = 'success', 
+    emotion: 'happy' | 'curious' | 'annoyed' | 'proud' | 'confused' | 'affectionate' | 'angry' | 'playful' | 'offended' | 'sad' | 'suspicious' = 'happy', 
+    noCerrarElAnterior: boolean = false,
+    opcion1: string="", opcion2: string="", time_duration: number = 4000) {
+
+    const numero = this.onCountNivelNumeric(message.toLowerCase());
+      console.log("numero count:", numero);
+    // Cerrar cualquier modal existente antes de abrir uno nuevo
+    let { speak, feeling, color: my_color, level_state } = await 
+    this.loadToastData(message.toLowerCase(), color, emotion, numero, opcion1, opcion2);
+    
+    return {
+      message: speak,
+      feeling: feeling,
+      color: my_color,
+      level_state: level_state,
+    }
+
+  }
+
 
   onCountNivelNumeric(message: string): number {
     // Buscar si el mensaje ya existe en el array

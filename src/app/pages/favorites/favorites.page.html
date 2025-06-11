@@ -1,0 +1,207 @@
+
+<ion-content class="ion-padding">
+  
+  <div class="user-profile">  
+      <ion-buttons class="ion-page">
+        <ion-button slot="start" (click)="goBack()">
+          <ion-icon name="arrow-back-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <div class="greeting">
+        <h5> Bienvenido </h5>
+        <h3> mis favoritos </h3>
+      </div>
+
+      <div class="end-add">
+        <ion-button class="add" fill="light" color="primary" (click)="goAddCuorse()">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </div>
+  </div> 
+  
+
+  <div class="tabs-content">
+
+    
+    <ion-searchbar [debounce]="1000" placeholder="Introduce el examen favorito"
+       (ionInput)="filtrarExamenes($event)"></ion-searchbar>
+
+
+      <div class="recomendando">
+        <div class="flex center justify title">
+          <h6> <b>Recomendando examenes</b> </h6>
+          <span class="disabled"> View all </span>
+        </div>
+  
+        <div class="cards-recomendando">
+
+          @if(!isLoading()){
+            <app-spinner></app-spinner>
+          }
+
+          @for (exam of dataExams; track i; let i = $index) {
+          <div class="card-data"
+              [ngClass]="{ 
+                            'no-question':  exam.exm_pr.length == 0,
+                            'private': exam.exm_state == 'private',
+                            'public': exam.exm_state == 'public'
+                          }">
+            
+            <div class="toggle-switch">
+              <ion-icon name="lock-closed-outline" class="icon active" 
+                [color]="exam.exm_state == 'private'? 'light' : 'dark'"
+                [ngClass]="{ 'active':  exam.exm_state == 'private'}"
+              (click)="onToggleSwitch(exam, i, 'private')"></ion-icon>
+              <ion-icon name="lock-open-outline" class="icon" 
+                [color]="exam.exm_state == 'public'? 'light' : 'dark'"
+                [ngClass]="{ 'active':  exam.exm_state == 'public'}"
+              (click)="onToggleSwitch(exam, i, 'public')"></ion-icon>
+            </div>
+
+            <div class="card-overlay"
+              (click)="goModalExam(exam)">
+              <!-- @if(exam.exm_state == "private"){
+                <ion-icon name="lock-closed-outline" class="icon"></ion-icon>
+              }@else {
+                <ion-icon name="lock-open-outline"></ion-icon>
+              }
+               -->
+              
+              <h6> {{ exam.exm_name }} </h6>
+            </div>
+          </div>
+         }
+        </div>
+        
+      </div>
+    
+
+  </div>
+  <br><br>
+
+  <ion-modal #modal trigger="open-modal" 
+    [isOpen]="isModalOpen()"
+    (didDismiss)="onModalDismiss($event)">
+    <ng-template>
+      <ion-content>
+        <ion-toolbar>
+          <ion-title class="flex center"> 
+            <ion-icon name="heart-outline"></ion-icon>
+            <h5>{{ selectExam.exm_name }} </h5>
+          </ion-title>
+          <ion-buttons slot="end">
+            <ion-button color="light" (click)="modal.dismiss()">X</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+        <ion-list>
+         @for(item of selectExam.exm_pr; track i; let i = $index) {
+          <ion-item>
+            <ion-avatar slot="start">
+              @if(item.pr_img){
+                <ion-img [src]="item.pr_img"></ion-img>
+              }@else {
+                <ion-img src="assets/imgs/avatar.png"></ion-img>
+              }
+            </ion-avatar>
+            <ion-label>
+              <h2> {{ item.pr_question | textLimit : 58 }} </h2>
+              <p> {{ item.
+                pr_difficulty }} </p>
+            </ion-label>
+          </ion-item>
+         }
+        
+        </ion-list>
+        
+      </ion-content>
+      <ion-footer class="ion-no-border footer-btn">        
+        <ion-button (click)="onEnviar()" class="play"  fill="solid" color="primary">
+          Play &nbsp;
+          <ion-icon name="arrow-forward-circle-outline" slot="end"></ion-icon>
+        </ion-button>
+      </ion-footer>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>
+
+<ion-modal
+  #review_quiz_modal
+  (didDismiss)="setIsExam(false)"
+  [isOpen]="isModalExam()"
+  [initialBreakpoint]="1" 
+  [cssClass]="'small-modal'">
+  
+  <ng-template>
+    <ion-content class="ion-padding">
+
+      <div class="header">
+        <h2> Mis Examenes: </h2>
+        <ion-icon name="close-outline" (click)="setIsExam(false)"></ion-icon>
+      </div>
+
+      <ion-list class="checkbox-list"> 
+        Agregar exames: 
+        @for (examen of dataExams; track m; let m = $index) {
+          
+          <ion-item class="size-list">
+            <ion-label> {{ examen.exm_name }} </ion-label>
+            @if(examen.exm_state == 'private'){
+              <ion-icon  name="lock-closed-outline"></ion-icon>
+            }@else{ <ion-icon  name="earth-outline"></ion-icon> }
+          </ion-item>
+          
+      }
+
+      </ion-list>
+
+      <form class="formExam"
+        [formGroup]="examForm" (ngSubmit)="onExamSubmit()">
+
+          <div class="flex between">
+            <ion-input
+              type="text"
+              formControlName="exm_name"
+              placeholder="Agregar examen">
+            </ion-input>
+
+            <ion-select
+              formControlName="exm_state"
+              interface="popover">
+              <ion-select-option value="private">
+                <ion-icon name="lock-closed-outline">
+                </ion-icon>
+                🔒
+              </ion-select-option>
+              <ion-select-option value="public" selected="true">
+                <ion-icon name="earth-outline">
+                </ion-icon>
+                🌍
+              </ion-select-option>
+            </ion-select>
+          </div>
+          <ion-select label="Curso" labelPlacement="fixed" interface="popover" 
+            placeholder="Seleccione un Curso"
+            formControlName="cat_crs_id">
+            @for(curso of Courses(); track $index){
+              <ion-select-option 
+              [value]="curso.crs_id">
+                {{curso?.crs_name}}
+              </ion-select-option>
+            }
+          </ion-select>
+          <ion-textarea
+            formControlName="exm_description"
+            placeholder="Descripción del examen">
+          </ion-textarea>
+       
+        <ion-button expand="block" type="submit" class="new-list-button" fill="outline"
+            >
+          <ion-icon slot="start" name="add-outline"></ion-icon>
+        </ion-button>
+      </form>
+
+    </ion-content>
+  </ng-template>
+
+</ion-modal>

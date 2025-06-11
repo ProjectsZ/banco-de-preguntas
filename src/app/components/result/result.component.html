@@ -61,6 +61,20 @@
 
           <ion-col class="postion-center txt">
             <ion-label>
+              Preguntas totales
+            </ion-label>
+            <p>
+              <ion-text slot="start">        
+                <ion-chip color="dark" disabled="true" class="flex center">
+                  <ion-icon name="diamond-outline"></ion-icon> &nbsp;
+                  <ion-text class="bold"> {{ currentUser.usr_coin }} </ion-text>
+                </ion-chip>
+              </ion-text>
+            </p>
+          </ion-col>
+
+          <ion-col class="postion-center txt">
+            <ion-label>
               Total de duración
             </ion-label>
             <p>
@@ -124,6 +138,14 @@
 
     
     <ion-row>
+
+      <ion-col class="postion-center txt">
+        <ion-button expand="block" fill="outline" mode="ios" color="medium"  
+          [disabled]="!coin_win"      
+          (click)="canjearPremio()"> {{ coin_win }} &nbsp;
+          <ion-icon name="gift-outline"></ion-icon> &nbsp; click para canjear
+        </ion-button>
+      </ion-col>
 
     </ion-row>
 

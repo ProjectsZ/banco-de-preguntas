@@ -1,5 +1,8 @@
-import { Component } from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { Component, inject } from '@angular/core';
+import { IonApp, IonRouterOutlet, isPlatform, Platform } from '@ionic/angular/standalone';
+import { Capacitor } from '@capacitor/core';
+import { StatusBar, Style } from '@capacitor/status-bar';
+import { from } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -7,5 +10,38 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent {
-  constructor() {}
+
+  private platform = inject(Platform);
+
+
+  constructor() {
+    this.platform.ready().then(()=>{
+      setTimeout(()=>{
+        this.customStatusBar(true);
+      }, 2500);
+    });
+  }
+
+  async customStatusBar(primaryColor: boolean = false){
+    if(Capacitor.getPlatform() != 'web'){
+      await StatusBar.setStyle({
+        style: primaryColor ? Style.Dark : Style.Light,
+       
+      });
+      if(isPlatform('android')){
+        // StatusBar.setBackgroundColor({
+        //   color: primaryColor ? '#141e30' : '#ffffff',
+        // });
+        await StatusBar.setBackgroundColor({
+          color: primaryColor ? '#141e30' : '#ffffff',
+        });
+  
+        // Esto es fundamental: evita que se superponga a la app
+        await StatusBar.setOverlaysWebView({ overlay: false });
+
+      }
+    }
+  }
+
+
 }

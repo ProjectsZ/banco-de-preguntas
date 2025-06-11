@@ -1,0 +1,225 @@
+@use '../../../assets/css/var-colors' as *;
+@use '../../../assets/css/var-config' as *;
+
+ion-header {
+    background-color: $white;
+    border-bottom: 1px solid #f2f2f2;
+}
+  
+ion-content{
+    height: 100vh;
+}
+
+.greeting{
+    h5{
+        font-size: 0.75em;
+        color: $gray_700;
+    }
+    h3{
+        font-size: 1.5em;
+        font-weight: 700;
+        color: $gray_900;
+    }
+}
+    .user-image {
+
+        img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    }
+.user-profile{
+    margin-top: 0.4rem;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.2rem;
+
+    ion-buttons{
+        position: relative;
+        margin-left: 0.4rem;
+    }
+
+    .greeting{
+        margin-left: 0.64rem;
+    }
+
+}
+
+.menu-perfil{
+    margin: 0;
+    padding-top: 2rem;
+    padding-left: 1.8rem;
+    padding-bottom: 1.6rem;
+    border-bottom: 2px solid var(--ion-color-light);
+
+    img{
+        width: 4rem;
+        height: 4rem;
+    }
+
+    .greeting{
+        margin: 0;
+        margin-top: 0.4rem;
+
+        span{
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        h5{
+            margin-top: 0.32rem;
+        }
+    }
+}
+
+ion-list{
+    margin-left: 1.8rem;
+    margin-top: 1.6rem;
+
+    ion-icon{
+        opacity: 0.64;
+    }
+
+    ion-label{
+        padding-left: 1rem;
+    }
+}
+
+
+.tabs{
+    
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1rem;
+
+    a{
+        padding: 1rem 1rem 0.5rem 0;
+        position: relative;
+        font-weight: 500;
+        font-size: 0.9rem;
+        color: $gray_400;
+
+        &.active, &:hover{
+            font-weight: 700;
+            color: $gray_900;
+
+            &::after{
+                position: absolute;
+                content: '';
+                display: block;
+                width: 40%;
+                height: 2px;
+                margin-top: 0.5rem;
+                background-color: $gray_900;
+            }
+        }
+
+    }
+
+
+}
+
+.temas{
+    margin-top: 1.2rem;
+
+    img{
+        border-radius: 10px;
+        width: 100vw;
+        height: 160px;
+    }
+}
+
+ion-searchbar{
+    margin-top: 1rem;
+    width: 100%;
+    padding: 0;
+}
+
+.recomendando{
+    
+    .title{
+        h6{
+            color: var(--ion-color-primary);
+        }
+        span{
+            font-size: 0.72rem;
+        }
+    }
+}
+// card carrusel
+.cards-recomendando {
+    display: flex;
+    gap: 1rem; /* Espacio entre tarjetas */
+    overflow-x: auto;
+    padding: 1rem 0.5rem;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+
+  
+    /* Opcional: oculta la barra de scroll */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      display: none; /* Chrome/Safari */
+    }
+  
+    ion-card {
+      flex: 0 0 auto;
+      width: 54vw; /* Más anchas para buena visualización */
+      max-width: 320px;
+      scroll-snap-align: start;
+      border-radius: 1rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  
+      ion-card-title {
+        font-weight: bold;
+        font-size: 1.2rem;
+      }
+  
+      ion-button {
+        margin-top: 0.5rem;
+      }
+    }
+
+    .card-data{
+        ion-card-header{
+            height: 7.2rem;
+            margin-bottom: 0.64rem;
+        }
+        ion-card-title{
+            margin: 0 0 0.4rem 0;
+        }
+        .description{
+            font-size: 0.8rem;
+            
+        }
+        .plus-description{
+            color: var(--ion-color-secondary);
+        }
+    }
+
+    .card-mini{
+        position: relative;
+        width: 7.2rem;
+        height: 7.2rem;
+
+        .card-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); /* oscurece un poco el fondo */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+      
+            h6 {
+              color: white;
+              font-size: 0.72rem;
+              text-align: center;
+              padding: 0 1rem;
+            }
+          }
+    }
+  }

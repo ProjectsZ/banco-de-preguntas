@@ -3,7 +3,11 @@ import { IonHeader, IonToolbar, IonTitle, IonText, IonButton, IonButtons, IonIco
 import { CircleTextComponent } from "./../widgets/circle-text/circle-text.component";
 import { addIcons } from 'ionicons';
 import { giftOutline, reloadOutline } from 'ionicons/icons';
+import { User } from 'src/app/interfaces/user.interface';
 import { Subscription } from 'rxjs';
+import { AuthService } from 'src/app/services/auth.service';
+import { ToastService } from '../toast/toast.service';
+
 
 @Component({
   selector: 'app-result',
@@ -26,8 +30,11 @@ export class ResultComponent  implements OnInit, OnDestroy {
   coin_win: number = 0;
   
   isLoading = signal<boolean>(false); // Loading state
-
+  // usuario
+  currentUser!: User;      // usuario de tipo User
   private userSubscription: Subscription | null = null; // Suscripción al BehaviorSubject del servicio
+  private authS = inject(AuthService);
+  private toastS = inject(ToastService); // Servicio de Toast
 
   constructor() {
     addIcons({
@@ -53,6 +60,20 @@ export class ResultComponent  implements OnInit, OnDestroy {
       this.coin_win = 0
     }
 
+    // Nos suscribimos al BehaviorSubject del servicio
+    this.userSubscription = this.authS.currentUser.subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        // console.log('Usuario actual:', this.currentUser);
+      },
+      error: (err) => {
+        console.error('Error al obtener datos del usuario:', err);
+      },
+      complete: () => {
+        console.log('Suscripción completada');
+      }
+    });
+
   }
 
   closeModal(){
@@ -72,5 +93,42 @@ export class ResultComponent  implements OnInit, OnDestroy {
     this.isLoading.set(loading);
   }
 
+  canjearPremio(){
+    if(this.currentUser?.usr_coin == "0"){
+      this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", 'angry', true); 
+      return
+    }
+  
+    // Validar si existe el usuario antes de proceder
+    if (!this.currentUser?.usr_id) {
+      console.error('Usuario no autenticado');
+      return;
+    }
+
+    // Activar loading
+    this.setIsLoading(true);
+    console.log('--> Monedas a canjear:', this.coin_win);
+    // Actualizar moneditas
+    this.userSubscription = this.authS.updateCoin(this.currentUser.usr_id,0, this.coin_win).subscribe({
+      next: (success) => {
+        if (success) {
+          console.log('Monedas actualizadas correctamente');
+
+          // desactivando loading
+          this.setIsLoading(false);
+
+          // this.questions()[index].viewAnswer = true;
+          this.coin_win = 0; // Reiniciar el valor de las monedas ganadas
+          this.toastS.openToast("Se canjeo el regalo, chevere!", "success", "happy", true); // Mensaje de éxito
+
+        } else {         
+          this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger", "annoyed", true);
+        }
+      },
+      error: (err) => {
+        console.error('Error en la suscripción de updateCoin:', err);
+      }
+    });
+  }
 
 }

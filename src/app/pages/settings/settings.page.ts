@@ -2,12 +2,11 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonTitle, IonToolbar, ToastController, IonButtons, IonMenuButton, IonList, IonItem, IonLabel, IonToggle, IonModal, IonSpinner, IonIcon } from '@ionic/angular/standalone';
-
+import { QuestionService } from 'src/app/services/question.service';
 import { AddQuestionsComponent } from 'src/app/components/add-questions/add-questions.component';
 import { arrowBack, arrowBackOutline, closeOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { SpinnerComponent } from 'src/app/components/spinner/spinner.component';
-import { QuestionService } from 'src/services/question.service';
 
 @Component({
   selector: 'app-settings',
