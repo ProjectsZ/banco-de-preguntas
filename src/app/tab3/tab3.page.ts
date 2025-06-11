@@ -130,10 +130,20 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
     }
   }
 
+  onSelectionCursos(){    
+    if(!this.courseS.courses()){
+      this.isLoading.set(true);
+      console.log('cargando cursos');
+      return;
+    } 
+    console.log('click');
+    
+  }
+
   async onCouseSelection(crs_id: string){
     try{
-      this.isLoading.set(true);
       // console.log(crs_id);
+
       const { data, total } = await this.categoryS.getCategories_crs(crs_id);
       this.countCategories = total;
       if(this.countCategories === 0){

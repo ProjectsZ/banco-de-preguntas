@@ -4,13 +4,15 @@ Uu$123456789
 >$ npm i xlsx
 >$ npm i swiper
 
-npm i @capacitor/splash-screen
+    npm i @capacitor/splash-screen
 rm -rf android
+rm -rf www
 ionic build
 ionic cap add android
-ionic cap add ios
+    ionic cap add ios
 ionic cap sync
-npx capacitor-assets generate --android --ios
+npx capacitor-assets generate
+    npx capacitor-assets generate --android --ios
 ionic cap open android
 
 npm install @capacitor/assets --save-dev

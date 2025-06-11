@@ -154,9 +154,10 @@ ion-header.answers{
     }
 }
 
+// los chiups
 .cat-chip{
     margin-right: 3.2rem;
-    opacity: 0.4;
+    opacity: 0.56;
     
     .icon_cat{
         position: absolute;
@@ -248,3 +249,10 @@ ion-textarea.answer-chip{
     }
 }
 
+.filter-chip{
+    margin-left: 0.4rem;
+}
+.ion-select-filter{
+    background: transparent;
+    margin-left: 0.2rem;
+}

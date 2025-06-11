@@ -2,9 +2,9 @@ import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, effect, ElementRef, Inject
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonicSlides, IonToolbar, IonButton, IonButtons, IonFab, IonFabButton, IonFabList,
-  Platform, IonAlert, IonModal,
+  Platform, IonAlert, IonModal, IonFooter,
    IonIcon, IonItem, IonChip, IonText, IonList, IonItemGroup, IonLabel, IonRow, IonCol, IonSpinner, IonTitle, IonSegment, IonSegmentButton } from '@ionic/angular/standalone';
-import { add, addOutline, arrowBack, bookmarkOutline, bulbOutline, checkmark, checkmarkCircle, chevronBack, chevronDownCircle, chevronForwardCircle, chevronUpCircle, chevronUpOutline, close, closeCircle, colorPalette, diamondOutline, earthOutline, eye, eyeOutline, fileTrayFullOutline, globe, lockClosedOutline, optionsOutline, pencilOutline, saveOutline, star, starOutline } from 'ionicons/icons';
+import { add, addOutline, arrowBack, bookmarkOutline, bulbOutline, checkmark, checkmarkCircle, chevronBack, chevronDownCircle, chevronForwardCircle, chevronUpCircle, chevronUpOutline, close, closeCircle, colorPalette, diamondOutline, earthOutline, eye, eyeOutline, fileTrayFullOutline, globe, lockClosedOutline, optionsOutline, pencilOutline, saveOutline, searchSharp, star, starOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { Question } from 'src/app/interfaces/question.interface';
 import { QuizService } from 'src/app/services/quiz/quiz.service';
@@ -37,7 +37,7 @@ register();
   styleUrls: ['./quiz.page.scss'],
   standalone: true,
   imports: [IonSegmentButton, IonSegment, IonTitle, IonSpinner, IonCol, IonRow, IonLabel, 
-    IonFab,IonFabButton,IonFabList,
+    IonFab,IonFabButton,IonFabList, IonFooter,
     IonItemGroup, IonList, IonText, IonChip, IonItem, IonIcon, IonButtons, IonButton, IonContent,
      IonHeader, IonToolbar, IonAlert, IonModal, ReviewComponent,
     CommonModule, FormsModule, QuizOptionsComponent, ResultComponent, ViewAnswerComponent,
@@ -49,6 +49,12 @@ export class QuizPage implements OnInit, OnDestroy {
   currentIndex = signal<number>(0);
   isReview = signal<boolean>(false);
   isSubmitted = signal<boolean>(false);
+
+  //image Zoom
+  imgZoom = signal<string | null>(null);  
+  isImageZoom = signal<boolean>(false); // variable para el zoom de la imagen
+  isCantidadZoom = signal<number>(0.5); // variable para el zoom de la imagen
+  isFilterImgZoom = signal<string>('none'); // variable para el zoom de la imagen
 
   // promos
   promociones = signal<Publicity[]>([]);
@@ -80,6 +86,8 @@ export class QuizPage implements OnInit, OnDestroy {
   resultModal = viewChild<IonModal>('result_modal');
   reviewModal = viewChild<IonModal>('review_quiz_modal');
   
+
+
   backButtonSubscription!: Subscription;  
   // readonly questions = input<Question[]>([]);
   swiperModules = [IonicSlides];
@@ -154,7 +162,8 @@ export class QuizPage implements OnInit, OnDestroy {
       bookmarkOutline,
       fileTrayFullOutline,
       earthOutline,
-      lockClosedOutline
+      lockClosedOutline,
+      searchSharp
     });
 
     effect(()=> {
@@ -210,6 +219,10 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
 
+  setIsImageZoom(value: boolean){
+    this.isImageZoom.set(value);
+    this.isCantidadZoom.set(1);
+  }
 
   setIsReview(value: boolean){
     this.isReview.set(value);
@@ -352,6 +365,7 @@ export class QuizPage implements OnInit, OnDestroy {
   }
 
   slideTo(index: number){
+    this.setIsReview(false)
     console.log(index);
     const swiperElement = this.swiperRef()?.nativeElement.swiper;
     swiperElement.slideTo(index, 300, false);
@@ -559,7 +573,7 @@ export class QuizPage implements OnInit, OnDestroy {
     }
 
       if(this.currentUser?.usr_coin == "0"){
-        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger"); 
+        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", "angry", true); 
         return
       }
     
@@ -584,7 +598,7 @@ export class QuizPage implements OnInit, OnDestroy {
 
             this.questions()[index].viewAnswer = true;
 
-            this.toastS.openToast("La explicación de la pregunta fue desbloqueada exitosamente!","success");
+            this.toastS.openToast("La explicación de la pregunta fue desbloqueada exitosamente!","success", "happy", false);
 
             // setTimeout(() => {
             //   this.questions()[index].viewAnswer = false;
@@ -592,7 +606,7 @@ export class QuizPage implements OnInit, OnDestroy {
 
           } else {
             // console.warn('No se pudo actualizar las monedas');            
-            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger");
+            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger", "angry", true);
 
           }
         },
@@ -781,7 +795,7 @@ export class QuizPage implements OnInit, OnDestroy {
     // }
 
       if(this.currentUser?.usr_coin == "0"){
-        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger"); 
+        this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", "angry", true); 
         return
       }
     
@@ -805,10 +819,10 @@ export class QuizPage implements OnInit, OnDestroy {
 
             // this.questions()[index].viewAnswer = true;
 
-            this.toastS.openToast("la respuesta podra ser", "success", "happy", false, `**${data?.opcion1}**`, `ó **${data?.opcion2}**`, 6400);
+            this.toastS.openToast("la respuesta podra ser", "success", "happy", true, `**${data?.opcion1}**`, `ó **${data?.opcion2}**`, 6400);
 
           } else {         
-            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger");
+            this.toastS.openToast("Error al pagar con las monedas, intente luego!","danger", "angry", true);
           }
         },
         error: (err) => {
@@ -905,6 +919,24 @@ export class QuizPage implements OnInit, OnDestroy {
 
   addMyCourses(){
 
+  }
+
+  onSelectionImageZoom(pr_img: string){
+    console.log("imagen: ", pr_img);
+    this.imgZoom.set(pr_img);
+    this.setIsImageZoom(true);
+  }
+
+  onZoomImage(){
+    this.isCantidadZoom.set(this.isCantidadZoom() + 0.5);
+    if(this.isCantidadZoom() >= 2.5){
+      this.isCantidadZoom.set(0.5);
+    }
+  }
+
+  onFilterImage(evento: any){
+    const value = evento.detail.value;
+    this.isFilterImgZoom.set(value);
   }
 
 }

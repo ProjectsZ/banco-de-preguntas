@@ -31,10 +31,17 @@
 
         <!-- Seleccione el curso o materia especifica -->
         <ion-item lines="none" color="light" class="ion-margin-top">
-          <ion-select label="Curso" labelPlacement="fixed" interface="popover" 
+
+          <ion-select label="Curso" labelPlacement="fixed" interface="action-sheet" cancelText="X"
+
           placeholder="Seleccione un Curso"
           formControlName="cat_crs_id" 
+          (click)="onSelectionCursos()"
           (ionChange)="onCouseSelection(formData.get('cat_crs_id')?.value)">
+
+          
+
+
           @for(curso of Courses(); track $index){
             <ion-select-option 
             [value]="curso.crs_id">
@@ -42,6 +49,7 @@
             </ion-select-option>
           }
           </ion-select>
+
 
           @let cat_crs_id = formData.get('cat_crs_id');
           @if(cat_crs_id?.invalid && cat_crs_id?.touched){

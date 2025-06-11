@@ -4,6 +4,7 @@ import { Question } from '../interfaces/question.interface';
 import { SupabaseService } from './supabase/supabase.service';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Observable } from 'rxjs';
+import { ToastService } from '../components/toast/toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,8 @@ export class QuestionService {
 
   private supabaseS = inject(SupabaseService);
   private supabase = computed<SupabaseClient>(()=> this.supabaseS.getClient());
+
+  toastS = inject(ToastService); // Assuming you have a ToastService for notifications
 
   constructor() {
 
@@ -136,6 +139,9 @@ export class QuestionService {
       }
 
       console.log(data);
+      if(data){
+        this.toastS.openToast('Preguntas importadas correctamente', 'success', 'happy');
+      }
       return data;
 
     }catch(e){

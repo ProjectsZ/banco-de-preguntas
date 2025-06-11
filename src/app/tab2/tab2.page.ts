@@ -73,6 +73,9 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
     if (this.userSubscription) {
       this.userSubscription.unsubscribe();
     }
+
+    this.dictionaryS.setDictionary(null);
+
   }
 
   setIsLoading(loading: boolean){

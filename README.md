@@ -1,5 +1,13 @@
 
 # VERSION 0.8
+0.8.5
+- creacion de un nuevo componente que use la libreria angular PDF view, PARA VISUALIZAR PDFs linkeados de la red
+- Fixed tab Quiz, 
+- Fixed modal Review Quiz, que se muestre un espaciado entre los botones y nose vean tan pegados y que al realizar la accion se cierre el modal de manera automatica
+- Fixed ventana toast, para que no cierre el cambio de otros modal activos
+- Se agrando el boton icono para mostrar significado en la busqueda del diccionario, por palabras
+- En la imagen de las quiz, se adjunta una imagen de referencia y en algunas ocaciones diche imagen muestra texto para leer o pistas de la respeusta entorno a la pregunta, como las letras son pequeñas (ya que se ajusta al ancho de la pantalla) se tendrá que aplicar opciones para darle zoom (1, 1.5, 2 como maximo) y tambien se aplicara filtros (gray, tono, brillo, invertir color, etc)
+0.8.4
 - se corrige el tag de las etiquetas, lo normal es que se presente un # + palabra clave, pero en caso de que la etiqueta tenga un @ eso indicara que es un nombre o apellido especifico de algun profesional, docente o administrador.
 - Agregando al componente quiz, un bloque de publicidad, siendo esta contratada por inversionistas locales o nacionales segun la demanda de marketeo, en la que consiste en tener un banner que se muestre en forma de slider y que si la publicidad contratada es de grado 0 (se repite 3 veces en la secuencia), en 1 (se repite 2) y en 2 (solo una vez), luego se desplaza con las navegaciones.
 - Se corrige el componente favoritos, y se muestra cada carga de examenes propios del usuario, como tambien poder crear mas examenes como ESTUDIANTE (5 examenes), DOCENTE (20 examenes), ADMIN (iliminitado), PLUS, PRO Y TEAM (Ilimitado), tambien se agrego la opcion de busqueda por nombre

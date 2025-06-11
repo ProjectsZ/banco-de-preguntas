@@ -1,8 +1,8 @@
 {
   "name": "ion-investigateTheme",
-  "version": "0.7.0",
-  "author": "Ionic Framework",
-  "homepage": "https://ionicframework.com/",
+  "version": "0.8.0",
+  "author": "Skyrider Team",
+  "homepage": "fredpizarro.github.io",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -67,5 +67,5 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.6.3"
   },
-  "description": "An Ionic project"
+  "description": "An Ionic project, 'Banco de preguntas' is a mobile application that allows users to create, share, and solve questions. It is designed to be user-friendly and efficient, making it easy for users to access and manage their questions. The app is built using the Ionic framework, which provides a powerful set of tools for building cross-platform mobile applications."
 }

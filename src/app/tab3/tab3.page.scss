@@ -1,8 +1,12 @@
 
-
-
 ion-content{
     --background: var(--ion-background-gradient);
+
+    ion-select{
+        --border-width: 0;
+        --padding-start: 0;
+        --padding-end: 0;
+    }
 
     ion-header{
         background: transparent;

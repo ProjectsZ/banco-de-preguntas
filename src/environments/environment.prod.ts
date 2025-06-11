@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   supabase: {
-    url: 'https://********************.supabase.co',
-    key: '************************************.*************************************.**************************',
+    url: 'https://iexhl.supabase.co',
+    key: '',
   }
 };

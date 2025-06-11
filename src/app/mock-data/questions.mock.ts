@@ -16,7 +16,7 @@ export const questions: Question[] = [
           ],
           "pr_question": "¿Cuáles son los tres principios fundamentales de la Seguridad de la Información según la norma ISO 27000?",
           "pr_tags": [
-            "SEGURIDAD DE LA INFORMACIÓN"
+            "SEGURIDAD", "SEGURIDAD DE LA INFORMACIÓN"
           ],
           "pr_type": "multiple",
           viewAnswer: false,
