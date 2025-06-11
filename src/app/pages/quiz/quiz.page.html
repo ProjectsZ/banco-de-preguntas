@@ -14,7 +14,8 @@
       @let isMarked = qstn[currentIndex()].marked ? true : false;
 
       <ion-buttons slot="end">
-        <ion-button color="light" fill="clear" size="large">
+        <ion-button color="light" fill="clear" size="large"
+          (click)="iniciarRecuerdo()">
           <ion-icon name="bulb-outline" slot="icon-only"></ion-icon>
           <span class="pointRecuerdo">{{ recordQuestions.length }}</span>
         </ion-button>
@@ -40,7 +41,13 @@
   <app-spinner></app-spinner>
 }
 <ion-content [fullscreen]="true" class="ion-padding-horizontal quiz-content">
-
+  
+  @if(viewWord){
+    <app-floating-card 
+    [wordX]="wordX" 
+    [wordY]="wordY"
+    [dictionary]="wordsDic"></app-floating-card>
+  }
   <!-- el tiempo de duracion del examen -->
   @if(questions()){
   <ion-item lines="lines" class="timer">
@@ -92,8 +99,7 @@
 
                 <!-- @if(currentUser.usr_r_id?.r_name == 'ADMIN' || currentUser.usr_r_id?.r_name == 'DOCENTE'){ -->
                   @if (question?.viewAnswer) {
-                    <ion-chip color="light" class="eye-chip cat-chip"
-                      (click)="onActiveCatAnswer(question, i)">
+                    <ion-chip color="light" class="eye-chip cat-chip">
                       <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt="">
                     </ion-chip>
                     <ion-chip color="light" class="eye-chip"
@@ -103,8 +109,7 @@
 
                   }@else {
                   
-                    <ion-chip color="light" class="eye-chip cat-chip"
-                      (click)="onActiveCatAnswer(question, i)">
+                    <ion-chip color="light" class="eye-chip cat-chip">
                       <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="">
                     </ion-chip>
                     <ion-chip color="light" class="eye-chip"
@@ -119,8 +124,8 @@
                 <ion-item>
                   <ion-label>
                    <b class="title-short"> PREGUNTA {{ $index+1 }}: </b> 
-                   <p
-                   [innerHTML]="question?.pr_question + '' "></p>
+                   <p (click)="onSelectionChange($event)"  
+                   [innerHTML]="question?.pr_question + '' | textHighlight : eventClassName : eventTagName "></p>
                     <!-- {{ question?.pr_question }} -->
                    
                   </ion-label>
@@ -147,16 +152,17 @@
                       <ion-chip color="dark" class="answer-chip">
 
                         <ion-text class="bold"
-                        [innerHTML]="question?.pr_content + ''"></ion-text>
+                        [innerHTML]="question?.pr_content + '' | textHighlight : 'text-yellow' "></ion-text>
                         
                       </ion-chip> 
-                      <ion-icon name="eye" class="on-edit" (click)="activeEditContent_()"></ion-icon>
                       
                       <ion-icon name="pencil-outline" class="on-edit" (click)="activeEditContent_()"></ion-icon>
                     }
                     <div>
                       @for (my_tag of question.pr_tags; track l; let l = $index) {
-                        <ion-chip color="dark" class="tag-chip">
+                        <ion-chip color="dark" class="tag-chip"
+                          #tagRef
+                          (click)="onTagClick(my_tag, tagRef)">
                           <ion-text class="bold">#{{ my_tag }}</ion-text>
                         </ion-chip>
                       }
@@ -252,7 +258,8 @@
               </ion-fab-button>
               <ion-fab-list side="top">
                 <!-- GUARDADO MOMENTANEO DE LA PREGUNTA -->
-                <ion-fab-button>
+                <ion-fab-button
+                (click)="addRecuerdo(i, question)">
                   <ion-icon name="add"></ion-icon>
                 </ion-fab-button>
                 <ion-fab-button>
@@ -372,14 +379,15 @@
               @if(!isFlipped){
               <div class="front">
                 <h6> <b>Pregunta: {{ k +1  }}</b> </h6>
-                <p 
-                   [innerHTML]="pregunta.pr_question + '' "></p>
+                <p (click)="onSelectionChange($event)"  
+                   [innerHTML]="pregunta.pr_question + '' | textHighlight : eventClassName : eventTagName "></p>
                     
                 <ion-textarea class="answer-textarea answer-chip"  placeholder="Escribe tu respuesta" class="answer-textarea answer-chip" 
                   #dataquestion >
                 </ion-textarea>
               
-                <ion-button fill="clear">
+                <ion-button fill="clear"
+                  (click)="onConprobarRespuesta(k, dataquestion.value)">
                   <ion-icon name="file-tray-full-outline"></ion-icon>
                 </ion-button>
               </div>
@@ -389,7 +397,7 @@
                   <h6> <b>Respuesta:</b> </h6>
                   <p>{{ pregunta.pr_content }}</p>
                   <p 
-                    [innerHTML]="pregunta?.pr_content + ''"></p>
+                    [innerHTML]="pregunta?.pr_content + '' | textHighlight : 'text-yellow' "></p>
 
                   <h6> {{ pregunta.pr_answer }} </h6>
                 </div>
@@ -402,7 +410,8 @@
                     #dataquestion >
                   </ion-textarea>
 
-                  <ion-button fill="clear">
+                  <ion-button fill="clear"
+                    (click)="onConprobarRespuesta(k, dataquestion.value)">
                     <ion-icon name="file-tray-full-outline"></ion-icon>
                   </ion-button>
 

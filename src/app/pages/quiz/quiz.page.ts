@@ -13,10 +13,15 @@ import { QuizOptionsComponent } from "../../components/quiz-options/quiz-options
 import { ResultComponent } from "../../components/result/result.component";
 import { ViewAnswerComponent } from "../../components/view-answer/view-answer.component";
 import { ReviewComponent } from 'src/app/components/review/review.component';
+import { TextHighlightPipe } from 'src/app/pipes/text-highlight.pipe';
+import { FloatingCardComponent } from 'src/app/components/floating-card/floating-card.component';
 import { SpinnerComponent } from 'src/app/components/spinner/spinner.component';
+import { ToastService } from 'src/app/components/toast/toast.service';
 import { Question } from 'src/interfaces/question.interface';
 import { QuizService } from 'src/services/quiz/quiz.service';
-
+import { Dictionary } from 'src/interfaces/dictionary.interface';
+import { DictionaryService } from 'src/services/dictionary.service';
+import { QuestionService } from 'src/services/question.service';
 register();
 
 @Component({
@@ -29,7 +34,7 @@ register();
     IonItemGroup, IonList, IonText, IonChip, IonItem, IonIcon, IonButtons, IonButton, IonContent,
      IonHeader, IonToolbar, IonAlert, IonModal, ReviewComponent,
     CommonModule, FormsModule, QuizOptionsComponent, ResultComponent, ViewAnswerComponent,
-    SpinnerComponent],
+    TextHighlightPipe, FloatingCardComponent, SpinnerComponent],
     schemas: [ CUSTOM_ELEMENTS_SCHEMA ], //CUIDADO: Esto puede evitar que se encuentre el error en los elementos. Si se encuentra un error en el template, eliminar esta línea y revisar el error en consola
 })
 export class QuizPage implements OnInit, OnDestroy {
@@ -81,7 +86,6 @@ export class QuizPage implements OnInit, OnDestroy {
   private router = inject(Router);
   private platform = inject(Platform);
   private quizS = inject(QuizService);
-
   /********************************************************************** */
   // Agregando busqueda de palabras por diccionario a las preguntas
   eventTagName: string = "b";
@@ -94,8 +98,11 @@ export class QuizPage implements OnInit, OnDestroy {
   wordToTranslate: string = '';
   playText: boolean = false;
   isMove: boolean = true;
+  wordsDic: Dictionary | null = null; // signal<Dictionary[]>(); // signal<Dictionary[]>([]);
   // wordsDic = signal<Dictionary>();
-
+  private dictionaryS = inject(DictionaryService);
+  private questionS = inject(QuestionService);
+  private toastS = inject(ToastService);
 
   isLoading = signal<boolean>(false); // Loading state
   selectSeeAnswer = signal<boolean>(false); // variable para el select de ver respuestas
@@ -145,6 +152,9 @@ export class QuizPage implements OnInit, OnDestroy {
     this.backButtonEventHandler();
     // dictionary
     this.attachGlobalClickListener();
+
+    // load dictionary
+    this.loadingDictionary();
 
   }
 
@@ -386,6 +396,49 @@ export class QuizPage implements OnInit, OnDestroy {
     this.slideTo(index);
   }
 
+  /***************************************************************** */
+  // dictionary
+  loadingDictionary(){
+    this.dictionaryS.getDictionary();
+  }
+
+  onSelectionChange(event: MouseEvent | PointerEvent): void {
+    const target = event.target as HTMLElement;
+  
+    // Solo seguir si el clic fue sobre un <b> con la clase exacta
+    if (target.tagName.toLowerCase() === this.eventTagName && target.classList.contains(this.eventClassName)) {
+  
+      const word = target.innerText.trim();
+      console.log("--> " + word);
+  
+      if (!word) {
+        this.viewWord = false;
+        return;
+      }
+  
+      this.viewWord = true;
+      this.wordToTranslate = word;
+
+      
+      this.wordsDic = this.dictionaryS.dictionaries()!.filter((item: any) => {
+        return item.dic_name === word;
+      })[0];
+
+      console.log(this.wordsDic);
+  
+      // Capturar la posición exacta del clic
+      this.wordX = event.clientX;
+      this.wordY = event.clientY;
+  
+      console.log(`Posición - X: ${this.wordX}, Y: ${this.wordY}`);
+  
+    } else {
+      // Si no es un <b class='word-english'>, ocultar la tarjeta flotante
+      this.viewWord = false;
+    }
+  }
+
+
   private attachGlobalClickListener(): void {
     this.document.onclick = (event: MouseEvent) => {
       clearTimeout(this.ctrlTimeOut_word);
@@ -424,8 +477,8 @@ export class QuizPage implements OnInit, OnDestroy {
       // Activar loading
       this.setIsLoading(true);
 
-      // Actualizar moneditas
-    }
+      
+  }
 
   
   onVerRespuestasTotales(){
@@ -445,32 +498,131 @@ export class QuizPage implements OnInit, OnDestroy {
 
     if(this.questions()[index].pr_content === question_content){
       this.activeEditContent.set(!this.activeEditContent());
+      this.toastS.openToast("No se han realizado cambios en la pregunta","danger");
       return;
     }
 
-    
+
+
+    // Activar loading
+    this.setIsLoading(true);
+    const resultado = await this.questionS.getQuestionByContent(pr_id, question_content);
+    if (resultado) {
+      console.log('Actualización exitosa');
+
+      // cortar loading
+      this.setIsLoading(false);
+
+      this.toastS.openToast("Los datos fueron actualizados exitosamente!...","success");
+      
+      this.activeEditContent.set(!this.activeEditContent());
+      this.questions()[index].pr_content = question_content;
+
+    } else {
+      this.toastS.openToast("Error al actualizar la pregunta, intente luego!","danger");
+      console.log('Falló la actualización');
+    }
+
   }
 
-  onActiveCatAnswer(question: Question, index: number, payment: number = 2){
-    console.log("activeCatAnswer: ", question);
-    this.setAlertMessage(`¿Está seguro de que desea pagar ${payment} monedas para ver la respuesta?`);
-          
-    
-    this.setIsSubmitConfirm(true);
+  // recordar preguntas
+  iniciarRecuerdo(){
+    if(this.recordQuestions.length == 0){
+      this.toastS.openToast("usted no tiene preguntas que recordar!","warning");
 
-    this.alertButtons.set([
-      {
-        text: 'No',
-        role: 'cancel',
-      }, {
-        text: 'Si',
-        handler: () => {
-          if(this.alertMessage()){
-            console.log("si: ");
-          }
-        }
-      }
-    ]);
+      return;
+    }
+
+    this.isCacheQuestion.set(!this.isCacheQuestion());
+
   }
+
+  addRecuerdo(index: number, question: Question){
+    // console.log("agregar recuerdo: ", question);
+
+    if(this.recordQuestions.some(q => q.pr_id === question.pr_id)){
+      this.toastS.openToast("pregunta ya recordada","warning");
+      return;
+    }
+
+    this.recordQuestions.push(question);
+    this.toastS.openToast("pregunta agregada","success");
+    console.log("index: ", index);
+  }
+
+  onConprobarRespuesta(index: number, pr_answer: any){
+    this.isFlipped = false;
+    // comprobar que la respuesta pr_answer por lo menos contenga el 70% de las letras de la respuesta correcta
+    const respuestaCorrecta = this.recordQuestions[index].pr_answer;
+    this.recordIndex = index;
+    const respuestaUsuario = pr_answer;
+
+    if(pr_answer == ""){
+      this.toastS.openToast("No se puede dejar la respuesta vacia!","danger", "proud", true);
+      return;
+    }
+
+    const porcentajeCoincidencia = this.calcularCoincidencia(respuestaCorrecta, respuestaUsuario);
+    console.log("porcentaje: ", porcentajeCoincidencia);
+    if (porcentajeCoincidencia.porcentaje >= 70) {
+      this.isFlipped = !this.isFlipped;
+    }else {
+      this.toastS.openToast("respuesta incorrecta","danger", "proud", true, `${porcentajeCoincidencia.porcentaje}`, "%");
+    }
+
+  }
+
+  calcularCoincidencia(respuestaCorrecta: string, respuestaUsuario: string): { porcentaje: number, esSuficiente: boolean } {
+    const limpiar = (texto: string) => texto.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
   
+    const respuestaCorrectaLimpia = limpiar(respuestaCorrecta);
+    const respuestaUsuarioLimpia = limpiar(respuestaUsuario);
+  
+    console.log("Respuesta correcta:", respuestaCorrectaLimpia);
+    console.log("Respuesta usuario:", respuestaUsuarioLimpia);
+  
+    const longitudOriginal = respuestaCorrectaLimpia.length;
+    const longitudComparacion = Math.min(respuestaCorrectaLimpia.length, respuestaUsuarioLimpia.length);
+  
+    let coincidencias = 0;
+  
+    for (let i = 0; i < longitudComparacion; i++) {
+      if (respuestaCorrectaLimpia[i] === respuestaUsuarioLimpia[i]) {
+        coincidencias++;
+      }
+    }
+  
+    const porcentaje = (coincidencias / longitudOriginal) * 100;
+    const esSuficiente = porcentaje >= 70;
+  
+    return {
+      porcentaje: Math.round(porcentaje * 100) / 100, // redondeado a 2 decimales
+      esSuficiente
+    };
+  }
+
+  onTagClick(word_tag: string, event: any){
+    clearTimeout(this.ctrlTimeOut_word);
+
+    this.wordsDic = this.dictionaryS.dictionaries()!.filter((item: any) => {
+      return item.dic_name === word_tag;
+    })[0];
+    
+    if(!this.wordsDic){
+      this.toastS.openToast("palabra no diccionario","danger");
+      return;
+    }
+    
+    this.viewWord = true;
+
+      // Ocultar la palabra traducida tras 8.8 segundos
+    this.ctrlTimeOut_word = setTimeout(() => {
+        this.viewWord = false;
+    }, 8800);
+
+    console.log("event: ", event);
+    console.log(this.wordsDic);
+  }
+
+
 }

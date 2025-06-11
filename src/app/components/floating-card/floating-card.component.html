@@ -1,0 +1,17 @@
+<!-- nube flotando con significado y contexto -->
+<div class="floating-card"
+  [style.top.px]="wordY()"
+  [style.left.px]="wordX()"
+ >
+  <div class="header">
+    <h6> {{ dictionary().categorias.cat_subtitle }} </h6>
+    <h3> {{ dictionary().dic_name }} </h3>
+  </div>
+  <div class="body">
+    @for(item of dictionary().dic_description; track $index){
+      <div class="item">
+        <p [innerHTML]="item.text | textHighlight : 'text-yellow' "> </p>
+      </div>
+    }
+  </div>
+</div>

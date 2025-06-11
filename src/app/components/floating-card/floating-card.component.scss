@@ -1,0 +1,49 @@
+
+.floating-card{
+    position: absolute;
+    z-index: 9;
+    width: 60vw;
+    padding: 0.64rem 0.4rem;
+    border-radius: 0.5rem;
+    border-bottom-left-radius: 0;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14),0 3px 1px -2px rgba(0,0,0,0.12),0 1px 5px 0 rgba(0,0,0,0.2);
+    margin-top: 1rem;
+    background: var(--ion-color-primary);
+    color: #ffff;
+    .header{
+        h6,h3{
+            margin: 0; padding: 0;
+        }
+        h6{
+            font-size: 0.64rem;
+            font-weight: 400;
+            font-style: italic;
+        }
+        h3{
+            margin-top: -0.24rem;
+            margin-bottom: 0.4rem;
+        }
+    }
+
+    &::before{
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 0;
+        margin-bottom: -1.2rem;
+        border-bottom: 20px solid transparent;
+        border-left: 20px solid  var(--ion-color-primary);
+    }
+
+}
+
+.body{
+    max-height: 15vh;
+    overflow-y: auto;
+
+    p{
+        font-size: 0.88em;
+    }
+}
