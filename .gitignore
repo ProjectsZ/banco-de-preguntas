@@ -12,7 +12,7 @@ $RECYCLE.BIN/
 *.log
 log.txt
 
-
+/src/enviroments
 /.sourcemaps
 /.versions
 /coverage

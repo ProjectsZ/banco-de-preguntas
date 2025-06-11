@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Course } from 'src/app/interfaces/course.interface';
 import { SupabaseService } from '../supabase/supabase.service';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { Course } from 'src/interfaces/course.interface';
 
 @Injectable({
   providedIn: 'root'

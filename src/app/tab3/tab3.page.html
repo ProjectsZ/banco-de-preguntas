@@ -9,13 +9,12 @@
     <ion-toolbar>
 
       <ion-title> Quiz Course </ion-title>
-     @if(currentUser.usr_r_id?.r_name == 'ADMIN' || currentUser.usr_r_id?.r_name == 'DOCENTE'){
       <ion-buttons slot="end" [routerLink]="['/', 'tabs', 'tab3', 'settings']">
         <ion-button color="light">
           <ion-icon name="settings-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
-    }
+    
     </ion-toolbar>
   </ion-header>
 

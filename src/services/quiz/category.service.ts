@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SupabaseService } from '../supabase/supabase.service';
-import { Category } from 'src/app/interfaces/category.interface';
+import { Category } from 'src/interfaces/category.interface';
 
 @Injectable({
   providedIn: 'root'

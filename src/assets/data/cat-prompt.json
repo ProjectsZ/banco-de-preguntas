@@ -1,0 +1,183 @@
+[
+    {
+        "key_phrase": "error usuario",
+        "color": "danger",
+        "message": [
+            { "speak": "No encuentro a ese humano... ¿Seguro que existe? ¡Miauu!", "feeling": "confused", "several_times": 2 },
+            { "speak": "Usuario extraviado entre los hilos de lana... vuelve a intentarlo, ¡miau!", "feeling": "confused", "several_times": 2 },
+            { "speak": "Oops, ese usuario se ha escondido. No lo veo, ¡Miauu!", "feeling": "confused", "several_times": 2 },
+            { "speak": "Ese usuario no está en mi radar gatuno... busca mejor, ¡miau!", "feeling": "curious", "several_times": 2 },
+            { "speak": "¡Miau! ¡Miau! ¡Miau!... No puedo encontrar a ese humano. ¿Podrías verificar su nombre?", "feeling": "confused", "several_times": 3 },
+            { "speak": "Déjate de vainas, humano. No encuentro a ese usuario... ¡Miau!", "feeling": "angry", "several_times": 8 },
+            { "speak": "¡No más juegos, humano! ¡Ese usuario no está en ninguna parte! ¡Grrr... Miau!", "feeling": "angry", "several_times": 7 },
+            { "speak": "Ougg sh** humano, entiende que no puedo encontrar a ese usuario... ¡Miau!", "feeling": "annoyed", "several_times": 10 },
+            { "speak": "¡Basta ya! ¿Cuántas veces debo decir que ese humano no aparece? ¡Miau!", "feeling": "angry", "several_times": 10 },
+            { "speak": "¡Miau infernal! ¡No hay rastro de ese humano terco!", "feeling": "annoyed", "several_times": 10 },
+            { "speak": "¿Otra vez buscando fantasmas, humano? ¡Ese usuario no está, miau enojado!", "feeling": "angry", "several_times": 10 },
+            { "speak": "¡Estoy perdiendo mi paciencia gatuna! ¡Ese humano no existe, miau!", "feeling": "annoyed", "several_times": 10 },
+            { "speak": "¡Me arranco los bigotes! ¡No encuentro a ese humano, miau de furia!", "feeling": "angry", "several_times": 10 }
+        ]
+    },
+    {
+        "key_phrase": "usuario correcto",
+        "color": "success",
+        "message": [
+            { "speak": "¡Miau! He encontrado a ese humano. ¡Vamos a jugar!", "feeling": "playful", "several_times": 1 },
+            { "speak": "¡Hurra! El humano está aquí. ¡A aprender se ha dicho!", "feeling": "proud", "several_times": 1 },
+            { "speak": "¡Miau! He encontrado al humano. ¡Vamos a jugar juntos!", "feeling": "affectionate", "several_times": 1 },
+            { "speak": "Usuario localizado exitosamente. ¡Bienvenido, humano!", "feeling": "proud", "several_times": 1 },
+            { "speak": "¡Confirmado! Humano encontrado. Procediendo con alegría, ¡miau!", "feeling": "happy", "several_times": 2 },
+            { "speak": "¡He detectado al humano correcto! Iniciemos, ¡miau!", "feeling": "proud", "several_times": 3 },
+            { "speak": "¡Perfecto! El humano está listo para comenzar, ¡miau!", "feeling": "happy", "several_times": 4 },
+            { "speak": "¡Miau! Encontré al humano correcto, ¡vamos a divertirnos!", "feeling": "playful", "several_times": 5 },
+            { "speak": "¡Genial! Ya sé quién eres, humano curioso. ¡Miau!", "feeling": "curious", "several_times": 6 },
+            { "speak": "¡Misión cumplida! Humano hallado, ¿listo para la aventura, miau?", "feeling": "playful", "several_times": 7 },
+            { "speak": "¡Al fin, humano! Pensé que te habías perdido entre ovillos de lana, ¡miau!", "feeling": "playful", "several_times": 8 },
+            { "speak": "¡Ya era hora! Te encontré, humano despistado, ¡miau-miau!", "feeling": "affectionate", "several_times": 9 },
+            { "speak": "¡Weeepa humano! ¡Aquí estás, últimamente estuviste más perdido que ratón en fiesta de gatos! ¡Miau!", "feeling": "playful", "several_times": 10 }
+        ]
+    },
+    {
+        "key_phrase": "curso sin temas",
+        "color": "warning",
+        "message": [
+            { "speak": "Este curso no tiene temitas disponibles por ahora... vuelve a seleccionarlo, humano. ¡Miau!", "feeling": "sad", "several_times": 2 },
+            { "speak": "¡Miau!, este curso no tiene temitas disponibles. ¿Quieres intentar con otro?", "feeling": "curious", "several_times": 2 },
+            { "speak": "Ups, parece que este curso está vacío... ¡sigue buscando, humano! Miau~", "feeling": "confused", "several_times": 2 },
+            { "speak": "No encuentro temitas aquí... ¿jugamos en otro curso? ¡Miau!", "feeling": "sad", "several_times": 1 },
+            { "speak": "Curso sin temitas detectado. ¡No te preocupes, humano, sigue explorando! ¡Miau!", "feeling": "proud", "several_times": 1 },
+            { "speak": "¡Miau! Este rincón está vacío. ¡Vamos a buscar otro curso lleno de aventuras!", "feeling": "proud", "several_times": 1 },
+            { "speak": "Nada por aquí, nada por allá... Este curso no tiene temas. ¡Miau!", "feeling": "playful", "several_times": 1 },
+            { "speak": "¡Este curso está dormidito, humano! No hay temitas por ahora. Miau...", "feeling": "affectionate", "several_times": 3 },
+            { "speak": "Parece que este curso está echando una siesta... ¡sigamos buscando, miau!", "feeling": "confused", "several_times": 1 },
+            { "speak": "¡Miau! Aquí no hay temitas todavía. ¡Vamos a explorar otro rincón!", "feeling": "proud", "several_times": 1 },
+            { "speak": "Este curso aún no tiene aventuras. ¿Saltamos a otro, humano?", "feeling": "playful", "several_times": 8 },
+            { "speak": "Humano curioso, este curso está vacío. ¡Miau, mejor busquemos más!", "feeling": "curious", "several_times": 10 },
+            { "speak": "Ups... este curso necesita más amor. ¡Vuelve luego, miau!", "feeling": "sad", "several_times": 3 },
+            { "speak": "¡Miau de ánimo! No te desanimes, humano. ¡Seguro hay otro curso esperando!", "feeling": "suspicious", "several_times": 2 },
+            { "speak": "Miau... no hay nada interesante aquí todavía. ¡Pero no te rindas!", "feeling": "suspicious", "several_times": 2 },
+            { "speak": "Oh no, humano... este curso está más vacío que mi plato de comida. ¡Miau!", "feeling": "sad", "several_times": 9 }
+          
+        ]
+    },
+    {
+        "key_phrase": "pregunta ya recordada",
+        "color": "danger",
+        "message": [
+            { "speak": "¿Eh? ¡Miau! ¡Pero si ya guardaste esta pregunta, humano distraído!", "feeling": "confused", "several_times": 2 },
+            { "speak": "¡Oye, humano! ¿Intentas guardar lo mismo dos veces? ¡Miau molesto!", "feeling": "annoyed", "several_times": 3 },
+            { "speak": "¡Miau! ¿Otra vez esta pregunta? ¡Ya la tienes guardada, curioso!", "feeling": "curious", "several_times": 2 },
+            { "speak": "¿Qué está pasando aquí? ¡Esta preguntita ya está en tu colección, humano! ¡Miau!", "feeling": "confused", "several_times": 2 },
+            { "speak": "¡Grrrr...! ¡No repitas! Esta pregunta ya ronronea segura contigo. ¡Miau enojado!", "feeling": "angry", "several_times": 6 },
+            { "speak": "¡Miau! ¿Seguro que no estás jugando conmigo, humano? ¡Esta pregunta ya está guardada!", "feeling": "suspicious", "several_times": 3 },
+            { "speak": "¡Miau-miau! ¡Eso ya lo hiciste! No intentes engañar a este pequeño guardián.", "feeling": "offended", "several_times": 3 },
+            { "speak": "¡Ups, miau! ¿Otra vez? ¡Esta pregunta ya está bien guardadita!", "feeling": "suspicious", "several_times": 2 },
+            { "speak": "¡Miau de duda! ¿No recuerdas? ¡Ya salvaste esta pregunta!", "feeling": "confused", "several_times": 2 },
+            { "speak": "¡Estoy confundido! ¡Miau! ¿Por qué quieres guardar lo que ya está a salvo?", "feeling": "confused", "several_times": 2 },
+            { "speak": "¡Miau! Esto ya lo tienes, humano distraído.", "feeling": "confused", "several_times": 2 },
+            { "speak": "¡Ya lo ronroneaste antes! Esta pregunta está bien guardadita, humano.", "feeling": "confused", "several_times": 8 },
+            { "speak": "¿Intentando hacerme caer en tu juego? ¡Ya guardaste eso, miau!", "feeling": "angry", "several_times": 8 },
+            { "speak": "¡Otra vez, humano! Esta pregunta ya duerme tranquila en tu colección, ¡miau!", "feeling": "confused", "several_times": 6 },
+            { "speak": "¡Grrr... humano repetitivo! Esta preguntita ya es tuya, ¡miau!", "feeling": "angry", "several_times": 5 },
+            { "speak": "¡Ups! Parece que te olvidaste que ya la guardaste, miau.", "feeling": "suspicious", "several_times": 2 },
+            { "speak": "¡No me engañas, humano! Esta pregunta ya estaba escondida en tu rincón, ¡miau!", "feeling": "offended", "several_times": 8 }
+            
+        ]
+    },
+    {
+        "key_phrase": "pregunta agregada",
+        "color": "success",
+        "message": [
+          { "speak": "¡Pregunta registrada exitosamente, humano curioso! Chequea el foquito de eventos, miau!.", "feeling": "proud", "several_times": 1 },
+          { "speak": "¡Nueva pregunta añadida al mundo del saber! No olvides mirar la notificación de ideas, miau.", "feeling": "happy", "several_times": 2 },
+          { "speak": "¡Guardé tu pregunta en el cofre de conocimientos, humano! Revisa el foquito para más sorpresas.", "feeling": "happy", "several_times": 3 },
+          { "speak": "¡Miau curioso! Otra preguntita sumada. Dale un vistazo a la luz de eventos.", "feeling": "curious", "several_times": 4 },
+          { "speak": "¡Miau orgulloso! ¡Una huella más para nuestra aventura! Mira el foquito de ideas.", "feeling": "proud", "several_times": 6 },
+          { "speak": "¡Genial, humano! Tu pregunta ilumina el foquito de eventos, ¡échale un ojo!", "feeling": "affectionate", "several_times": 7 },
+          { "speak": "¡Sigue así, humano curioso! Revisa el foquito, puede haber sorpresas ronroneantes.", "feeling": "playful", "several_times": 8 },
+          { "speak": "¡Wow, humano! ¡Tus ideas están encendiendo el universo! Mira el foquito brillante.", "feeling": "playful", "several_times": 9 },
+          { "speak": "¡Eres una estrella de preguntas, humano! Corre a ver la notificación de ideas, miau.", "feeling": "happy", "several_times": 10 }
+        ]
+    },
+    {
+       "key_phrase": "preguntas obtenidas",
+        "color": "success",
+        "message": [
+            { "speak": "¡Atención humano! El reto ha comenzado. ¡Miau orgulloso!", "feeling": "proud", "several_times": 5 },
+            { "speak": "¡Miau! Hora de demostrar tus habilidades, humano.", "feeling": "happy", "several_times": 2 },
+            { "speak": "¡Comienza la aventura del conocimiento! ¡A jugar, humano!", "feeling": "playful", "several_times": 3 },
+            { "speak": "¡Prepárate, humano! Tu sabiduría será puesta a prueba. ¡Miau!", "feeling": "curious", "several_times": 4 },
+            { "speak": "¡Miau curioso! ¿Qué tan listo estás para este desafío?", "feeling": "curious", "several_times": 5 },
+            { "speak": "¡Que comience la batalla de cerebros! ¡Afila tus garras, humano!", "feeling": "playful", "several_times": 9 },
+            { "speak": "¡Vamos, humano! ¡Demuestra que eres más ágil que un ratón! ¡Miau!", "feeling": "playful", "several_times": 7 },
+            { "speak": "¡Miau! Que no te tiemblen las patitas, humano... ¡A darlo todo!", "feeling": "happy", "several_times": 8 },
+            { "speak": "¡Que tus neuronas brillen como bigotes al sol, miau!", "feeling": "playful", "several_times": 8 },
+            { "speak": "¡No pierdas la cabeza, humano! ¡Piensa como un felino veloz!", "feeling": "playful", "several_times": 9 },
+            { "speak": "¡Miau orgulloso! ¡Hoy conquistarás el mundo del saber, humano!", "feeling": "happy", "several_times": 7 },
+            { "speak": "¡Humano audaz! Que no se te enreden las patas... ¡a responder!", "feeling": "playful", "several_times": 8 },
+            { "speak": "¡Al ataque, humano sabio! ¡Caza cada respuesta como un buen felino!", "feeling": "playful", "several_times": 9 }
+        ] 
+    },
+    {
+        "key_phrase": "palabra no diccionario",
+        "color": "danger",
+        "message": [
+            { "speak": "¡Miau curioso! No encontré esa palabra en mi diccionario, humano.", "feeling": "curious", "several_times": 2 },
+            { "speak": "¡Ups, miau! Esa palabra no está registrada aquí... contacte con el admin!", "feeling": "confused", "several_times": 2 },
+            { "speak": "¡Miau triste! Busqué por todas partes, pero esa palabra no existe aquí.", "feeling": "sad", "several_times": 2 },
+            { "speak": "¿Eh? No logro encontrar esa palabrita en mi biblioteca de maullidos, humano.", "feeling": "confused", "several_times": 3 },
+            { "speak": "¡Miau curioso! Quizá inventaste una nueva palabra... ¡Qué creativo!", "feeling": "playful", "several_times": 4 },
+            { "speak": "¡No maulles palabras raras, humano! No la encuentro en mi diccionario, miau.", "feeling": "annoyed", "several_times": 5 },
+            { "speak": "¡Nada por aquí, nada por allá! Esa palabra parece un fantasma, miau.", "feeling": "curious", "several_times": 3 },
+            { "speak": "¡Mi olfato gatuno no detecta esa palabra, humano! ¿Seguro existe?", "feeling": "suspicious", "several_times": 5 }
+        ]
+    },
+    {
+        "key_phrase":"la respuesta podra ser",
+        "color":"warning",
+        "message":[
+            { "speak": "La respuesta podría ser **** o tal vez otra, ¿miau dudoso!", "feeling": "confused", "several_times": 2 },
+            { "speak": "Quizás sea ****... o tal vez me equivoque, ¡miau curioso!", "feeling": "curious", "several_times": 2 },
+            { "speak": "Mmm... podría ser **** o quizá no, humano. ¡Miau pensativo!", "feeling": "confused", "several_times": 3 },
+            { "speak": "Mi instinto dice ****, pero mis patitas dudan... ¡Miau!", "feeling": "confused", "several_times": 3 },
+            { "speak": "Puede ser **** o quizá sea otra opción, humano curioso. ¡Miau!", "feeling": "curious", "several_times": 2 },
+            { "speak": "Entre mis bigotes creo que es ****... pero quién sabe, ¡miau!", "feeling": "playful", "several_times": 4 },
+            { "speak": "¿Será **** o será otra travesura, humano? ¡Miau dudoso!", "feeling": "confused", "several_times": 4 },
+            { "speak": "Siento que podría ser ****... aunque no pondría mis garras al fuego, ¡miau!", "feeling": "playful", "several_times": 5 }
+
+        ]
+    },
+    {
+        "key_phrase": "respuesta incorrecta",
+        "color": "danger",
+        "message": [
+          { "speak": "¡Miau curioso! Coincidiste en un ****, pero no es la respuesta correcta.", "feeling": "curious", "several_times": 2 },
+          { "speak": "¡Ups, humano! Alcanzaste un **** de coincidencia. ¡Sigue intentando!", "feeling": "happy", "several_times": 2 },
+          { "speak": "¡Miau pensativo! Solo lograste un ****... necesitamos más, humano.", "feeling": "confused", "several_times": 3 },
+          { "speak": "¡Mmm! Un **** no es suficiente para acertar, humano curioso.", "feeling": "curious", "several_times": 3 },
+          { "speak": "¡Miau travieso! Llegaste a un ****, pero aún estamos lejos, humano.", "feeling": "playful", "several_times": 4 },
+          { "speak": "¡Buen intento! Un **** de coincidencia, ¡pero falta un empujoncito!", "feeling": "playful", "several_times": 5 },
+          { "speak": "¡Miau desconcertado! Con un ****, no podemos cantar victoria todavía.", "feeling": "confused", "several_times": 6 },
+          { "speak": "¡Estuviste cerca, humano! Un **** es prometedor, pero no es todo.", "feeling": "playful", "several_times": 7 },
+          { "speak": "¡Impresionante! Un **** es bueno, pero la respuesta correcta está más allá, miau.", "feeling": "proud", "several_times": 8 },
+          { "speak": "¡Miau dramático! Alcanzaste un **** de coincidencia, humano valiente.", "feeling": "affectionate", "several_times": 9 },
+          { "speak": "¡Oh no, humano! Con un **** no basta, pero cada paso cuenta, ¡miau optimista!", "feeling": "happy", "several_times": 10 }
+        ]
+    },
+    {
+        "key_phrase": "error al agregar examen",
+        "color": "danger",
+        "message": [
+          { "speak": "¡Miau triste! No pude agregar el examen, humano. Intenta más tarde.", "feeling": "sad", "several_times": 1 },
+          { "speak": "¡Ups! Algo salió mal mientras agregaba tu examen. ¡No pierdas la fe, miau!", "feeling": "confused", "several_times": 2 },
+          { "speak": "¡Grrr! Se me enredaron las patitas y no logré guardar el examen, humano.", "feeling": "annoyed", "several_times": 3 },
+          { "speak": "¡Oh no! El examen escapó de mis garras. Intenta de nuevo, humano curioso.", "feeling": "curious", "several_times": 4 },
+          { "speak": "¡Miau desconcertado! Algo falló en la creación del examen... ¡Ronronearé para arreglarlo!", "feeling": "confused", "several_times": 5 },
+          { "speak": "¡Humano! El examen se esfumó como un ratón travieso... vuelve a intentarlo.", "feeling": "playful", "several_times": 6 },
+          { "speak": "¡Miau molesto! No pude atrapar el examen, pero no nos rendimos, humano.", "feeling": "angry", "several_times": 7 },
+          { "speak": "¡Zas! El examen se me resbaló entre las patas, miau. Prueba nuevamente.", "feeling": "playful", "several_times": 8 },
+          { "speak": "¡Miau desconsolado! Fallamos esta vez, pero aprenderemos juntos, humano.", "feeling": "sad", "several_times": 9 },
+          { "speak": "¡Grrrr! ¡Fallé en agregar el examen, humano! Pero no abandonaré, ¡volveré más fuerte!", "feeling": "proud", "several_times": 10 }
+        ]
+    }
+]

@@ -1,0 +1,12 @@
+
+<img [src]="'assets/icon/cat_'+ feeling +'.svg'" alt="" class="toast-cat">
+
+<div class="toast-container" [ngStyle]="{ background: getColor(color) }">
+  <ion-icon [name]="icon" [color]="colorIcon"></ion-icon>
+  <!-- <p class="toast-message" [class]="colorIcon"
+    >{{ message }}</p> -->
+  <p 
+    [innerHTML]="message + '' | textHighlight: 'text-orange' "></p>
+   
+
+</div>

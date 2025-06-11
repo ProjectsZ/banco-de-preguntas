@@ -34,4 +34,119 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+// @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+/* Reset global styles */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: inherit;
+  vertical-align: baseline;
+}
+
+/* Resetea los estilos predeterminados de los elementos de texto */
+body {
+  line-height: 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Evita la decoración en enlaces */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Desactiva los bordes de las imágenes */
+img {
+  border: 0;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Asegúrate de que todos los elementos de formulario sean consistentes */
+input,
+select,
+textarea,
+button {
+  outline: none;
+  border: none;
+  background: transparent;
+}
+
+/* Asegúrate de que las listas no tengan viñetas o márgenes */
+ul,
+ol {
+  list-style: none;
+}
+
+h5,h3{
+    margin: 0;
+    padding: 0;
+}
+
+.errorMessage{
+  font-size: small;
+}
+
+.position-center{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.txt{
+  ion-label, ion-text{
+    opacity: 0.7;
+  }
+}
+
+
+.question-image{
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.flex{
+  display: flex;
+
+  &.center{
+    justify-content: center;
+    align-items: center;
+  }
+
+  &.justify{
+    justify-content: space-between;
+  }
+
+  &.end{
+    justify-content: flex-end;
+  }
+}
+
+.text-yellow{
+  background: #FFEB3B;
+  color: var(--ion-color-primary);
+}
+
+.text-orange{
+  background: #FFDA6E;
+  color: var(--ion-color-primary);
+}
+
+.disabled{
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+
+.toast-modal{
+  height: 8rem;
+  --background: transparent;
+}

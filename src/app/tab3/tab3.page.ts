@@ -7,11 +7,12 @@ import { ValidatorData } from '../class/validator-data';
 import { Duration } from '../class/duration';
 import { Router, RouterModule } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { ToastService } from '../components/toast/toast.service';
 import { SpinnerComponent } from '../components/spinner/spinner.component';
 import { Course } from 'src/interfaces/course.interface';
 import { Category } from 'src/interfaces/category.interface';
-import { CourseService } from 'src/services/quiz/course.service';
 import { QuizService } from 'src/services/quiz/quiz.service';
+import { CourseService } from 'src/services/quiz/course.service';
 import { CategoryService } from 'src/services/quiz/category.service';
 
 @Component({
@@ -47,6 +48,7 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
   private quizS = inject(QuizService);
   private courseS = inject(CourseService);
   private categoryS = inject(CategoryService);
+  private toastS = inject(ToastService);
 
   constructor(private validatorData: ValidatorData,
               private duration: Duration
@@ -114,7 +116,7 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
       const { data, total } = await this.categoryS.getCategories_crs(crs_id);
       this.countCategories = total;
       if(this.countCategories === 0){
-        console.log('curso sin temas');
+        this.toastS.openToast('curso sin temas','warning');
       }
 
       if(data){
@@ -132,7 +134,7 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
       this.countQuestions = await this.quizS.getQuestion_cat(this.form()!.value.pr_cat_id);
       
       if(this.countQuestions === 0){
-        console.log('tema sin preguntas');
+        this.toastS.openToast('tema sin preguntas','warning');
       }
 
       //actualizamos el campo específico del formulario que pasamos como parámetros 

@@ -3,6 +3,7 @@ import { SupabaseClient } from '@supabase/supabase-js';
 import { Duration } from 'src/app/class/duration';
 import { SupabaseService } from '../supabase/supabase.service';
 import { DataArr } from 'src/app/class/data-arr';
+import { ToastService } from 'src/app/components/toast/toast.service';
 import { Question } from 'src/interfaces/question.interface';
 
 
@@ -21,6 +22,7 @@ export class QuizService {
   private timerInterval: any;
   
   // toast mensaje
+  private toastS = inject(ToastService);
   private supabaseS = inject(SupabaseService);
   private supabase = computed<SupabaseClient>(()=> this.supabaseS.getClient());
 
@@ -80,6 +82,8 @@ export class QuizService {
 
         console.log(selectedQuestions);
 
+        this.toastS.openToast('Preguntas obtenidas', 'success');
+        
         const duration = formValue.duration;
         this.examDuration.set(duration);
         this.startTimer(duration);
@@ -312,7 +316,7 @@ export class QuizService {
     }
   
     // Eliminar la respuesta correcta de las opciones para elegir una incorrecta
-    const incorrectOptions = question.pr_options.filter(opt => opt !== question.pr_answer);
+    const incorrectOptions = question.pr_options.filter((opt: any) => opt !== question.pr_answer);
   
     if (incorrectOptions.length === 0) {
       // Si solo existe la respuesta correcta, en caso de que la pregunta sea para introducir la respuesta
