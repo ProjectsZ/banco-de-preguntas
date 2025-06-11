@@ -94,7 +94,7 @@ export class ResultComponent  implements OnInit, OnDestroy {
   }
 
   canjearPremio(){
-    if(this.currentUser?.usr_coin == "0"){
+    if(this.currentUser?.usr_coin == 0){
       this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", 'angry', true); 
       return
     }

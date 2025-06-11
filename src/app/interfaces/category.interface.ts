@@ -6,5 +6,8 @@ export interface Category {
     cat_crs_id: string;
     created_at: string;
     cat_doc?: any[];
+    cat_img?: string;
+    cat_color?: string;
+    cat_badge?: string;
 }
 

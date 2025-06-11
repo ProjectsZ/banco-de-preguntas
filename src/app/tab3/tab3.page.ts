@@ -2,7 +2,7 @@ import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular
 import { IonSelect, IonSelectOption, IonContent, IonCard, IonCardTitle, IonCardSubtitle, IonButton, IonCardContent, IonItem, IonInput, IonText, IonLabel, IonDatetime, IonDatetimeButton, IonModal, IonSpinner, IonIcon, IonHeader, IonToolbar,  IonTitle, IonButtons } from '@ionic/angular/standalone';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { arrowForwardCircleOutline, settingsOutline } from 'ionicons/icons';
+import { arrowForwardCircleOutline, moonOutline, settingsOutline, sunnyOutline } from 'ionicons/icons';
 import { QuizService } from '../services/quiz/quiz.service';
 import { Category } from '../interfaces/category.interface';
 import { CategoryService } from '../services/quiz/category.service';
@@ -56,15 +56,25 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
   private authS = inject(AuthService);
   private toastS = inject(ToastService);
 
+  // thema color
+  colorTheme = signal<string>('');
+
   constructor(private validatorData: ValidatorData,
               private duration: Duration
   ) {
     addIcons({
       arrowForwardCircleOutline,
       settingsOutline,
+      sunnyOutline,
+      moonOutline
     });
     this.initForm();
+
+    // verificar en el storage si el tema esta en modo light o dark
+    this.colorTheme.set(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+    // console.log('---> colorTheme: ', localStorage.getItem('theme'));
   }
+
   ngOnInit(): void {
     this.getCourses();
 
@@ -90,8 +100,7 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
      this.userSubscription.unsubscribe();
    }
  }
-
-
+ 
   initForm() {
     const form = this.formBuilder.group({
       question_count: [null, 
@@ -110,6 +119,17 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
 
     this.form.set(form);
 
+  }
+
+  // cambio del tema
+  changeModeThem(){
+    if(this.colorTheme() === 'light'){
+      this.colorTheme.set('dark');
+      localStorage.setItem('theme', 'dark');
+    }else{
+      this.colorTheme.set('light');
+      localStorage.setItem('theme', 'light');
+    }
   }
 
 

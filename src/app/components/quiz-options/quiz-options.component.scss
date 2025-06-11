@@ -25,3 +25,23 @@ ion-icon{
 ion-label{
     margin-left: 0.8rem;
 }
+
+.dark-theme{
+    ion-item{
+        --background: var(--ion-dark-color-primary);
+        --color: var(--ion-dark-text-primary);
+        border:none;
+
+        &.selected{
+            --background: var(--ion-dark-text-primary);
+             --color: var(--ion-dark-color-primary);
+        }
+    }
+
+    ion-radio{
+        --background: var(--ion-dark-color-primary);
+        border: 1px solid var(--ion-dark-text-primary);
+        border-radius: 50%;
+        background: var(--ion-dark-color-primary);
+    }
+}

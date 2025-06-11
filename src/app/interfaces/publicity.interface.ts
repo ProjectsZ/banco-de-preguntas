@@ -3,9 +3,8 @@ export interface Publicity {
     pub_id: string; // UUID
     pub_title: string;
     pub_description?: string;
-    pub_img_url: string;
-    pub_link_url?: string;
-    pub_type: 'banner' | 'popup' | 'video'; // Puedes extender estos valores
+    pub_data?: { img: string; url: string };
+    pub_type: 'banner' | 'popup' | 'video' | 'promo' | any; // Puedes extender estos valores
     pub_position: 'inicio' | 'sidebar' | 'footer' | string;
     pub_audience?: string[]; // Representa jsonb de tipo array
     pub_priority?: number;

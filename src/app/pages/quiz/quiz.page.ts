@@ -153,7 +153,8 @@ export class QuizPage implements OnInit, OnDestroy {
   selectQuestion = signal<Question | null>(null); // variable para el select de ver respuestas
 
   
-  
+    // thema color
+  colorTheme = signal<string>('');
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     addIcons({
@@ -190,6 +191,11 @@ export class QuizPage implements OnInit, OnDestroy {
         this.submitQuiz();
       }
     });
+    
+    // verificar en el storage si el tema esta en modo light o dark
+    this.colorTheme.set(localStorage.getItem('theme') === 'dark' ? 'dark' : 'light');
+    // console.log('---> colorTheme: ', localStorage.getItem('theme'));
+
    }
 
    setIsLoading(loading: boolean){
@@ -244,6 +250,16 @@ export class QuizPage implements OnInit, OnDestroy {
 
   }
 
+   // cambio del tema
+  changeModeThem(){
+    if(this.colorTheme() === 'light'){
+      this.colorTheme.set('dark');
+      localStorage.setItem('theme', 'dark');
+    }else{
+      this.colorTheme.set('light');
+      localStorage.setItem('theme', 'light');
+    }
+  }
 
 
   setIsImageZoom(value: boolean){
@@ -606,7 +622,7 @@ export class QuizPage implements OnInit, OnDestroy {
       return;
     }
 
-      if(this.currentUser?.usr_coin == "0"){
+      if(this.currentUser?.usr_coin == 0){
         this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", "angry", true); 
         return
       }
@@ -828,7 +844,7 @@ export class QuizPage implements OnInit, OnDestroy {
     //   return;
     // }
 
-      if(this.currentUser?.usr_coin == "0"){
+      if(this.currentUser?.usr_coin == 0){
         this.toastS.openToast("Usted no tiene monedas suficientes, no insista!","danger", "angry", true); 
         return
       }

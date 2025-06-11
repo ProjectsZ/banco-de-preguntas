@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { Publicity } from 'src/app/interfaces/publicity.interface';
 import { SupabaseService } from '../supabase/supabase.service';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { AuthService } from '../auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +10,12 @@ import { SupabaseClient } from '@supabase/supabase-js';
 export class PublicityService {
 
   promos = signal<Publicity [] | null>(null);
+  banner = signal<Publicity [] | null>(null);
 
   private supabaseS = inject(SupabaseService);
   private supabase = computed<SupabaseClient>(()=> this.supabaseS.getClient());
+  private authS = inject(AuthService);
+  userRole = computed<any>(()=> this.authS.currentUser);
 
   constructor() { }
 
@@ -44,9 +48,43 @@ export class PublicityService {
     };
   }
 
-  
+  async getBanner(r_name: string){
+    // Verifica si ya hay promociones cargadas
+    if (this.banner()) {
+      return;
+    }
+    
+    const { data, count, error } = await this.supabase()
+          .from('publicidad')
+          .select('*', { count: 'exact' })          
+          .order('pub_title', { ascending: true });
+
+      if (error) throw error;
+    console.log("usuario ---> :", r_name);
+    const datR_name = this.setFiltrarXestudiante(data, r_name);   
+        
+    this.setBanner(datR_name);
+
+    return {
+      data: datR_name,
+      total: count
+    };
+  }
+
+ setFiltrarXestudiante(data: Publicity[], r_name: string) {
+  const filteredData = data.filter((item) => {
+    return item.pub_audience?.includes(r_name);
+  });
+
+  return filteredData;
+}
+
   setPromos(value: any){
     this.promos.set(value);
   }
-
+  
+  setBanner(value: any){
+    this.banner.set(value);
+  }
+  
 }

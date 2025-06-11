@@ -165,6 +165,7 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
         console.log(data);
         if(data){
           this.getWordAll(true);
+          this.setIsLoading(false); // Se produjo un error inesperado!
           this.presentToast("Agregado correctamente! ...", 'top', 5000, 'checkmark', 'success');
         }
   

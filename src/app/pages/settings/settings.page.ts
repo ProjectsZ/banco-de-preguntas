@@ -50,30 +50,14 @@ export class SettingsPage implements OnInit {
       const data = await this.questionS.importQuestionFromExcel(event)
       console.log(data);
       if(data){
-        this.presentToast("Agregado correctamente! ...", 'top', 5000, 'checkmark', 'success');
+        this.setIsLoading(false);
       }
 
     }catch(e){
       console.error(e);
-    } finally{
-      this.presentToast( "Se produjo un error inesperado!", 'top', 5000, 'close', 'danger');
     }
   }
 
-  async presentToast( message?: string, position: 'top' | 'middle' | 'bottom' = 'top', 
-    duration: number = 50500, icon?: string, color: 'success' | 'warning' | 'danger' | 'primary' | 'tertiary' | 'light' | 'dark' | 'medium' = 'success',
-    ) {
-    const toast = await this.toastC.create({
-      message: `${message}`,
-      animated: true,  
-      color: color,
-      icon: 'checkmark', 
-      cssClass: 'toast',
-      duration: duration,
-      position: position,
-    });
-
-    await toast.present();
-  }
+  
 
 }

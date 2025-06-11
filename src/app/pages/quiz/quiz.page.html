@@ -14,6 +14,16 @@
       @let isMarked = qstn[currentIndex()].marked ? true : false;
 
       <ion-buttons slot="end">
+
+        <ion-button color="light" (click)="changeModeThem()">
+          @if(colorTheme() === 'dark'){
+            <ion-icon name="moon-outline"></ion-icon>
+          }@else {
+            <ion-icon name="sunny-outline"></ion-icon>
+          }
+        </ion-button>
+
+
         <ion-button color="light" fill="clear" size="large"
           (click)="iniciarRecuerdo()">
           <ion-icon name="bulb-outline" slot="icon-only"></ion-icon>
@@ -27,9 +37,10 @@
         </ion-button> -->
 
         <ion-button color="light"
-        (click)="setIsReview(true)">
-        <ion-icon name="options-outline" slot="icon-only"></ion-icon>
-      </ion-button>
+          (click)="setIsReview(true)">
+          <ion-icon name="options-outline" slot="icon-only"></ion-icon>
+        </ion-button>
+
 
       </ion-buttons>
 
@@ -40,7 +51,11 @@
 @if(isLoading() || !questions()){
   <app-spinner></app-spinner>
 }
-<ion-content [fullscreen]="true" class="ion-padding-horizontal quiz-content">
+<ion-content [fullscreen]="true" class="ion-padding-horizontal quiz-content"
+[class]="{
+    'dark-theme': colorTheme() === 'dark',
+    'light-theme': colorTheme() === 'light'
+    }">
   
   @if(viewWord){
     <app-floating-card 
@@ -52,7 +67,7 @@
 
 
   <!-- PUBLICIDAD -->
-   @if(publicidad.length > 0 && promociones()){
+   @if(publicidad.length > 0 && promociones() && publicidad[0].pub_type == 'promo'){
     <div class="promotion">
       <!-- <img src="assets/imgs/publicidad_01.png" alt=""> -->
 
@@ -63,8 +78,8 @@
         class="mi-swiper"
       >
         <swiper-slide *ngFor="let pub of publicidad">
-          <a [href]="pub.pub_link_url" target="_blank">
-            <img [src]="pub.pub_img_url" alt="Publicidad" class="img-pub">
+          <a [href]="pub.pub_data?.url" target="_blank">
+            <img [src]="pub.pub_data?.img" alt="Publicidad" class="img-pub">
           </a>
           <!-- <h4>{{ pub.pub_description }}</h4> -->
         </swiper-slide>
@@ -123,7 +138,9 @@
       <swiper-container #swiper [Modules]="swiperModules" 
         [slidesPerView]="1"
         [spaceBetween]="20"
-        initial-slide="0" centered-slides="true" keyboard="true"
+        initial-slide="0" centered-slides="true"
+         [loop]="false" 
+          [autoplay]="false"
         (swiperslideChange)="onSlideChange()">
         
         @for (question of questions(); track i; let i = $index) {
@@ -141,12 +158,12 @@
 
                 <!-- @if(currentUser.usr_r_id?.r_name == 'ADMIN' || currentUser.usr_r_id?.r_name == 'DOCENTE'){ -->
                   @if (question?.viewAnswer) {
-                    <ion-chip color="light" class="eye-chip cat-chip"
+                    <ion-chip color="light" class="flex center eye-chip cat-chip"
                       (click)="onActiveCatAnswer(question, i)">
                       @if(isSubmitConfirm()){
-                        <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt="">
+                        <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt=""  width="16">
                       }@else{
-                        <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="">
+                        <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="" width="16">
                       }
                     </ion-chip>
                     <ion-chip color="light" class="eye-chip"
@@ -156,12 +173,12 @@
 
                   }@else {
                   
-                    <ion-chip color="light" class="eye-chip cat-chip"
+                    <ion-chip color="light" class="flex center eye-chip cat-chip"
                       (click)="onActiveCatAnswer(question, i)">
                       @if(isSubmitConfirm()){
-                        <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt="">
+                        <img class="icon_cat" src="assets/icon/ic_cat_full.svg" alt="" width="16">
                       }@else{
-                        <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="">
+                        <img class="icon_cat" src="assets/icon/ic_cat_outline.svg" alt="" width="16">
                       }
                     </ion-chip>
                     <ion-chip color="light" class="eye-chip"
@@ -260,7 +277,10 @@
                   <!-- options component-->
                   <app-quiz-options
                     [options]="question.pr_options"
+                    [content]="question.pr_content"
+                    [role]="currentUser.usr_r_id?.r_name!"
                     [selectedOption]="question.selectedAnswer"
+                    [colorTheme]="colorTheme()"
                     (selectedOptionChange)="optionSelected($event, $index)"
                     [freezeAction]="isSubmitted()"></app-quiz-options>
                 }

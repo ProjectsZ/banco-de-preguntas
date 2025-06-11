@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, model, OnInit } from '@angular/core';
+import { Component, inject, input, model, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonRadioGroup, IonItem, IonRadio, IonLabel, IonIcon } from "@ionic/angular/standalone";
+import { ToastService } from '../toast/toast.service';
 
 @Component({
   selector: 'app-quiz-options',
@@ -20,16 +21,29 @@ export class QuizOptionsComponent  implements OnInit {
 
   private debounceTimeout: any;
 
+  // usuarios premium
+  content = input<string>("");
+  role = input<any>('ESTUDIANTE');
+
+  private toastS = inject(ToastService);
+
+  // thema color
+  colorTheme = input<string>("light");
+
   constructor() { }
 
   ngOnInit() {}
+
+   // Crear un getter para acceder al valor de colorTheme
+  get currentColorTheme(): string {
+    return this.colorTheme();  // Accede al valor de la señal
+  }
 
   setOption(index: number){
     console.log("Selected option: ", index);
 
     if(this.freezeAction()){
       return;
-
     }
 
     // clear any existing debounce timer
@@ -48,6 +62,13 @@ export class QuizOptionsComponent  implements OnInit {
 
       this.selectedOption.set(newSelection);
       console.log("New selection: ", this.selectedOption());
+
+      // mostrar el cat mascota con mensaje
+      console.log(this.role());
+      if((this.role() === 'PLUS') || (this.role() === 'ADMIN')){
+        this.toastS.openToast(`${ this.content() }`,"success", "happy", true);
+      }
+      
 
     }, 100);
   }

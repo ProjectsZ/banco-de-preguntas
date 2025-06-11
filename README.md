@@ -1,5 +1,19 @@
 
 # VERSION 0.8
+
+0.8.8
+- probando test del login
+
+0.8.7
+- fixed quiz component, corrigiendolo la parte del slider que este en estatico y no se mueva solo o evitando que cambie de manera automatica!
+- Agregando el modo oscuro en la aplicacion, iniciando con el Quiz
+- Para los usuarios con membresia, se asignara la vista previa del significado o contexto, con un solo click se vera por algunos instantes (en mensaje de la maskota).
+- Fixed Home component (Temas), se creo cards del curso/tema especifico, en donde se muestran de manera random desde los temas que existen, para luego direccionarlos a un modal donde se especifique mas sobre el curso y los temas + direcciones adicionales o recomendaciones para estudios (*
+PDF, *.DOC, *.PPT o Note), Nota si el tema no es propio (en gran parte): se tiene que direccionar a links externos, como google Drive, team, scribd, studocu, etc. En torno a todo ello debe existir un boton "View all" que muestre todos los que existen pero de manera listada en un modal! 
+- Fixed Home component (Temas), en el segundo apartado se modulo por temas que existen, se adiciono un tipo de ensignia para identificarlos, tambien se agrego un color especifico que caracterizara al tema. En torno a todo ello debe existir un boton "View all" que muestre todos los que existen pero de manera listada en un modal!
+- Se diseño el Home Component (Temas), en donde se particio en tres sectores, siendo el primero el slider infinito segun el banner que se usa pero categorizado por perfil de acceso (DOCENTE, ESTUDIANTE, ADMIN), y el slider se desgloza un cambio de cada 10000, tratar de corregir el momento de carga cuando la data demora en llegar.
+
+
 0.8.6
 - creacion de un nuevo componente que use la libreria angular PDF view, PARA VISUALIZAR PDFs linkeados de la red (ngx-extended-pdf-viewer), permite leer el pdf que es referente del contenido de del tema seleccionado
 

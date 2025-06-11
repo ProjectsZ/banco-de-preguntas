@@ -1,6 +1,10 @@
 
 <ion-radio-group mode ="ios"
-  [ngModel]="selectedOption()" >
+  [ngModel]="selectedOption()" 
+  [class]="{
+    'dark-theme': currentColorTheme === 'dark',
+    'light-theme': currentColorTheme === 'light'
+    }">
   @let opts = options();
 
   @for(option of opts; track $index){

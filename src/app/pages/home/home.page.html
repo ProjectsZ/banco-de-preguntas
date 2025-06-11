@@ -61,6 +61,10 @@
   </ion-content>
 </ion-menu>
 
+@if(isLoading()){
+        <app-spinner></app-spinner>
+}
+
 
 <ion-content class="ion-padding">
   
@@ -90,9 +94,39 @@
 
     @if(selectTab() === 'temas'){
       
-    <div class="temas">
-      <img src="../../../assets/imgs/loading_img.png" alt="">
-    </div>
+    <!-- <div class="temas">
+      <img src="https://res.cloudinary.com/dmzqftdha/image/upload/v1746832810/cat-banner-min_fo3o9l.jpg" alt="">
+    </div> -->
+    <br>
+    <app-advertising
+      [data]="banner"
+    ></app-advertising>
+
+      <div class="recomendando">
+        
+        <div class="flex center justify title">
+          <h6> <b>Listado de temas</b> </h6>
+          <span> View all </span>
+        </div>
+        
+        <div class="cards-recomendando">
+        @if(temas()){ 
+         @for(tm of temas(); track i; let i = $index) {
+            <ion-card class="card-data card-mini"
+              [ngStyle]="{ 'background': '#'+ tm.grouped_data[0].cat_color }">
+              <ion-card-content>
+                @if (tm.grouped_data[0].cat_badge){
+                  <img class="cm-img"
+                    [src]="tm.grouped_data[0].cat_badge" alt="">
+                }
+                <h5> {{ tm.cat_title }} </h5>
+              </ion-card-content>
+            </ion-card>
+          }
+        }
+        </div>
+
+      </div>
 
       <div class="recomendando">
         <div class="flex center justify title">
@@ -101,38 +135,34 @@
         </div>
   
         <div class="cards-recomendando">
-          <ion-card class="card-data">
-            <ion-card-header>            
-              <img src="../../../assets/imgs/loading_img.png" alt="">
-            </ion-card-header>
-            <ion-card-content>
-              <h6> Subtitle </h6>
-              <ion-card-title> tituloss</ion-card-title>
-  
-              <p class="description">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id consequatur, eligendi eum consectetur est tenetur <a href="" class="plus-description">... ver más.</a>
-              </p>
-              
-            </ion-card-content>
-          </ion-card>
-          <ion-card class="card-data">
-            <ion-card-header>            
-              <img src="../../../assets/imgs/loading_img.png" alt="">
-            </ion-card-header>
-            <ion-card-content>
-              <h6> Subtitle </h6>
-              <ion-card-title> tituloss</ion-card-title>
-  
-              <p class="description">
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id consequatur, eligendi eum consectetur est tenetur <a href="" class="plus-description">... ver más.</a>
-              </p>
-              
-            </ion-card-content>
-          </ion-card>
-  
+        @if(temas()){ 
+         @for(tm of temas()[3].grouped_data; track i; let i = $index) {
+            <ion-card class="card-data">
+              <ion-card-header>      
+                @if(tm.cat_img){
+                  <img src="{{ tm.cat_img }}" alt="Fondo">
+                }@else {
+                  <img src="../../../assets/imgs/loading_img.png" alt="">                  
+                }  
+
+              </ion-card-header>
+              <ion-card-content>
+                <span class="title"> {{ temas()[randomSelectNumber()].cat_title }} </span>
+                <ion-card-title> {{ tm.cat_subtitle }} </ion-card-title>
+    
+                <!-- <p class="description">
+                  {{ tm.cat_description | textLimit: 62 : '' }}
+                  <a href="" class="plus-description">... ver más.</a>
+                </p> -->
+                
+              </ion-card-content>
+            </ion-card>
+          }
+        }
         </div>
         
       </div>
+
     }
 
     @if(selectTab() === 'cursos'){

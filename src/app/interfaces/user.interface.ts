@@ -10,7 +10,7 @@ export interface User {
     usr_infp_id?: informacionPersonal;
     updated_at?: string;
     created_at?: string;
-    usr_coin?: string;//moneditas;
+    usr_coin?: number;//moneditas;
 }
 
 // interface moneditas{

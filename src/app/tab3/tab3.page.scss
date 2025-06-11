@@ -11,12 +11,15 @@ ion-content{
     ion-header{
         background: transparent;
 
+
+
         ion-toolbar{
             --background: transparent;
             
             ion-title{
                 --color: var(--ion-color-text-primary);
                 font-size: 1.4rem;
+                margin-left: 1rem;
             }
         }
     }
@@ -42,6 +45,18 @@ ion-content{
 
         .errorMessage{
             font-size: small;
+        }
+
+    }
+
+    &.dark-theme{
+        ion-card{
+            background: var(--ion-dark-color-primary);
+        }
+
+        ion-button.play{
+            border: 1px solid #ffffff;
+            border-radius: 15px;
         }
 
     }

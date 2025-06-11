@@ -1,4 +1,4 @@
-import { Component, inject, Inject, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { IonContent, IonButtons, IonMenu, IonMenuButton, IonIcon, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonAvatar, IonLabel, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonCardSubtitle, IonSearchbar } from "@ionic/angular/standalone";
@@ -9,6 +9,15 @@ import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/interfaces/user.interface';
 import { ToastService } from 'src/app/components/toast/toast.service';
+import { Category } from 'src/app/interfaces/category.interface';
+import { CategoryService } from 'src/app/services/quiz/category.service';
+import { SpinnerComponent } from 'src/app/components/spinner/spinner.component';
+import { TextLimitPipe } from 'src/app/pipes/text-limit.pipe';
+import { AdvertisingComponent } from 'src/app/components/advertising/advertising.component';
+import { PublicityService } from 'src/app/services/publicidad/publicity.service';
+import { Publicity } from 'src/app/interfaces/publicity.interface';
+
+
 
 @Component({
   selector: 'app-home',
@@ -16,20 +25,31 @@ import { ToastService } from 'src/app/components/toast/toast.service';
   styleUrls: ['./home.page.scss'],
   standalone: true,
   imports: [IonSearchbar, IonCardContent, IonCardTitle, IonCardHeader, IonCard, IonLabel, IonAvatar, IonItem, IonList, IonIcon, IonButtons, IonContent, IonMenu, IonMenuButton,
-           CommonModule, FormsModule,ReactiveFormsModule ]
+           CommonModule, FormsModule,ReactiveFormsModule, SpinnerComponent, TextLimitPipe, AdvertisingComponent ],
 })
 export class HomePage implements OnInit, OnDestroy {
 
     // usuario de tipo User
-    currentUser!: User;
-    private userSubscription: Subscription | null = null; // Suscripción al BehaviorSubject del servicio
+  currentUser!: User;
+  private userSubscription: Subscription | null = null; // Suscripción al BehaviorSubject del servicio
 
-    private authS = inject(AuthService);
+  private authS = inject(AuthService);
 
   selectTab = signal<string>('temas');
 
+  temas = computed<any[]>(()=> this.categoryS.topics()!); 
+
   private router = inject(Router);
   private toastS = inject(ToastService);
+  private categoryS = inject(CategoryService);
+  private publicityS = inject(PublicityService);
+
+  randomSelectNumber = signal<number>(0); // Número aleatorio para la selección de temas  
+  
+  isLoading = signal<boolean>(false); // Loading state
+
+  //PUBLICIDAD
+  banner: any[] = [];
 
   constructor() {
   }
@@ -49,6 +69,18 @@ export class HomePage implements OnInit, OnDestroy {
       exitOutline
     })
 
+    this.isLoading.set(true); // Set loading state to true
+    this.categoryS.getAllCategoriesWithCatDoc().then((res) => {
+      // console.log(this.temas());
+      if(res){        
+        this.isLoading.set(false); // Set loading state to false
+        this.randomSelectNumber.set(Math.floor(Math.random() * this.temas().length)); // Set random number
+        console.log('Categorias:', res);
+      }
+    }).catch((err) => {
+      console.error('Error al obtener categorias:', err);
+    });
+
 
      // Nos suscribimos al BehaviorSubject del servicio
      this.userSubscription = this.authS.currentUser.subscribe({
@@ -63,8 +95,23 @@ export class HomePage implements OnInit, OnDestroy {
         console.log('Suscripción completada');
       }
     });
- 
+
+    this.getBanner();
   }
+
+  async getBanner(){
+    const {data, total}: any = await this.publicityS.getBanner(this.currentUser.usr_r_id!.r_name);
+    
+    if(data){
+      console.log("Banner ---> :", data);
+      this.banner.push(...data);
+    }
+
+  }
+
+
+
+
 
   ngOnDestroy(): void {// Es importante desuscribirse para evitar memory leaks
     if (this.userSubscription) {
@@ -82,6 +129,8 @@ export class HomePage implements OnInit, OnDestroy {
     this.router.navigate([navegar]);
 
   }
+
+  
 
 
 }

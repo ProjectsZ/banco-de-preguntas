@@ -3,7 +3,11 @@
   <app-spinner></app-spinner>
 } 
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true"
+  [class]="{
+    'dark-theme': colorTheme() === 'dark',
+    'light-theme': colorTheme() === 'light'
+    }">
 
   <ion-header class="ion-no-border">
     <ion-toolbar>
@@ -15,7 +19,18 @@
           <ion-icon name="settings-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
-    }
+     }
+
+     <ion-buttons slot="end">
+        <ion-button color="light" (click)="changeModeThem()">
+          @if(colorTheme() === 'dark'){
+            <ion-icon name="moon-outline"></ion-icon>
+          }@else {
+            <ion-icon name="sunny-outline"></ion-icon>
+          }
+        </ion-button>
+      </ion-buttons>
+
     </ion-toolbar>
   </ion-header>
 

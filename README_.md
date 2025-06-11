@@ -26,7 +26,9 @@ Icon files should be at least 1024px x 1024px. Splash screen files should be at 
 
 npx capacitor-assets generate
 
-
+>  error de net::ERR_CACHE_READ_FAILURE 
+>$ rm -rf .angular/cache
+------------------------------------------------------------------------------------------
 -- Create the categories Table
 create table if not exists cursos (
   crs_id uuid primary key default gen_random_uuid(),

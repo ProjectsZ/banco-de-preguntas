@@ -1,6 +1,13 @@
 @use '../../../assets/css/var-colors' as *;
 @use '../../../assets/css/var-config' as *;
 
+
+
+h6{
+    font-size: 0.88rem;
+}
+
+
 ion-header {
     background-color: $white;
     border-bottom: 1px solid #f2f2f2;
@@ -126,7 +133,8 @@ ion-list{
     img{
         border-radius: 10px;
         width: 100vw;
-        height: 160px;
+        height: 120px;
+        object-fit: cover;
     }
 }
 
@@ -182,17 +190,55 @@ ion-searchbar{
     }
 
     .card-data{
+
+        &.card-mini{
+            ion-card-content{
+                display: flex;
+                justify-items: center;
+                height: 100%;
+                align-items: center;
+
+                .cm-img{
+                    width: 3rem;
+                    height: 3rem;
+                    margin-left: -0.4rem;
+                    margin-right: 0.64rem;
+                    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+                }                
+            }
+        }
+        
         ion-card-header{
             height: 7.2rem;
             margin-bottom: 0.64rem;
+            img{
+                object-fit: cover;
+            }
         }
-        ion-card-title{
-            margin: 0 0 0.4rem 0;
-        }
-        .description{
-            font-size: 0.8rem;
+
+        ion-card-content{
             
+            .title{
+                font-size: 0.60rem;
+                font-weight: 700;
+                color: var(--ion-color-primary);
+                opacity: .64;
+                display: flex;
+                line-height: 0.64rem;
+                list-style: 0.64rem;
+            }
+
+            ion-card-title{
+                margin: 0.4rem 0 0 0;
+                font-size: 1.2rem;
+                line-height: 1.1rem;
+            }
+
+            .description{
+                text-align: justify;
+            }
         }
+
         .plus-description{
             color: var(--ion-color-secondary);
         }
@@ -200,8 +246,8 @@ ion-searchbar{
 
     .card-mini{
         position: relative;
-        width: 7.2rem;
-        height: 7.2rem;
+        width:  12rem;
+        height: 6rem;
 
         .card-overlay {
             position: absolute;

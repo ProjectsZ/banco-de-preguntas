@@ -9,6 +9,8 @@ import { Category } from 'src/app/interfaces/category.interface';
 export class CategoryService {
 
   categories = signal<Category[] | null>(null); // Signal to hold categories
+  topics = signal<Category[] | null>(null); // Signal to hold temas
+   
 
   select_cat_id = signal<string | null>(null); // Signal to hold selected category ID
 
@@ -74,21 +76,30 @@ export class CategoryService {
   }
 
   // objeter todas las categorias con documentos (cat_doc)
-  async getAllCategoriesWithCatDoc(){
+  async getAllCategoriesWithCatDoc():Promise<boolean>{
 
     try{
-      const { data, error } = await this.supabase()
-        .from('categorias')
-        .select('*, cat_doc(*)')
-        .order('cat_id', { ascending: true });
+      
+        const { data, error } = await this.supabase().rpc('grouped_temas');
+
+        if(error) throw error;
+
+        this.topics.set(data);
+
 
       if(error) throw error;
 
-      return data;
+      if(data){
+        this.topics.set(data); // Set the topics signal
+        console.log('Categorias con documentos:', data);
+        return true;
+      }else{
+        return false;
+      }
 
     }catch(error){
       console.error('Error al obtener las categorias con documentos:', error);
-      throw error;
+      return false;
     }
 
   }

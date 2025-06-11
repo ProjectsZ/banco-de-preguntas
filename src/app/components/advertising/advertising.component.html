@@ -1,0 +1,36 @@
+
+<swiper-container class="custom-swiper" centered-slides="true"
+    #swiper 
+    [modules]="swiperModules" 
+    [slidesPerView]="1"
+    [spaceBetween]="20"
+    initial-slide="0"    
+    pagination="true"
+    keyboard="true"    
+    [loop]="false" 
+    autoplay-delay="10000"
+    (swiperactiveindexchange)="onSlideChange()"
+    >
+  
+  @for(pub of data(); track i; let i = $index) {
+      @if(pub.pub_type == filterType()){
+        <swiper-slide>
+          <img [src]="pub.pub_data?.img" [alt]="'Advertising ' + (i+1)">
+        </swiper-slide>
+      }
+
+  }
+  <!-- <swiper-slide>
+    <img src="https://th.bing.com/th/id/OIP.G_ChabYqjVSfheGLCXLpTwHaHa" alt="Advertising 1">
+  </swiper-slide> -->
+
+  <!-- <swiper-slide>
+    <img src="https://th.bing.com/th/id/OIP.u2Lz9GuUXLS9-cWFyuDg9AHaE6" alt="Advertising 2">
+  </swiper-slide>
+  <swiper-slide>
+    <img src="https://th.bing.com/th/id/R.cf8b240d6d04bc30202e0e1e9f2ceeaa?rik=sGKiRdA33Ca72g&pid=ImgRaw&r=0" alt="Advertising 3">
+  </swiper-slide>
+  <swiper-slide>
+    <img src="https://th.bing.com/th/id/OIP.diL9nkyNl0aQGJgrsrOKSQHaEx" alt="Advertising 4">
+  </swiper-slide> -->
+</swiper-container>

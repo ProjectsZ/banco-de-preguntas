@@ -26,6 +26,10 @@
     linear-gradient(120deg, #141e30 0%, #243b55 100%)
 
     --ion-background-color: #ffffff;
+
+    // dark theme
+    --ion-dark-color-primary: #0C131E;
+    --ion-dark-text-primary: #fafafa;
 }
 
 @media (prefers-color-scheme: dark) {
