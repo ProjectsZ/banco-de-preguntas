@@ -4,12 +4,13 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem,  IonLabe
 
 import { addOutline, chatbubbleEllipsesOutline, chevronBackOutline, documentOutline, layersOutline, shareSocialOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
+import { TextHighlightPipe } from '../pipes/text-highlight.pipe';
 import { SpinnerComponent } from "../components/spinner/spinner.component";
 import { Subscription } from 'rxjs';
-import { TextHighlightPipe } from '../pipes/text-highlight.pipe';
+import { User } from '@supabase/supabase-js';
 import { Dictionary, OrderCatDictionary } from 'src/interfaces/dictionary.interface';
 import { DictionaryService } from 'src/services/dictionary.service';
-
+import { AuthService } from 'src/services/auth.service';
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -19,6 +20,8 @@ import { DictionaryService } from 'src/services/dictionary.service';
 })
 export class Tab2Page implements OnInit, OnDestroy {
 
+  // usuario de tipo User
+  currentUser!: User;
 
   // wordsAll = signal<Dictionary[]>([]); // Signal to hold words
   wordsAll = signal<OrderCatDictionary[]>([]); // Signal to hold words
@@ -32,6 +35,7 @@ export class Tab2Page implements OnInit, OnDestroy {
 private userSubscription: Subscription | null = null; // Suscripción al BehaviorSubject del servicio
 
   private dictionaryS = inject(DictionaryService);
+  private authS = inject(AuthService);
   private toastC = inject(ToastController);
   
   constructor() {
@@ -44,6 +48,19 @@ private userSubscription: Subscription | null = null; // Suscripción al Behavio
       shareSocialOutline
     })
 
+    // Nos suscribimos al BehaviorSubject del servicio
+    this.userSubscription = this.authS.currentUser.subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        // console.log('Usuario actual:', this.currentUser);
+      },
+      error: (err) => {
+        console.error('Error al obtener datos del usuario:', err);
+      },
+      complete: () => {
+        console.log('Suscripción completada');
+      }
+    });
   }
 
   ngOnInit(): void {
