@@ -60,7 +60,7 @@ export class PublicityService {
           .order('pub_title', { ascending: true });
 
       if (error) throw error;
-    console.log("usuario ---> :", r_name);
+    // console.log("Banner ---> :", data);
     const datR_name = this.setFiltrarXestudiante(data, r_name);   
         
     this.setBanner(datR_name);

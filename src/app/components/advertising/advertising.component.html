@@ -7,11 +7,10 @@
     initial-slide="0"    
     pagination="true"
     keyboard="true"    
-    [loop]="false" 
-    autoplay-delay="10000"
+    [loop]="false"
     (swiperactiveindexchange)="onSlideChange()"
     >
-  
+
   @for(pub of data(); track i; let i = $index) {
       @if(pub.pub_type == filterType()){
         <swiper-slide>
@@ -20,9 +19,9 @@
       }
 
   }
-  <!-- <swiper-slide>
-    <img src="https://th.bing.com/th/id/OIP.G_ChabYqjVSfheGLCXLpTwHaHa" alt="Advertising 1">
-  </swiper-slide> -->
+  <swiper-slide>
+    <img src="https://res.cloudinary.com/dqmjvhsxe/image/upload/v1752297808/ed2825f7-f5d8-451c-af34-b862d859dce5_uqonra.webp" alt="Advertising 1">
+  </swiper-slide>
 
   <!-- <swiper-slide>
     <img src="https://th.bing.com/th/id/OIP.u2Lz9GuUXLS9-cWFyuDg9AHaE6" alt="Advertising 2">

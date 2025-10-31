@@ -1,0 +1,61 @@
+import { TestBed } from '@angular/core/testing';
+import { SupabaseService } from './supabase.service';
+
+describe('📊 Supabase Benchmark por Tabla', () => {
+  let service: SupabaseService;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({});
+    service = TestBed.inject(SupabaseService);
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    sessionStorage.clear();
+  });
+
+  const testCases = [
+    { tabla: 'cursos', limite: 150, latenciaMaxMs: 1200 },
+    { tabla: 'preguntas', limite: 150, latenciaMaxMs: 1000 }
+  ];
+
+  for (const { tabla, limite, latenciaMaxMs } of testCases) {
+    it(`📦 ${tabla} → rendimiento`, async () => {
+      const client = service.getClient();
+      const inicio = performance.now();
+
+      const { data, error } = await client
+        .from(tabla)
+        .select('*', { count: 'exact' })
+        .limit(limite);
+
+      const fin = performance.now();
+      const latencia = fin - inicio;
+      const sizeBytes = data ? new Blob([JSON.stringify(data)]).size : 0;
+      const registros = data?.length || 0;
+      const avgSize = registros > 0 ? (sizeBytes / registros).toFixed(2) : '0';
+
+      const informe = [
+        `Registros: ${registros}`,
+        `Tamaño total: ${sizeBytes} bytes`,
+        `Promedio por registro: ${avgSize} bytes`,
+        `Latencia: ${latencia.toFixed(2)} ms`,
+        `Error: ${error?.message || 'Sin error'}`
+      ].join('\n');
+
+      console.log(`📊 Informe de tabla '${tabla}':\n${informe}`);
+
+      // Verificar que no hay errores
+      expect(error).toBeNull();
+      if (error) {
+        console.error(`❌ Error en tabla '${tabla}': ${error.message}\n${informe}`);
+      }
+
+      expect(latencia).toBeLessThan(latenciaMaxMs);
+      // Agregamos información adicional al error si falla
+      if (latencia >= latenciaMaxMs) {
+        console.error(`⏱️ Latencia de '${tabla}': ${latencia.toFixed(2)} ms\nMáximo permitido: ${latenciaMaxMs} ms\n${informe}`);
+      }
+    }, 20000);
+  }
+});

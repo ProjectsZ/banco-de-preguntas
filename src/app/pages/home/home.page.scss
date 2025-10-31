@@ -2,7 +2,7 @@
 @use '../../../assets/css/var-config' as *;
 
 
-// textito
+
 h6{
     font-size: 0.88rem;
 }
@@ -226,7 +226,7 @@ ion-searchbar{
                 align-items: center;
 
                 .cm-img{
-                    width: 3rem;
+                    width: 2.8rem;
                     height: 3rem;
                     margin-left: -0.4rem;
                     margin-right: 0.64rem;
@@ -296,3 +296,48 @@ ion-searchbar{
           }
     }
   }
+
+.cards-recomendados-grid {
+
+  .grid-item {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 1rem;
+    text-align: center;
+  }
+
+  ion-card-content{
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+
+    .cm-img{
+        width: 3rem;
+        margin-left: -0.4rem;
+        margin-right: 0.64rem;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+  }
+
+
+
+  button {
+    margin-bottom: 1rem;
+    background: #eee;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+  }
+}
+
+.cards-recomendando >.recommended-card >.image-container{
+    height: 150px;
+    width: 100%;
+    img{
+        height: 100%;
+        width: 100%;
+        object-fit: cover;
+    }
+}

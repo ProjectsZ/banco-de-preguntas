@@ -9,6 +9,9 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "test:jest": "jest",
+    "test:jest:watch": "jest --watch",
+    "test:jest:coverage": "jest --coverage",
     "lint": "ng lint"
   },
   "private": true,
@@ -56,6 +59,7 @@
     "@capacitor/cli": "7.1.0",
     "@ionic/angular-toolkit": "^12.0.0",
     "@types/jasmine": "~5.1.0",
+    "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.18.0",
     "@typescript-eslint/parser": "^8.18.0",
     "eslint": "^9.16.0",
@@ -64,11 +68,14 @@
     "eslint-plugin-prefer-arrow": "1.2.2",
     "jasmine-core": "~5.1.0",
     "jasmine-spec-reporter": "~5.0.0",
+    "jest": "^29.7.0",
+    "jest-preset-angular": "^14.6.0",
     "karma": "~6.4.0",
     "karma-chrome-launcher": "~3.2.0",
     "karma-coverage": "~2.2.0",
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
+    "ts-jest": "^29.4.0",
     "typescript": "~5.6.3"
   },
   "description": "An Ionic project, 'Banco de preguntas' is a mobile application that allows users to create, share, and solve questions. It is designed to be user-friendly and efficient, making it easy for users to access and manage their questions. The app is built using the Ionic framework, which provides a powerful set of tools for building cross-platform mobile applications."

@@ -1,0 +1,225 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+    
+        <ion-chip color="dark" disabled="true" class="flex center">
+          <ion-icon name="diamond-outline"></ion-icon> &nbsp;
+          <ion-text class="bold">  {{ currentUser.usr_coin }} </ion-text>
+        </ion-chip>
+      
+
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="topic-content">
+  <!-- Header con imagen de fondo -->
+  <div class="topic-header" *ngIf="dataTopic">
+    <div class="header-background" [style.background-color]="'#' + dataTopic.grouped_data[0]?.cat_color + '20'"></div>
+    <div class="header-content">
+      <div class="badge-container">
+        <img 
+          [src]="dataTopic.grouped_data[0]?.cat_badge" 
+          [alt]="dataTopic.cat_title"
+          class="topic-badge"
+          (error)="onImageError($event)"
+        >
+      </div>
+      <div class="topic-info">
+        <h1 class="topic-title">{{ dataTopic.cat_title }}</h1>
+        <p class="topic-subtitle">{{ dataTopic.grouped_data[0]?.cat_subtitle }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="topic-body" *ngIf="dataTopic">
+    <!-- Descripción -->
+    <ion-card class="description-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="information-circle-outline"></ion-icon>
+          Descripción del Módulo
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="description-text" [innerHTML]="formatDescription(dataTopic.grouped_data[0]?.cat_description)"></div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Información del curso -->
+    <ion-card class="course-info-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="school-outline"></ion-icon>
+          Información del Curso
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Fecha de creación</span>
+              <span class="info-value">{{ formatDate(dataTopic.grouped_data[0]?.created_at) }}</span>
+            </div>
+          </div>
+          <div class="info-item">
+            <ion-icon name="id-card-outline"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">CANTIDAD DE PREGUNTAS</span>
+              <span class="info-value">{{ preguntas.length }}</span>
+            </div>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Preguntas disponibles -->
+    <ion-card class="questions-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="help-circle-outline"></ion-icon>
+          Preguntas Disponibles
+        </ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="questions-info">
+          
+          <div class="questions-count">
+            <ion-icon name="document-text-outline"></ion-icon>
+            <span>{{ preguntas.length }} preguntas cargadas</span>
+            <span class="page-info">(Página {{ currentPage }} de {{ totalPages }})</span>
+          </div>
+        
+        </div>
+
+        <!-- Lista de preguntas -->
+        <div class="questions-list" *ngIf="preguntasPaginadas.length > 0">
+         
+          <div class="question-item"
+            *ngFor="let pregunta of preguntasPaginadas; trackBy: trackByQuestion; let j = index"
+              (click)="onActiveCatAnswer(pregunta, j, 2)">
+            
+            <div class="question-header">
+              <ion-icon name="help-circle"></ion-icon>
+              <span class="question-text">
+                {{ pregunta.pr_question | slice:0:100 }}
+                {{ pregunta.pr_question.length > 100 ? '...' : '' }}
+              </span>
+            </div>
+            
+            <div class="question-meta">
+              <div class="meta-info">
+
+
+                <div class="ionChip"  *ngIf="pregunta.pr_type">
+                  <ion-icon [name]="getQuestionTypeIcon(pregunta.pr_type)"></ion-icon>
+                  <ion-label>{{ pregunta.pr_type | titlecase }}</ion-label>
+                </div>
+                
+                <div class="ionChip"  *ngIf="pregunta.created_at">
+                  <ion-icon name="calendar-outline"></ion-icon>
+                  <ion-label>{{ formatDateShort(pregunta.created_at) }}</ion-label>
+                </div>
+
+                <ion-chip size="small" [color]="getDifficultyColor(pregunta.pr_difficulty)">
+                  <ion-icon [name]="getDifficultyIcon(pregunta.pr_difficulty)"></ion-icon> 
+                </ion-chip>
+                
+              </div>
+            </div>
+
+          </div>
+         
+        </div>
+
+        <!-- Estado vacío -->
+        <div class="empty-state" *ngIf="!isLoading && preguntasPaginadas.length === 0">
+          <ion-icon name="document-outline"></ion-icon>
+          <p>No hay preguntas disponibles para este tema</p>
+        </div>
+
+        <!-- Controles de paginación -->
+        <div class="pagination-controls" *ngIf="totalPages > 1">
+          <div class="pagination-info">
+            <span>Mostrando {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ Math.min(currentPage * itemsPerPage, preguntas.length) }} de {{ preguntas.length }} preguntas</span>
+          </div>
+          
+          <div class="pagination-buttons">
+            <!-- Botón Anterior -->
+            <ion-button 
+              fill="clear" 
+              size="small"
+              [disabled]="currentPage === 1"
+              (click)="irAPagina(currentPage - 1)"
+            >
+              <ion-icon name="chevron-back-outline"></ion-icon>
+              Anterior
+            </ion-button>
+            
+            <!-- Números de página -->
+            <div class="page-numbers">
+              <ion-button 
+                *ngFor="let pagina of obtenerRangoPaginas()"
+                fill="clear" 
+                size="small"
+                [color]="pagina === currentPage ? 'primary' : 'medium'"
+                [class.active]="pagina === currentPage"
+                (click)="irAPagina(pagina)"
+              >
+                {{ pagina }}
+              </ion-button>
+            </div>
+
+            <!-- Botón Siguiente -->
+            <ion-button 
+              fill="clear" 
+              size="small"
+              [disabled]="currentPage > 1 && currentPage < totalPages"
+              (click)="irAPagina(currentPage + 1)"
+            >
+              Siguiente
+              <ion-icon name="chevron-forward-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Botón de acción principal -->
+    <div class="action-section">
+      <ion-button 
+        expand="block" 
+        size="large"
+        [disabled]="preguntas.length === 0"
+        (click)="iniciarQuiz()"
+      >
+        <ion-icon name="play-outline" slot="start"></ion-icon>
+        Iniciar Quiz
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-container" *ngIf="!dataTopic">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando información del tema...</p>
+  </div>
+
+  <!-- alert on submit -->
+  <ion-alert  header="Confirm" 
+    #confirmAlert
+    [isOpen]="isSubmitConfirm()"
+    [message]="alertMessage() || 'Estas seguro de que quieres enviar?'"
+    [buttons]="alertButtons()"
+    (didDismiss)="setIsSubmitConfirm(false, alertMessage() ? true: false)">
+  </ion-alert>
+
+
+
+</ion-content>

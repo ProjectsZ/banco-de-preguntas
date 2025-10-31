@@ -40,7 +40,7 @@ register();
   styleUrls: ['./quiz.page.scss'],
   standalone: true,
   imports: [IonSegmentButton, IonSegment, IonTitle, IonSpinner, IonCol, IonRow, IonLabel, 
-    IonFab,IonFabButton,IonFabList, IonFooter,
+    IonFab,IonFabButton,IonFabList,
     IonItemGroup, IonList, IonText, IonChip, IonItem, IonIcon, IonButtons, IonButton, IonContent,
      IonHeader, IonToolbar, IonAlert, IonModal, ReviewComponent,
     CommonModule, FormsModule, QuizOptionsComponent, ResultComponent, ViewAnswerComponent,

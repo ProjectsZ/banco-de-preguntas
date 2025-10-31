@@ -1,3 +1,5 @@
+
+<router-outlet></router-outlet>
 <!-- menu: Informacio ndel usuario -->
 <ion-menu side="start" contentId="main-content">
   <ion-content>
@@ -14,21 +16,26 @@
       </div>
     </div>
     <ion-list>
-      <!-- 
-      <ion-item class="ion-no-padding" lines="none">
-        <ion-icon name="book-outline"></ion-icon>
-        <ion-label>Mis cursos</ion-label>
-      </ion-item> -->
+      
       <ion-item class="ion-no-padding" lines="none"
         (click)="onNaviate('/register')">
-        <ion-icon name="person-outline"></ion-icon>
+        <ion-icon name="person-circle-outline"></ion-icon>
         <ion-label>{{ 'HOME.menu.mi_perfil' | translate }}</ion-label>
 
       </ion-item>
       <ion-item class="ion-no-padding" lines="none" (click)="onNaviate('/favorites')">
-        <ion-icon name="clipboard-outline"></ion-icon>
+        <ion-icon name="star-outline"></ion-icon>
         <ion-label>{{ 'HOME.menu.mis_examenes' | translate }}</ion-label>
       </ion-item>
+
+
+      @if(currentUser.usr_r_id?.r_name === 'admin'){
+        <ion-item class="ion-no-padding" lines="none"  (click)="onNaviate('/category')">
+          <ion-icon name="book-outline"></ion-icon>
+            <ion-label>{{ 'HOME.menu.mis_cursos' | translate }}</ion-label>
+        </ion-item>
+      }
+
       <!-- <ion-item class="ion-no-padding" lines="none">
         <ion-icon name="folder-outline"></ion-icon>
         <ion-label>Mis categorias</ion-label>
@@ -119,24 +126,50 @@
         
         <div class="flex center justify title">
           <h6> <b>{{ 'HOME.recomendando.listado_temass' | translate }}</b> </h6>
-          <span> {{ 'HOME.recomendando.ver_todos' | translate }} </span>
+          <a (click)="verTodosRecomendados()"> <span> {{ 'HOME.recomendando.ver_todos' | translate }} </span> </a>
         </div>
         
         <div class="cards-recomendando">
         @if(temas()){ 
-         @for(tm of temas(); track i; let i = $index) {
-            <ion-card class="card-data card-mini"
-              [ngStyle]="{ 'background': '#'+ tm.grouped_data[0].cat_color }">
-              <ion-card-content>
-                @if (tm.grouped_data[0].cat_badge){
-                  <img class="cm-img"
-                    [src]="tm.grouped_data[0].cat_badge" alt="">
-                }
-                <h5> {{ tm.cat_title }} </h5>
-              </ion-card-content>
-            </ion-card>
+          @if(mostrarTodosRecomendados){
+            @for(tm of temas(); track i; let i = $index) {
+              <ion-card class="card-data card-mini"
+                [ngStyle]="{ 'background': tm.grouped_data[0].cat_color }"
+                (click)="onTopicSelectItem(tm)">
+                
+                <ion-card-content>
+                  @if (tm.grouped_data[0].cat_badge){
+                    <img class="cm-img"
+                      [src]="tm.grouped_data[0].cat_badge" alt="">
+                  }
+                  <h5> {{ tm.cat_title }} </h5>
+                </ion-card-content>
+              </ion-card>
+            }
           }
+
         }
+        </div>
+
+        <div class="cards-recomendados-grid">
+          @if(temas()){
+            @if(!mostrarTodosRecomendados){
+              @for(tm of temas(); track i; let i = $index) {
+                <ion-card class="card-data card-mini"
+                  [ngStyle]="{ 'background': '#'+ tm.grouped_data[0].cat_color }"
+                  (click)="onTopicSelectItem(tm)">
+                  
+                  <ion-card-content>
+                    @if (tm.grouped_data[0].cat_badge){
+                      <img class="cm-img"
+                        [src]="tm.grouped_data[0].cat_badge" alt="">
+                    }
+                    <h5> {{ tm.cat_title }} </h5>
+                  </ion-card-content>
+                </ion-card>
+              }
+            }
+          }
         </div>
 
       </div>
@@ -144,30 +177,23 @@
       <div class="recomendando">
         <div class="flex center justify title">
           <h6> <b>{{ 'HOME.recomendando.recomendando_temass' | translate }}</b> </h6>
-          <span> {{ 'HOME.recomendando.ver_todos' | translate }} </span>
+          <!-- <span> {{ 'HOME.recomendando.ver_todos' | translate }} </span> -->
         </div>
   
-        <div class="cards-recomendando">
+        <div class="cards-recomendando"> 
         @if(temas()){ 
          @for(tm of temas()[3].grouped_data; track i; let i = $index) {
-            <ion-card class="card-data">
-              <ion-card-header>      
-                @if(tm.cat_img){
-                  <img src="{{ tm.cat_img }}" alt="Fondo">
-                }@else {
-                  <img src="../../../assets/imgs/loading_img.png" alt="">                  
-                }  
-
-              </ion-card-header>
+            <ion-card class="recommended-card" (click)="onTheneSelectItem(tm)">
+              <div class="image-container">
+                <img [src]="tm.cat_img || 'assets/imgs/loading_img.png'" alt="Fondo" />
+              </div>
               <ion-card-content>
-                <span class="title"> {{ temas()[randomSelectNumber()].cat_title }} </span>
-                <ion-card-title> {{ tm.cat_subtitle }} </ion-card-title>
-    
-                <!-- <p class="description">
+                <ion-card-title class="main-title">{{ tm.cat_title }}</ion-card-title>
+                <div class="subtitle">{{ tm.cat_subtitle }}</div>
+                <p class="description">
                   {{ tm.cat_description | textLimit: 62 : '' }}
-                  <a href="" class="plus-description">... ver más.</a>
-                </p> -->
-                
+                  <span *ngIf="tm.cat_description?.length > 62" class="plus-description">... ver más.</span>
+                </p>
               </ion-card-content>
             </ion-card>
           }

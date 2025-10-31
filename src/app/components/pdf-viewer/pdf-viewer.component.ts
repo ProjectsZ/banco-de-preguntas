@@ -71,9 +71,12 @@ export class PdfViewerComponent  implements OnInit {
   }
 
   onFileSelectedPDF(event: any): void {
-    const file = event.target.files[0];
-    if (!file) return;
-
+    const files = event?.target?.files;
+    if (!files || !files[0]) {
+      this.selectedFile = null;
+      return;
+    }
+    const file = files[0];
     this.selectedFile = file;
 
     const reader = new FileReader();

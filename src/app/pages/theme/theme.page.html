@@ -1,0 +1,160 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1"></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+      <ion-chip color="dark" disabled="true" class="flex center">
+        <ion-icon name="diamond-outline"></ion-icon> &nbsp;
+        <ion-text class="bold">{{ currentUser?.usr_coin || 0 }}</ion-text>
+      </ion-chip>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="theme-content">
+  <!-- Header con imagen de fondo -->
+  <div class="theme-header" *ngIf="themeData">
+    <div class="header-background" [style.background-color]="'#' + (themeData.cat_color || '007bff') + '20'"></div>
+    <div class="header-content">
+      <div class="badge-container">
+        <img 
+          [src]="themeData.cat_img" 
+          [alt]="themeData.cat_title"
+          class="theme-image"
+          (error)="onImageError($event)"
+        >
+      </div>
+      <div class="theme-info">
+        <h1 class="theme-title">{{ themeData.cat_subtitle }}</h1>
+        <p class="theme-subtitle">{{ themeData.cat_description | slice:0:80 }}{{ themeData.cat_description.length > 80 ? '...' : '' }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="theme-body" *ngIf="themeData">
+    <!-- Descripción -->
+    <ion-card class="description-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="information-circle-outline"></ion-icon>
+          Descripción del Tema
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="description-text" [innerHTML]="formatDescription(themeData.cat_description)"></div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Información del tema -->
+    <ion-card class="theme-info-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="document-text-outline"></ion-icon>
+          Información del Contenido
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="info-grid">
+          <div class="info-item">
+            <ion-icon name="calendar-outline"></ion-icon>
+            <div class="info-content">
+              <span class="info-label">Fecha de creación</span>
+              <span class="info-value">{{ formatDate(themeData.created_at) }}</span>
+            </div>
+          </div>
+          
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Documentos/PDFs -->
+    <ion-card class="documents-card">
+      <ion-card-header>
+        <ion-card-title>
+          <ion-icon name="library-outline"></ion-icon>
+          Material de Estudio ({{ themeData.cat_doc?.length || 0 }} documentos)
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="documents-container">
+          <!-- Estado de carga -->
+          <div class="loading-state" *ngIf="isLoading()">
+            <ion-spinner name="crescent"></ion-spinner>
+            <p>Cargando documentos...</p>
+          </div>
+
+          <!-- Lista de documentos -->
+          <div class="documents-list" *ngIf="!isLoading() && themeData.cat_doc?.length">
+            <div class="document-item" *ngFor="let doc of themeData.cat_doc; let i = index">
+              <div class="document-info">
+                <div class="document-icon-container">
+                  <ion-icon name="document-text-outline" class="document-icon"></ion-icon>
+                  <span class="document-number">{{ i + 1 }}</span>
+                </div>
+                <div class="document-details">
+                  <h4 class="document-title">{{ doc.title }}</h4>
+                  <p class="document-author">{{ doc.author }}</p>
+                </div>
+              </div>
+              <ion-button 
+                fill="clear" 
+                size="small"
+                (click)="openDocument(doc.uri)"
+              >
+                <ion-icon name="eye-outline" slot="icon-only"></ion-icon>
+              </ion-button>
+            </div>
+          </div>
+
+          <!-- Estado sin documentos -->
+          <div class="no-documents-state" *ngIf="!isLoading() && (!themeData.cat_doc || themeData.cat_doc.length === 0)">
+            <ion-icon name="library-outline" class="no-doc-icon"></ion-icon>
+            <h3>Sin Documentos</h3>
+            <p>Este tema no tiene documentos asociados</p>
+          </div>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Acciones -->
+    <div class="action-section">
+      <ion-button 
+        expand="block" 
+        size="large"
+        [disabled]="!themeData.cat_doc?.length"
+        (click)="openDocument()"
+      >
+        <ion-icon name="document-text-outline" slot="start"></ion-icon>
+        Ver Primer Documento
+      </ion-button>
+      
+      <ion-button 
+        expand="block" 
+        size="large"
+        fill="outline"
+        (click)="goToQuiz()"
+      >
+        <ion-icon name="help-circle-outline" slot="start"></ion-icon>
+        Ir al Quiz
+      </ion-button>
+    </div>
+  </div>
+
+  <!-- Loading state -->
+  <div class="loading-container" *ngIf="!themeData">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Cargando información del tema...</p>
+  </div>
+
+  <!-- Alert para confirmar visualización -->
+  <ion-alert 
+    header="Confirmar" 
+    #confirmAlert
+    [isOpen]="isSubmitConfirm()"
+    [message]="alertMessage() || '¿Está seguro de que desea ver este contenido?'"
+    [buttons]="alertButtons()"
+    (didDismiss)="setIsSubmitConfirm(false, alertMessage() ? true: false)">
+  </ion-alert>
+</ion-content>

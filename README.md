@@ -1,5 +1,9 @@
 
-# VERSION 0.8
+# VERSION 
+1.0.0
+- agregado del componente topic, en donde va todo los datos con respecto a la categoria (titulo, descripcion, tiempo estimado, fecha de agregado, preguntas adjuntas con esa categoria, y mostrar respuestas con costo de 2 coin de los usuarios )
+- Se creo el componente categorías (/category) y se implementó un formulario para agregar y editar categorías, incluyendo selección de curso (con datos dinámicos desde el servicio), subida de badge/logo, selección de color (guardando solo el código sin #), y gestión dinámica de documentos opcionales (como un array de objetos). Se mejoró la experiencia de usuario con tabs modernos, previsualización de imagen/color, paginación, búsqueda, y una lista de categorías en tarjetas con acciones de editar/eliminar. Además, se corrigieron detalles técnicos para asegurar que los datos se enlacen y refresquen correctamente tras cada operación.
+
 0.8.9
 - Se corrigio el error de la maskota (en dos lenguajes adjuntos)
 - Se ajusto el idioma cambio y mejoro el lenguaje

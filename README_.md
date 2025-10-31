@@ -1,4 +1,64 @@
 
+
+# 1 listar memoria chache
+npx jest --clearCache
+ng cache clean
+
+# Prueba Unitaria (login)
+npx jest pages/auth0/login/login.spec.ts
+npx jest pages/auth0/login/login.spec.ts --coverage
+
+# Prueba Concurrencia (preguntas masivas)
+npx jest src/app/components/add-questions/add-questions.component.spec.ts
+npx jest src/app/components/add-questions/add-questions.component.spec.ts --coverage
+
+# Prueba Rendimiento
+npx jest src/app/services/supabase/supabase-performance.spec.ts
+npx jest src/app/services/supabase/supabase-performance.spec.ts --coverage
+
+
+# Arrancar el coverage (despues de cada prueba)
+cd coverage/
+http-server
+#######  http-server
+#######  http://127.0.0.1:8080
+
+## Cuentas usuarios
+
+admin@unas.edu.pe:Aa$123456789
+plus@unas.edu.pe:Pp$123456789
+docente@unas.edu.pe:Dd$123456789
+estudiante@unas.edu.pe:Ee$123456789
+---------------------------------------------------------------------------
+# pruebas unitarias e integradas completas:  Y Pruebas de integración
+npx jest src/app/components/advertising/advertising.component.spec.ts
+
+# prueba de integracion, funcionalidad
+npx jest src/app/components/floating-card/floating-card.component.spec.ts
+
+# pruebas unitarias, carga, renderizacion
+npx jest src/app/components/pdf-viewer/pdf-viewer.component.spec.ts
+
+# pruebas de integracion, casos, renderozadp
+npx jest src/app/components/quiz-options/quiz-options.component.spec.ts
+
+npx jest src/app/components/result/result.component.spec.ts
+
+
+# CAJA NEGRA: Analisis de valor limite (Garantizar la robustez de la validación de números de teléfono)
+npx jest src/app/pages/auth0/register/register.boundary.spec.ts
+
+# pruebas de tabla de decisión (Decision Table Testing), Caso x4
+npx jest src/app/pages/auth0/register/register.decision-table.spec.ts
+
+# pruebas de usabilidad (Usability Testing) UX, manejo errores, etados UI, flujo de trabajo
+npx jest src/app/pages/auth0/register/register.usability.spec.ts
+
+
+
+
+---------------------------------------------------------------------------
+
 Uu$123456789
 
 >$ npm i xlsx
@@ -131,3 +191,7 @@ create table if not exists publicidad (
   pub_is_active boolean default false,
   created_at timestamp default now()
 );
+
+
+------------------------------------------------------------------------------------------
+

@@ -1,10 +1,11 @@
 import { Component, computed, CUSTOM_ELEMENTS_SCHEMA, ElementRef, inject, Inject, OnDestroy, OnInit, signal, viewChild } from '@angular/core';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { IonContent, IonButtons, IonMenu, IonMenuButton, IonIcon, IonHeader, IonToolbar, IonTitle, IonList, IonItem, IonAvatar, IonLabel, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonButton, IonCardSubtitle, IonSearchbar } from "@ionic/angular/standalone";
+import { IonContent, IonButtons, IonMenu, IonMenuButton, IonIcon, IonList, IonItem, IonLabel, IonCard, IonCardTitle, IonCardContent, IonSearchbar } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
-import { bookOutline, clipboardOutline, exitOutline, folderOutline, helpOutline, languageOutline, listOutline, menu, notificationsOutline, personOutline, settingsOutline, starOutline } from 'ionicons/icons';
-import { Router } from '@angular/router';
+import { bookOutline, clipboardOutline, exitOutline, folderOutline, helpOutline, languageOutline,
+   listOutline, menu, notificationsOutline, personOutline, settingsOutline, starOutline, personCircleOutline } from 'ionicons/icons';
+import { Router, RouterOutlet } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/interfaces/user.interface';
@@ -26,8 +27,9 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
   standalone: true,
-  imports: [IonSearchbar, IonCardContent, IonCardTitle, IonCardHeader, IonCard, IonLabel, IonAvatar, IonItem, IonList, IonIcon, IonButtons, IonContent, IonMenu, IonMenuButton,
-           CommonModule, FormsModule,ReactiveFormsModule, SpinnerComponent, TextLimitPipe, AdvertisingComponent, TranslateModule,  ],
+  imports: [IonSearchbar, IonCardContent, IonCardTitle,IonCard, IonLabel, IonItem, IonList, IonIcon, IonButtons, IonContent, IonMenu, IonMenuButton,
+    IonMenu, 
+           CommonModule, FormsModule,ReactiveFormsModule, SpinnerComponent, RouterOutlet, AdvertisingComponent, TranslateModule,  TextLimitPipe ],
 })
 export class HomePage implements OnInit, OnDestroy {
 
@@ -55,6 +57,15 @@ export class HomePage implements OnInit, OnDestroy {
   //PUBLICIDAD
   banner: any[] = [];
 
+  mostrarTodosRecomendados = true;
+
+  verTodosRecomendados() {
+    this.mostrarTodosRecomendados = !this.mostrarTodosRecomendados;
+  }
+
+  cerrarTodosRecomendados() {
+    this.mostrarTodosRecomendados = false;
+  }
   
   constructor() {
     // Set default language
@@ -79,7 +90,9 @@ export class HomePage implements OnInit, OnDestroy {
       settingsOutline,
       helpOutline,
       exitOutline,
-      languageOutline
+      languageOutline,
+      personCircleOutline,
+      
     })
 
     this.isLoading.set(true); // Set loading state to true
@@ -116,7 +129,7 @@ export class HomePage implements OnInit, OnDestroy {
     const {data, total}: any = await this.publicityS.getBanner(this.currentUser.usr_r_id!.r_name);
     
     if(data){
-      console.log("Banner ---> :", data);
+      // console.log("Banner ---> :", data);
       this.banner.push(...data);
     }
 
@@ -147,7 +160,18 @@ export class HomePage implements OnInit, OnDestroy {
     this.currentLang.set(lang);
   }
 
-  
+  // path navigation topic/:id
+  onTopicSelectItem(topic: Category){
+    console.log("topic ---> :", topic);
+    this.categoryS.topic_selected.set(topic);
+    this.router.navigate(['/tabs/tab1/topic'], { queryParams: { id: topic.cat_title } });
+  }
+
+  onTheneSelectItem(theme: any){
+    console.log("theme ---> :", theme);
+    this.categoryS.theme_selected.set(theme);
+    this.router.navigate(['/tabs/tab1/theme'], { queryParams: { id: theme.cat_title } });
+  }
 
 
 }

@@ -25,6 +25,7 @@
     "menu": {
       "mi_perfil": "Mi perfil",
       "mis_examenes": "Mis exámenes",
+      "mis_cursos": "Mis cursos",
       "idioma": "Idioma",
       "exit": "Salir"
     },
@@ -37,9 +38,9 @@
       "cursos": "Cursos"
     },
     "recomendando": {
-      "listado_temass": "Listado de temas",
+      "listado_temass": "Listado de categorías",
       "ver_todos": "Ver todos",
-      "recomendando_temass": "Temas recomendados"
+      "recomendando_temass": "Recomendaciones"
     },
     "cards": {
       "desarrollo_aplicaciones": "Desarrollo de aplicaciones para la nube"

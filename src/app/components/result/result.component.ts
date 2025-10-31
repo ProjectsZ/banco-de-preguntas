@@ -2,7 +2,7 @@ import { Component, inject, input, OnDestroy, OnInit, output, signal } from '@an
 import { IonHeader, IonToolbar, IonTitle, IonText, IonButton, IonButtons, IonIcon, IonContent, IonLabel, IonCard, IonGrid, IonRow, IonCol, IonChip } from "@ionic/angular/standalone";
 import { CircleTextComponent } from "./../widgets/circle-text/circle-text.component";
 import { addIcons } from 'ionicons';
-import { giftOutline, reloadOutline } from 'ionicons/icons';
+import { arrowBack, giftOutline, reloadOutline } from 'ionicons/icons';
 import { User } from 'src/app/interfaces/user.interface';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
@@ -39,7 +39,8 @@ export class ResultComponent  implements OnInit, OnDestroy {
   constructor() {
     addIcons({
       reloadOutline,
-      giftOutline
+      giftOutline,
+      arrowBack
     });
   }
   ngOnDestroy(): void {
@@ -50,14 +51,20 @@ export class ResultComponent  implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    if(this.result().totalPoints >= 10 && this.result().totalPoints <= 20 && this.result().score >= (this.result().totalPoints -2)){
-      this.coin_win = 7
-    }else if(this.result().totalPoints > 20 && this.result().totalPoints <= 30 && this.result().score >= (this.result().totalPoints -3)){
-      this.coin_win = 10
-    }else if(this.result().totalPoints > 30 && this.result().score >= (this.result().totalPoints -5)){
-      this.coin_win = 20
-    }else{
-      this.coin_win = 0
+    const resultData = this.result();
+    
+    if (resultData && resultData.totalPoints && resultData.score !== undefined) {
+      if(resultData.totalPoints >= 10 && resultData.totalPoints <= 20 && resultData.score >= (resultData.totalPoints -2)){
+        this.coin_win = 7
+      }else if(resultData.totalPoints > 20 && resultData.totalPoints <= 30 && resultData.score >= (resultData.totalPoints -3)){
+        this.coin_win = 10
+      }else if(resultData.totalPoints > 30 && resultData.score >= (resultData.totalPoints -5)){
+        this.coin_win = 20
+      }else{
+        this.coin_win = 0
+      }
+    } else {
+      this.coin_win = 0;
     }
 
     // Nos suscribimos al BehaviorSubject del servicio

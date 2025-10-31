@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { IonText, IonIcon } from "@ionic/angular/standalone";
+import { IonIcon } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { alertCircleOutline, alertOutline, checkmarkCircle, checkmarkDoneCircle, closeCircleOutline, closeOutline } from 'ionicons/icons';
 import { TextHighlightPipe } from 'src/app/pipes/text-highlight.pipe';
@@ -10,7 +10,7 @@ import { TextLimitPipe } from 'src/app/pipes/text-limit.pipe';
   selector: 'app-toast',
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.scss'],
-  imports: [IonIcon, IonText, CommonModule, TextHighlightPipe]
+  imports: [IonIcon, CommonModule, TextHighlightPipe]
 })
 export class ToastComponent  implements OnInit {
 

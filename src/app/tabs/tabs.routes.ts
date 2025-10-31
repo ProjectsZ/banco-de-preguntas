@@ -12,6 +12,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('../tab1/tab1.page').then((m) => m.Tab1Page),
         // canActivate: [AuthGuard]
+        children: [
+          {
+            path: 'topic',
+            loadComponent: () =>
+              import('../pages/topic/topic.page').then((m) => m.TopicPage),
+          },
+          {
+            path: 'theme',
+            loadComponent: () =>
+              import('../pages/theme/theme.page').then((m) => m.ThemePage),
+          }
+        ]
       },
       {
         path: 'tab2',

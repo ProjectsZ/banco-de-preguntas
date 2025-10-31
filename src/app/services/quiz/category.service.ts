@@ -11,6 +11,8 @@ export class CategoryService {
   categories = signal<Category[] | null>(null); // Signal to hold categories
   topics = signal<Category[] | null>(null); // Signal to hold temas
    
+  topic_selected = signal<Category | null>(null); // Signal to hold selected topic
+  theme_selected = signal<Category | null>(null); // Signal to hold selected theme
 
   select_cat_id = signal<string | null>(null); // Signal to hold selected category ID
 
@@ -20,9 +22,9 @@ export class CategoryService {
 
   constructor() { }
 
-  async getCategories(){
+  async getCategories(refresh: boolean = false){
     // return categories;
-    if(this.categories()){
+    if(this.categories() && refresh){
       return;
     }
 
@@ -47,7 +49,7 @@ export class CategoryService {
     
     const { data, count, error } = await this.supabase()
       .from('categorias')
-      .select('*', { count: 'exact' })
+      .select('cat_id, cat_title, cat_crs_id, cat_subtitle', { count: 'exact' })
       .eq('cat_crs_id', cat_crs_id);
       // .range(0, 9);
       console.log(data, count, error);
@@ -86,6 +88,8 @@ export class CategoryService {
 
         this.topics.set(data);
 
+        console.log('----> Categorias con documentos:', data);
+
 
       if(error) throw error;
 
@@ -102,6 +106,32 @@ export class CategoryService {
       return false;
     }
 
+  }
+
+  async addCategory(category: Partial<Category>) {
+    const { data, error } = await this.supabase()
+      .from('categorias')
+      .insert([category]);
+    if (error) throw error;
+    return data;
+  }
+
+  async deleteCategory(cat_id: string) {
+    const { error } = await this.supabase()
+      .from('categorias')
+      .delete()
+      .eq('cat_id', cat_id);
+    if (error) throw error;
+    return true;
+  }
+
+  async updateCategory(cat_id: string, category: Partial<Category>) {
+    const { error } = await this.supabase()
+      .from('categorias')
+      .update(category)
+      .eq('cat_id', cat_id);
+    if (error) throw error;
+    return true;
   }
 
   setCategories(value: any){

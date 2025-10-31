@@ -1,0 +1,62 @@
+import { TestBed } from '@angular/core/testing';
+import { QuestionService } from '../../services/question.service';
+import { SupabaseService } from '../../services/supabase/supabase.service';
+import { ModalController } from '@ionic/angular';
+import { ToastService } from '../toast/toast.service';
+import { Question } from '../../interfaces/question.interface';
+
+describe('QuestionService - Rendimiento de inserciones masivas', () => {
+  let service: QuestionService;
+
+  beforeEach(() => {
+    const modalMock = {
+      create: jest.fn().mockResolvedValue({
+        present: () => Promise.resolve(),
+        onDidDismiss: () => Promise.resolve({ data: null }),
+        dismiss: () => Promise.resolve()
+      })
+    };
+
+    const toastServiceMock = {
+      showToast: jest.fn().mockResolvedValue(Promise.resolve()),
+      openToast: jest.fn()
+    };
+
+    TestBed.configureTestingModule({
+      providers: [
+        QuestionService,
+        SupabaseService,
+        { provide: ModalController, useValue: modalMock },
+        { provide: ToastService, useValue: toastServiceMock }
+      ]
+    });
+
+    service = TestBed.inject(QuestionService);
+  });
+
+  it('🧪 Debería insertar 100 preguntas en tiempo razonable', async () => {
+    const CATEGORIA_TEST_ID = 'cbe8f904-fcf0-4817-9cd9-c766766cd394';
+
+    const mockQuestions: Question[] = Array.from({ length: 100 }).map((_, i) => ({
+      pr_question: `¿Pregunta ${i + 1}?`,
+      pr_content: `Contenido ${i + 1}`,
+      pr_img: '',
+      pr_difficulty: 'media',
+      pr_options: ['A', 'B', 'C', 'D'],
+      pr_answer: 'A',
+      pr_type: 'alternativa',
+      pr_tags: ['mock'],
+      pr_cat_id: CATEGORIA_TEST_ID
+    }));
+
+    const start = performance.now();
+    const result = await service.bulkInsertQuestions(mockQuestions);
+    const end = performance.now();
+
+    const tiempo = end - start;
+    console.log(`⌛ Tiempo total: ${tiempo.toFixed(2)} ms`);
+
+    expect(result).toBeDefined();
+    expect(tiempo).toBeLessThan(10000); // límite de tiempo razonable
+  }, 25000);
+}); 

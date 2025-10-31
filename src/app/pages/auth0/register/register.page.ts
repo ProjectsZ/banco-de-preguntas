@@ -1,7 +1,7 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { IonContent, IonSelectOption, IonSelect, IonHeader, IonTitle, IonToolbar, IonSegmentButton, IonLabel, IonItem, IonButton, IonInput, IonCardHeader, IonCard, IonSegment, IonButtons, IonDatetime, IonIcon, IonText } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonSegmentButton, IonLabel, IonItem, IonButton, IonInput, IonCardHeader, IonCard, IonSegment, IonButtons, IonDatetime, IonIcon, IonText } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import { arrowBack, arrowBackCircle, closeOutline, diamondOutline, refreshOutline } from 'ionicons/icons';
@@ -18,7 +18,7 @@ import { ValidatorData } from 'src/app/class/validator-data';
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonText, IonIcon, IonButtons, IonSegment, IonSelect, IonDatetime,  IonSelectOption, IonInput, IonButton, IonItem, IonLabel, IonSegmentButton, IonContent, IonHeader, IonTitle, IonToolbar, 
+  imports: [IonText, IonIcon, IonButtons, IonSegment, IonDatetime, IonInput, IonButton, IonItem, IonLabel, IonSegmentButton, IonContent, IonHeader, IonTitle, IonToolbar,
     CommonModule, FormsModule, ReactiveFormsModule, SpinnerComponent]
 })
 export class RegisterPage implements OnInit, OnDestroy {
@@ -45,27 +45,27 @@ export class RegisterPage implements OnInit, OnDestroy {
     message: ' (*) Miau... aquí tienes el formulario para cambiar tu contraseña, humano. ¡Hazlo con cuidado, que no quiero maullar por un error!'
   };
 
-    // mascota
-    messageCAT1: {tipo: string, estado: boolean, message: string}[] = [
-      { tipo: "hasUpperCase", estado: false, message: "al menos una letra mayúscula" },
-      { tipo: "hasLowerCase", estado: false, message: "al menos una letra minúscula" },
-      { tipo: "hasNumber", estado: false, message: "al menos un número" },
-      { tipo: "hasSymbol", estado: false, message: "al menos un símbolo" }
-    ]
+  // mascota
+  messageCAT1: { tipo: string, estado: boolean, message: string }[] = [
+    { tipo: "hasUpperCase", estado: false, message: "al menos una letra mayúscula" },
+    { tipo: "hasLowerCase", estado: false, message: "al menos una letra minúscula" },
+    { tipo: "hasNumber", estado: false, message: "al menos un número" },
+    { tipo: "hasSymbol", estado: false, message: "al menos un símbolo" }
+  ]
 
-    messageCAT2: {tipo: string, estado: boolean, message: string}[] = [
-      { tipo: "hasUpperCase", estado: false, message: "al menos una letra mayúscula" },
-      { tipo: "hasLowerCase", estado: false, message: "al menos una letra minúscula" },
-      { tipo: "hasNumber", estado: false, message: "al menos un número" },
-      { tipo: "hasSymbol", estado: false, message: "al menos un símbolo" }
-    ]
+  messageCAT2: { tipo: string, estado: boolean, message: string }[] = [
+    { tipo: "hasUpperCase", estado: false, message: "al menos una letra mayúscula" },
+    { tipo: "hasLowerCase", estado: false, message: "al menos una letra minúscula" },
+    { tipo: "hasNumber", estado: false, message: "al menos un número" },
+    { tipo: "hasSymbol", estado: false, message: "al menos un símbolo" }
+  ]
 
-    messageCAT3: {tipo: string, estado: boolean, message: string}[] = [
-      { tipo: "hasUpperCase", estado: false, message: "al menos una letra mayúscula" },
-      { tipo: "hasLowerCase", estado: false, message: "al menos una letra minúscula" },
-      { tipo: "hasNumber", estado: false, message: "al menos un número" },
-      { tipo: "hasSymbol", estado: false, message: "al menos un símbolo" }
-    ]
+  messageCAT3: { tipo: string, estado: boolean, message: string }[] = [
+    { tipo: "hasUpperCase", estado: false, message: "al menos una letra mayúscula" },
+    { tipo: "hasLowerCase", estado: false, message: "al menos una letra minúscula" },
+    { tipo: "hasNumber", estado: false, message: "al menos un número" },
+    { tipo: "hasSymbol", estado: false, message: "al menos un símbolo" }
+  ]
 
   constructor(private fb: FormBuilder, private validatorData: ValidatorData) {
     addIcons({
@@ -75,21 +75,23 @@ export class RegisterPage implements OnInit, OnDestroy {
       closeOutline
     });
 
-
-    // Nos suscribimos al BehaviorSubject del servicio
-    this.userSubscription = this.authS.currentUser.subscribe({
-      next: (user) => {
-        this.currentUser = user;
-        console.log('Usuario actual:', this.currentUser);
-      },
-      error: (err) => {
-        console.error('Error al obtener datos del usuario:', err);
-      },
-      complete: () => {
-        console.log('Suscripción completada');
-      }
-    });
+    // Verifica si authS y currentUser están definidos antes de suscribirse
+    if (this.authS?.currentUser) {
+      this.userSubscription = this.authS.currentUser.subscribe({
+        next: (user) => {
+          this.currentUser = user;
+          console.log('Usuario actual:', this.currentUser);
+        },
+        error: (err) => {
+          console.error('Error al obtener datos del usuario:', err);
+        },
+        complete: () => {
+          console.log('Suscripción completada');
+        }
+      });
+    }
   }
+
 
   ngOnInit() {
     this.editRegisterForm = this.fb.group({
@@ -97,15 +99,15 @@ export class RegisterPage implements OnInit, OnDestroy {
       usr_email: [this.currentUser.usr_email, [Validators.required, Validators.email]],
       usr_password: ['', [Validators.required, Validators.minLength(8)]],
       usr_newPassword0: ['', [Validators.required, Validators.minLength(8),
-        this.validatorData.passwordStrengthValidator ]],
+      this.validatorData.passwordStrengthValidator]],
       // validar que el usr_newPassword sea igual al usr_newPassword0
 
       usr_newPassword: ['', [Validators.required, Validators.minLength(8),
-        this.validatorData.passwordStrengthValidator ]],
-    }, 
-    {
-      validators: this.validatorData.passwordsMatchValidator, // correcto: en minúscula
-    });
+      this.validatorData.passwordStrengthValidator]],
+    },
+      {
+        validators: this.validatorData.passwordsMatchValidator, // correcto: en minúscula
+      });
 
     this.editRegisterForm.get('usr_email')?.disable(); // Deshabilitar el campo de contraseña actual
 
@@ -118,8 +120,22 @@ export class RegisterPage implements OnInit, OnDestroy {
       usr_coin: [0, [Validators.required, Validators.min(0)]],
 
       // TAB 2 - Información personal
-      infp_firstname: ['', Validators.required],
-      infp_lastname: ['', Validators.required],
+      infp_firstname: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s'-]+$/)
+        ]
+      ],
+      infp_lastname: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(/^[A-Za-zÁÉÍÓÚáéíóúÑñ\s'-]+$/)
+        ]
+      ],
       infp_phone: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
       infp_address: [''],
       infp_birthday: ['', Validators.required],
@@ -184,7 +200,7 @@ export class RegisterPage implements OnInit, OnDestroy {
       this.isLoading.set(true);
       const dataComplete = await this.authS.updatePersonalData(this.currentUser.usr_id || '', this.editDataPersonalForm.value);
       // Aquí iría el servicio de envío
-      if(dataComplete){
+      if (dataComplete) {
         this.isLoading.set(false);
       }
     } else {
@@ -195,31 +211,31 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   /*** */
 
-  filterAnswers(event: any){
+  filterAnswers(event: any) {
     const value = event.detail.value;
     this.selectedTab.set(value);
 
     console.log('Valor seleccionado:', value);
     this.personalidadCAT.message = '';
 
-    if(this.selectedTab() === 'usuario'){
-      this.personalidadCAT = { 
+    if (this.selectedTab() === 'usuario') {
+      this.personalidadCAT = {
         color: 'success',
         feeling: 'happy',
         nivel_state: 1,
         message: ' (*) Miau... aquí tienes el formulario para cambiar tu contraseña, humano. ¡Hazlo con cuidado, que no quiero maullar por un error!'
       };
-    } if(this.selectedTab() === 'personal'){
+    } if (this.selectedTab() === 'personal') {
       this.personalidadCAT.message = ' (*) Miau... aquí tienes el formulario para cambiar tus datos, humano. ¡Hazlo con cuidado, que no quiero maullar por un error!'
     }
 
   }
 
-  goBack(){
+  goBack() {
     this.router.navigate(['/tabs/tab1']);
   }
 
-  async onSubmitLogin(){
+  async onSubmitLogin() {
 
     const formValues: { usr_email: string; usr_password: string; usr_newPassword: string; } = {
       usr_email: this.editRegisterForm.get('usr_email')?.value,
@@ -238,7 +254,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     console.log('data', data);
     this.messageCAT1 = data.requisitos;
     this.personalidadCAT = data.personalidadCAT;
-    
+
   }
 
   async onChangeWord_new(usrPassword: any) {
@@ -246,7 +262,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     console.log('data', data);
     this.messageCAT2 = data.requisitos;
     this.personalidadCAT = data.personalidadCAT;
-    
+
   }
 
   async onChangeWord_repeat(usrPassword: any) {
@@ -254,7 +270,7 @@ export class RegisterPage implements OnInit, OnDestroy {
     console.log('data', data);
     this.messageCAT3 = data.requisitos;
     this.personalidadCAT = data.personalidadCAT;
-    
+
   }
 
 
@@ -262,30 +278,30 @@ export class RegisterPage implements OnInit, OnDestroy {
 
   async onValidarPassword(usrPassword: any) {
     if (!usrPassword) return;
-  
+
     const hasUpperCase = /[A-Z]/.test(usrPassword);
     const hasLowerCase = /[a-z]/.test(usrPassword);
     const hasNumber = /[0-9]/.test(usrPassword);
     const hasSymbol = /[^A-Za-z0-9]/.test(usrPassword);
-  
+
     const requisitos = [
       { tipo: "hasUpperCase", estado: hasUpperCase, message: "mayúscula" },
       { tipo: "hasLowerCase", estado: hasLowerCase, message: "minúscula" },
       { tipo: "hasNumber", estado: hasNumber, message: "número" },
       { tipo: "hasSymbol", estado: hasSymbol, message: "símbolo" }
     ];
-  
+
     let faltantes = requisitos
       .filter(req => !req.estado)
       .map(req => req.message);
-  
-    let personalidadCAT: {tipo: string, estado: boolean, message: string} | any = {};
+
+    let personalidadCAT: { tipo: string, estado: boolean, message: string } | any = {};
 
 
     if (faltantes.length > 0) {
       const dataFaltantes: string = faltantes.join(', ');
-      const { color, feeling, level_state, message } = await this.toastS.openMessage("datos incorrectos", 'warning', "angry", false, `tu contraseña debe contener ${ dataFaltantes }`, '!... ');
-      
+      const { color, feeling, level_state, message } = await this.toastS.openMessage("datos incorrectos", 'warning', "angry", false, `tu contraseña debe contener ${dataFaltantes}`, '!... ');
+
       //verificar si existen **** en el message, si existe remplazarlo por faltantes
       if (message.includes("****")) {
         const mensaje = message.replace("****", `${dataFaltantes}`);
@@ -304,7 +320,7 @@ export class RegisterPage implements OnInit, OnDestroy {
       };
 
     } else {
-      
+
       personalidadCAT.color = 'success';
       personalidadCAT.feeling = "happy";
       personalidadCAT.nivel_state = 3;
@@ -322,7 +338,7 @@ export class RegisterPage implements OnInit, OnDestroy {
         requisitos: data
       };
     }
-  
+
   }
 
 }

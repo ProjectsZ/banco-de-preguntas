@@ -1,0 +1,190 @@
+<ion-content [fullscreen]="true" class="ion-padding">
+
+  <div class="data-nav">  
+    
+    <ion-icon name="arrow-back-outline" (click)="goBack()"></ion-icon>
+     
+    <div class="greeting">
+      <h5> QuizCat </h5>
+      <h3> Categoría </h3>
+    </div>
+
+  </div> 
+
+  <!-- Agregar datos de la categoria -->
+  <div class="data-tabs">
+    <h3 (click)="selectTab.set('add')" [class.active]="selectTab() === 'add'"> Agregando </h3>
+
+    <h3 (click)="selectTab.set('list')" [class.active]="selectTab() === 'list'"> Listado </h3>
+  </div>
+  
+  @if(selectTab() === 'add'){
+ 
+
+  <ion-card class="form-card">
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" class="form-category">
+      <ion-list lines="none">
+        <ion-item>
+          <ion-label position="floating">Título</ion-label>
+          <ion-input formControlName="cat_title" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Subtítulo</ion-label>
+          <ion-input formControlName="cat_subtitle" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea formControlName="cat_description" required></ion-textarea>
+        </ion-item>
+        <ion-item class="color-item">
+          <ion-label position="floating">Color</ion-label><br>
+          <ion-input class="color-input" formControlName="cat_color" type="color"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Imagen (URL)</ion-label>
+          <ion-input formControlName="cat_img" type="url"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Curso</ion-label>
+          <ion-select formControlName="cat_crs_id" interface="popover" placeholder="Seleccione un curso">
+            @for(course of coursesList; track course.crs_id) {
+              <ion-select-option [value]="course.crs_id">
+                {{ course.crs_name }}
+              </ion-select-option>
+            }
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Badge/Logo (URL)</ion-label>
+          <ion-input formControlName="cat_badge" type="url"></ion-input>
+        </ion-item>
+        
+        <!-- Sección de documentos -->
+        <div class="documents-section" formArrayName="cat_doc">
+          <div class="section-header">
+            <h3>Documentos</h3>
+            <ion-button fill="clear" size="small" (click)="addDocument()">
+              <ion-icon name="add-outline"></ion-icon>
+              Agregar documento
+            </ion-button>
+          </div>
+          
+          @if(catDocArray.length > 0){
+            @for(doc of catDocArray.controls; track $index; let i = $index) {
+              <ion-card class="document-card">
+                <ion-card-header>
+                  <ion-card-title>Documento {{ i + 1 }}</ion-card-title>
+                  <ion-button fill="clear" color="danger" size="small" (click)="removeDocument(i)">
+                    <ion-icon name="trash-outline"></ion-icon>
+                  </ion-button>
+                </ion-card-header>
+                <ion-card-content [formGroupName]="i">
+                  <ion-item>
+                    <ion-label position="floating">URL del documento</ion-label>
+                    <ion-input formControlName="uri" type="url"></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="floating">Título</ion-label>
+                    <ion-input formControlName="title"></ion-input>
+                  </ion-item>
+                  <ion-item>
+                    <ion-label position="floating">Autor</ion-label>
+                    <ion-input formControlName="author"></ion-input>
+                  </ion-item>
+                </ion-card-content>
+              </ion-card>
+            }
+          }@else{
+            <ion-text color="medium" class="no-documents">No hay documentos agregados. Haz clic en "Agregar documento" para comenzar.</ion-text>
+          }
+        </div>
+      </ion-list>
+      <div class="form-actions">
+        <ion-button expand="block" type="submit" [disabled]="categoryForm.invalid || isLoading" color="primary" size="large">
+          <ion-icon slot="start" name="add-outline"></ion-icon>
+          {{ editingCategoryId ? 'Actualizar Categoría' : 'Guardar Categoría' }}
+          <ion-spinner *ngIf="isLoading" slot="end" name="crescent"></ion-spinner>
+        </ion-button>
+      </div>
+      <ion-text color="success" *ngIf="successMsg">{{ successMsg }}</ion-text>
+      <ion-text color="danger" *ngIf="errorMsg">{{ errorMsg }}</ion-text>
+    </form>
+  </ion-card>
+
+
+   <!-- Previsualización de imagen y color -->
+   <div class="cards-recomendando" 
+   *ngIf="categoryForm.value.cat_img || categoryForm.value.cat_color">
+
+      <ion-card class="card-data card-mini"
+      [ngStyle]="{ 'background': categoryForm.value.cat_color }"
+            >
+            <ion-card-content>
+              @if (categoryForm.value.cat_badge){
+                <img class="cm-img"  *ngIf="categoryForm.value.cat_badge" 
+                  [src]="categoryForm.value.cat_badge" alt="Previsualización">
+              }
+
+              <h5> {{ categoryForm.value.cat_title | uppercase }} </h5>
+
+            </ion-card-content>
+      </ion-card>
+
+  </div>
+  }
+
+  @if(selectTab() === 'list'){
+  <!-- Barra de búsqueda -->
+  <ion-searchbar placeholder="Buscar categoría..." (ionInput)="onSearchChange($event)" [debounce]="400" [value]="searchTerm"></ion-searchbar>
+
+  <!-- Lista de categorías como tarjetas -->
+  <div class="categories-list">
+    @if(pagedCategories.length > 0){
+      @for(cat of pagedCategories; track cat.cat_id; let i = $index) {
+        <ion-card class="category-card">
+          <ion-item lines="none">
+            @if(cat.cat_img){
+              <ion-avatar slot="start">
+                <img [src]="cat.cat_img" alt="img" />
+              </ion-avatar>
+            }
+            <ion-label>
+              <h2>{{ cat.cat_title }}</h2>
+              <h3>{{ cat.cat_subtitle }}</h3>
+              
+              <!-- <p>{{ cat.cat_description }}</p> -->
+              
+            </ion-label>
+            <div class="option-cat">
+              <div class="color-dot" [style.background]="cat.cat_color ? cat.cat_color : '#cccccc'"></div>
+              <ion-buttons slot="end" class="card-actions">
+                <ion-button fill="clear" color="primary" (click)="editCategory(cat)">
+                  <ion-icon name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" color="danger" (click)="deleteCategory(cat.cat_id)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </div>
+          </ion-item>
+        </ion-card>
+      }
+    }@else{
+      <ion-text color="medium" class="no-results">No hay categorías para mostrar.</ion-text>
+    }
+  </div>
+  <!-- Paginación -->
+  <div class="pagination-controls">
+    @if(totalPages > 1){
+      <ion-button size="small" fill="clear" (click)="setPage(currentPage-1)" [disabled]="currentPage === 1">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <span>Página {{ currentPage }} de {{ totalPages }}</span>
+      <ion-button size="small" fill="clear" (click)="setPage(currentPage+1)" [disabled]="currentPage === totalPages">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </ion-button>
+    }
+  </div>
+  }
+
+</ion-content>
